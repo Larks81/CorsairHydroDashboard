@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorsairDashboard", "CorsairDashboard\CorsairDashboard.csproj", "{5E759830-F629-408D-A5AA-481DEF5AE394}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorsairDashboard.Models", "CorsairDashboard.Models\CorsairDashboard.Models.csproj", "{55FED39C-B72E-4DF1-8497-EE40F79E9B50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydroLib", "HydroLib\HydroLib.csproj", "{1648CB03-4073-44C4-9448-276891592D2F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E759830-F629-408D-A5AA-481DEF5AE394}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E759830-F629-408D-A5AA-481DEF5AE394}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E759830-F629-408D-A5AA-481DEF5AE394}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E759830-F629-408D-A5AA-481DEF5AE394}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55FED39C-B72E-4DF1-8497-EE40F79E9B50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55FED39C-B72E-4DF1-8497-EE40F79E9B50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55FED39C-B72E-4DF1-8497-EE40F79E9B50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55FED39C-B72E-4DF1-8497-EE40F79E9B50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1648CB03-4073-44C4-9448-276891592D2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1648CB03-4073-44C4-9448-276891592D2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1648CB03-4073-44C4-9448-276891592D2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1648CB03-4073-44C4-9448-276891592D2F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

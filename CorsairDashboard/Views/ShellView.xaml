@@ -1,0 +1,60 @@
+﻿<metro:MetroWindow x:Class="CorsairDashboard.Views.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:cal="http://www.caliburnproject.org"
+        Title="Corsair Hydro Dashboard" Height="609" Width="1027" ResizeMode="NoResize">
+    <metro:MetroWindow.RightWindowCommands>
+        <metro:WindowCommands>
+            <Button cal:Message.Attach="MainMenu">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20"
+                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                         Visual="{StaticResource appbar_home_empty}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Margin="4 0 0 0"
+                   VerticalAlignment="Center"
+                   Text="Home" />
+                </StackPanel>
+            </Button>
+        </metro:WindowCommands>
+    </metro:MetroWindow.RightWindowCommands>
+
+    <metro:MetroWindow.Resources>
+        <Style x:Key="DevStatusTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"></Setter>
+        </Style>
+    </metro:MetroWindow.Resources>
+    
+    <StackPanel>
+        <Border BorderBrush="{DynamicResource GrayBrush8}" BorderThickness="0, 0, 0, 1">
+            <Grid Margin="10">
+                <StackPanel>
+                    <TextBlock Text="Corsair Hydro Dashboard" HorizontalAlignment="Center" FontSize="50" />
+                    <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                        <TextBlock x:Name="ModelName" Text="H100i" Style="{StaticResource DevStatusTextStyle}"></TextBlock>
+                        <TextBlock Text="  |  " Style="{StaticResource DevStatusTextStyle}"></TextBlock>
+                        <TextBlock Text="Water temp: " Style="{StaticResource DevStatusTextStyle}"></TextBlock>
+                        <TextBlock x:Name="WaterTemperature" Text="N/A" Style="{StaticResource DevStatusTextStyle}"></TextBlock>
+                        <TextBlock Text="  |  " Style="{StaticResource DevStatusTextStyle}"></TextBlock>
+                        <ItemsControl x:Name="FansRpm" Width="1000" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Margin="10, 50">
+            <ContentControl x:Name="ActiveItem" />
+        </Grid>
+
+    </StackPanel>
+</metro:MetroWindow>
