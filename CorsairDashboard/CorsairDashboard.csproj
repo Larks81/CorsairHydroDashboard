@@ -68,6 +68,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\ColorConverter.cs" />
     <Compile Include="Converters\SolidColorBrushConverter.cs" />
+    <Compile Include="Extensions\ColorExtensions.cs" />
     <Compile Include="ViewModels\ChildBaseViewModel.cs" />
     <Compile Include="ViewModels\Controls\FanRpmViewModel.cs" />
     <Compile Include="ViewModels\Controls\RangeColorChooserViewModel.cs" />

@@ -120,6 +120,51 @@ namespace HydroLib
             return false;
         }
 
+        public async Task<bool> SetLedCycleColorsAsync(byte[] firstColor, byte[] secondColor, byte[] thirdColor, byte[] fourthColor)
+        {
+            if (firstColor == null || secondColor == null)
+                throw new ArgumentNullException("first and second colors cannot be null");
+
+            if (thirdColor == null)
+                thirdColor = new byte[] { 0, 0, 0 };
+            if (fourthColor == null)
+                fourthColor = new byte[] { 0, 0, 0 };
+
+            var ledMode = thirdColor == null ? LedMode.TwoColorsCycle : LedMode.FourColorCycle;
+
+            var resp = await QueryDeviceAsync(
+                0x18,
+                commandId++,
+                (byte)OpCodes.WriteOneByte,
+                (byte)Commands.LED_SelectCurrent,
+                0x00,
+                commandId++,
+                (byte)OpCodes.WriteOneByte,
+                (byte)Commands.LED_Mode,
+                (byte)ledMode,
+                commandId++,
+                (byte)OpCodes.WriteThreeBytes,
+                (byte)Commands.LED_CycleColors,
+                0x0c,
+                firstColor[0],
+                firstColor[1],
+                firstColor[2],
+                secondColor[0],
+                secondColor[1],
+                secondColor[2],
+                thirdColor[0],
+                thirdColor[1],
+                thirdColor[2],
+                fourthColor[0],
+                fourthColor[1],
+                fourthColor[2]);
+            if (resp != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
         #endregion Leds
 
         #region Fans
