@@ -7,16 +7,34 @@ using System.Threading.Tasks;
 
 namespace HydroLib
 {
-    public class HydroDeviceEnumerator : IEnumerable<HydroDevice>
+    public class HydroDeviceEnumerator : IEnumerable<IHydroDevice>
     {
-        public static readonly HydroDeviceEnumerator Instance = new HydroDeviceEnumerator();
+        bool canReturnNullDevice;
 
-        private HydroDeviceEnumerator() { }
-
-        public IEnumerator<HydroDevice> GetEnumerator()
+        /// <summary>
+        /// Builds a new Hydro devices enumerator.
+        /// </summary>
+        /// <param name="canReturnNullDevice">Returns a mock/null device if a real one isn't found.</param>
+        public HydroDeviceEnumerator(bool canReturnNullDevice)
         {
+            this.canReturnNullDevice = canReturnNullDevice;
+        }
+
+        public IEnumerator<IHydroDevice> GetEnumerator()
+        {
+            bool atLeastOneRealDeviceIsPresent = false;
             foreach (var device in HidDevices.Enumerate(0x1b1c, 0x0c04))
+            {
+                if (!atLeastOneRealDeviceIsPresent)
+                    atLeastOneRealDeviceIsPresent = true;
+
                 yield return new HydroDevice(device);
+            }
+
+            if (canReturnNullDevice && !atLeastOneRealDeviceIsPresent)
+            {
+                yield return new HydroNullDevice();
+            }
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

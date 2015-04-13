@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HydroLib
 {
-    public class HydroDevice : IDisposable
+    public class HydroDevice : IHydroDevice
     {
         private const int WriteBufferLength = 65;
         private const int WriteTimeOut = 3000;

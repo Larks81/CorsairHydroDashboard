@@ -10,7 +10,7 @@ namespace CorsairDashboard.Caliburn
 {
     public interface IShell
     {
-        HydroDevice HydroDevice { get; }
+        IHydroDevice HydroDevice { get; }
 
         void ChangeCurrentDisplayedViewModelTo(ChildBaseViewModel newViewModel);
     }

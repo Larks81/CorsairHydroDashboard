@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using CorsairDashboard.Caliburn;
 using CorsairDashboard.ViewModels.Controls;
+using HydroLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -17,7 +18,7 @@ namespace CorsairDashboard.ViewModels
         private CancellationTokenSource updateStatsCancellationToken;
         private int nrOfFans;
 
-        public HydroLib.HydroDevice HydroDevice { get; private set; }
+        public IHydroDevice HydroDevice { get; private set; }
 
         public String WaterTemperature { get; private set; }
 
@@ -27,7 +28,7 @@ namespace CorsairDashboard.ViewModels
 
         protected async override void OnActivate()
         {
-            HydroDevice = HydroLib.HydroDeviceEnumerator.Instance.First();
+            SetupDevice();
             DisplayName = "Corsair Hydro Dashboard";
             MainMenu();
             ModelName = await HydroDevice.GetModelNameAsync();
@@ -64,6 +65,12 @@ namespace CorsairDashboard.ViewModels
         public bool CanMainMenu()
         {
             return true;
+        }
+
+        private void SetupDevice()
+        {
+            var hydroEnumerator = new HydroDeviceEnumerator(canReturnNullDevice: true);
+            HydroDevice = hydroEnumerator.First();
         }
 
         private void BeginUpdateStats()

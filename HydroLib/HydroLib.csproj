@@ -46,6 +46,8 @@
     <Compile Include="HydroDevice.cs" />
     <Compile Include="HydroDeviceEnumerator.cs" />
     <Compile Include="HydroLedInfo.cs" />
+    <Compile Include="HydroNullDevice.cs" />
+    <Compile Include="IHydroDevice.cs" />
     <Compile Include="LedMode.cs" />
     <Compile Include="OpCodes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
