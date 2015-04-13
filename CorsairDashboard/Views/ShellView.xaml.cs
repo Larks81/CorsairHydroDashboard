@@ -1,4 +1,6 @@
-﻿using MahApps.Metro.Controls;
+﻿using CorsairDashboard.ViewModels;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +25,23 @@ namespace CorsairDashboard.Views
         public ShellView()
         {
             InitializeComponent();
+        }
+
+        private async void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            var shellViewModel = DataContext as ShellViewModel;
+            if (shellViewModel != null)
+            {
+                if (shellViewModel.IsOriginalCorsairLinkRunning)
+                {
+                    await this.ShowMessageAsync("Corsair Link is running!", "You cannot run this program along with the original Corsair Link.\nPlease close Corsair Link and then restart this app!", MessageDialogStyle.Affirmative);
+                    Application.Current.Shutdown();
+                }
+                else
+                {
+                    shellViewModel.Start();
+                }
+            }
         }
     }
 }

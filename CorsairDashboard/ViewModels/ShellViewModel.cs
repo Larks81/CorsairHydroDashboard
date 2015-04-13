@@ -5,6 +5,7 @@ using HydroLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -26,7 +27,15 @@ namespace CorsairDashboard.ViewModels
 
         public BindableCollection<FanRpmViewModel> FansRpm { get; set; }
 
-        protected async override void OnActivate()
+        public bool IsOriginalCorsairLinkRunning
+        {
+            get
+            {
+                return Process.GetProcessesByName("CorsairLink").Any();
+            }
+        }
+
+        public async void Start()
         {
             SetupDevice();
             DisplayName = "Corsair Hydro Dashboard";
@@ -47,7 +56,10 @@ namespace CorsairDashboard.ViewModels
 
         protected override void OnDeactivate(bool close)
         {
-            updateStatsCancellationToken.Cancel();
+            if (updateStatsCancellationToken != null)
+            {
+                updateStatsCancellationToken.Cancel();
+            }
             base.OnDeactivate(close);
         }
 
