@@ -31,11 +31,11 @@ namespace HydroLib
         /*
          * 0A AA 03 00 11 22 - Write 3-byte sequence (00 11 22) into 3-byte register AA
          * */
-        WriteThreeBytes = 0x0A,
+        WriteMoreBytes = 0x0A,
         
         /*
          * 0B AA 03 - Read from 3-byte register AA
          * */
-        ReadThreeBytes = 0x0B,
+        ReadMoreBytes = 0x0B,
     }
 }

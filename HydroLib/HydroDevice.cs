@@ -1,4 +1,5 @@
 ﻿using HidLibrary;
+using HydroLib.CommandSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,31 +11,33 @@ namespace HydroLib
 {
     public class HydroDevice : IHydroDevice
     {
-        private const int WriteBufferLength = 65;
         private const int WriteTimeOut = 3000;
         private const int ReadTimeOut = 3000;
 
         private HidDevice device;
-        private byte[] writeBuffer;
-        private byte commandId;
-        private SemaphoreSlim hidOperationsSemaphoreSlim;
+        private HydroCommandsPayloadGenerator payloadGenerator;
+        private SemaphoreSlim deviceIOLock;
 
         public HydroDevice(HidDevice hidDevice)
         {
-            hidOperationsSemaphoreSlim = new SemaphoreSlim(1, 1);
-            commandId = 1;
             device = hidDevice;
-            writeBuffer = new byte[WriteBufferLength];
+            deviceIOLock = new SemaphoreSlim(1);
+            payloadGenerator = new HydroCommandsPayloadGenerator();
         }
 
         #region Infos
 
         public async Task<String> GetModelNameAsync()
         {
-            var resp = await QueryDeviceAsync(0x03, commandId++, (byte)OpCodes.ReadThreeBytes, 0x02);
-            if (resp != null)
+            var modelNameCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.ProductName, nrOfBytesToRead: 8)
+                    .Build();
+            var responses = await QueryDeviceAsync(modelNameCommand);
+            HydroCommandResponse resp;
+            if (responses.TryGetResponseForCommand(modelNameCommand, out resp) && resp.IsSuccessful)
             {
-                var name = Encoding.ASCII.GetString(resp, 3, 32).Trim('\0');
+                var name = Encoding.ASCII.GetString(resp.ResponseData).Trim('\0');
                 return name;
             }
             return null;
@@ -46,11 +49,16 @@ namespace HydroLib
 
         public async Task<int> GetTemperatureAsync()
         {
-            var resp = await QueryDeviceAsync(0x03, commandId++, 0x09, 0x0e);
-            if (resp != null)
+            var temperatureCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.TEMP_Read)
+                    .Build();
+            var responses = await QueryDeviceAsync(temperatureCommand);
+            HydroCommandResponse resp;
+            if (responses.TryGetResponseForCommand(temperatureCommand, out resp) && resp.IsSuccessful)
             {
-                int temp = resp[3] << 8;
-                temp += resp[2];
+                int temp = resp.ResponseData[1] << 8;
+                temp += resp.ResponseData[0];
                 temp = temp / 256;
                 return temp;
             }
@@ -63,22 +71,25 @@ namespace HydroLib
 
         public async Task<HydroLedInfo> GetLedInfoAsync()
         {
-            var resp = await QueryDeviceAsync(
-                0x07,
-                commandId++,
-                (byte)OpCodes.ReadOneByte,
-                (byte)Commands.LED_Mode,
-                commandId++,
-                (byte)OpCodes.ReadThreeBytes,
-                (byte)Commands.LED_CycleColors,
-                0x0c);
-            if (resp != null)
+            var ledModeCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.LED_Mode)
+                    .Build();
+            var ledColorsCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.LED_CycleColors, nrOfBytesToRead: 0x0c)
+                    .Build();
+            var responses = await QueryDeviceAsync(ledModeCommand, ledColorsCommand);
+            HydroCommandResponse modeResp, colorResp;
+            if (responses.AreSuccessful && responses.TryGetResponseForCommand(ledModeCommand, out modeResp)
+                && responses.TryGetResponseForCommand(ledColorsCommand, out colorResp))
             {
-                var mode = (LedMode)resp[2];
-                var color1 = new[] { resp[6], resp[7], resp[8] };
-                var color2 = new[] { resp[9], resp[10], resp[11] };
-                var color3 = new[] { resp[12], resp[13], resp[14] };
-                var color4 = new[] { resp[15], resp[16], resp[17] };
+                var mode = (LedMode)modeResp.ResponseData[0];
+                var colorArray = colorResp.ResponseData;
+                var color1 = new[] { colorArray[0], colorArray[1], colorArray[2] };
+                var color2 = new[] { colorArray[3], colorArray[4], colorArray[5] };
+                var color3 = new[] { colorArray[6], colorArray[7], colorArray[8] };
+                var color4 = new[] { colorArray[9], colorArray[10], colorArray[11] };
                 return new HydroLedInfo()
                 {
                     Mode = mode,
@@ -93,27 +104,24 @@ namespace HydroLib
 
         public async Task<bool> SetLedSingleColorAsync(byte red, byte green, byte blue, bool pulse)
         {
-            var resp = await QueryDeviceAsync(
-                0x12,
-                commandId++,
-                (byte)OpCodes.WriteOneByte,
-                (byte)Commands.LED_SelectCurrent,
-                0x00,
-                commandId++,
-                (byte)OpCodes.WriteOneByte,
-                (byte)Commands.LED_Mode,
-                pulse ? (byte)0x04b : (byte)0x00,
-                commandId++,
-                (byte)OpCodes.WriteThreeBytes,
-                (byte)Commands.LED_CycleColors,
-                0x06,
-                red,
-                green,
-                blue,
-                0x00,
-                0x00,
-                0x00);
-            if (resp != null)
+            var ledSelectCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.LED_SelectCurrent)
+                    .WithData(new byte[] { 0x00 })
+                    .Build();
+            var ledModeCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.LED_Mode)
+                    .WithData(new byte[] { pulse ? (byte)LedMode.TwoColorsCycle : (byte)LedMode.StaticColor })
+                    .Build();
+            var ledColorCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.LED_CycleColors)
+                    .WithData(new byte[] { red, green, blue, 0x00, 0x00, 0x00 })
+                    .Build();
+
+            var responses = await QueryDeviceAsync(ledSelectCommand, ledModeCommand, ledColorCommand);
+            if (responses.AreSuccessful)
             {
                 return true;
             }
@@ -131,34 +139,26 @@ namespace HydroLib
                 fourthColor = new byte[] { 0, 0, 0 };
 
             var ledMode = thirdColor == null ? LedMode.TwoColorsCycle : LedMode.FourColorCycle;
+            var ledColorArray = firstColor.Concat(secondColor).Concat(thirdColor).Concat(fourthColor).ToArray();
 
-            var resp = await QueryDeviceAsync(
-                0x18,
-                commandId++,
-                (byte)OpCodes.WriteOneByte,
-                (byte)Commands.LED_SelectCurrent,
-                0x00,
-                commandId++,
-                (byte)OpCodes.WriteOneByte,
-                (byte)Commands.LED_Mode,
-                (byte)ledMode,
-                commandId++,
-                (byte)OpCodes.WriteThreeBytes,
-                (byte)Commands.LED_CycleColors,
-                0x0c,
-                firstColor[0],
-                firstColor[1],
-                firstColor[2],
-                secondColor[0],
-                secondColor[1],
-                secondColor[2],
-                thirdColor[0],
-                thirdColor[1],
-                thirdColor[2],
-                fourthColor[0],
-                fourthColor[1],
-                fourthColor[2]);
-            if (resp != null)
+            var ledSelectCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.LED_SelectCurrent)
+                    .WithData(new byte[] { 0x00 })
+                    .Build();
+            var ledModeCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.LED_Mode)
+                    .WithData(new byte[] { (byte)ledMode })
+                    .Build();
+            var ledColorCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.LED_CycleColors)
+                    .WithData(ledColorArray)
+                    .Build();
+
+            var responses = await QueryDeviceAsync(ledSelectCommand, ledModeCommand, ledColorCommand);
+            if (responses.AreSuccessful)
             {
                 return true;
             }
@@ -171,60 +171,100 @@ namespace HydroLib
 
         public async Task<int> GetNrOfFansAsync()
         {
-            var resp = await QueryDeviceAsync(
-                0x03,
-                commandId++,
-                (byte)OpCodes.ReadOneByte,
-                (byte)Commands.FAN_Count);
-            if (resp != null)
+            var nrOfFansCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_Count)
+                    .Build();
+            var responses = await QueryDeviceAsync(nrOfFansCommand);
+            HydroCommandResponse resp;
+            if (responses.TryGetResponseForCommand(nrOfFansCommand, out resp) && resp.IsSuccessful)
             {
-                var nrOfFans = resp[2];
-                return nrOfFans;
+                return resp.ResponseData[0];
             }
             return 0;
         }
 
         public async Task<int> GetRpmForFanNrAsync(byte fanNr)
         {
-            var resp = await QueryDeviceAsync(
-                0x07,
-                commandId++,
-                (byte)OpCodes.WriteOneByte,
-                (byte)Commands.FAN_Select,
-                fanNr,
-                commandId++,
-                (byte)OpCodes.ReadTwoBytes,
-                (byte)Commands.FAN_ReadRPM);
-            if (resp != null)
+            var fanSelectCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_Select)
+                    .WithData(new byte[] { fanNr })
+                    .Build();
+            var fanRpmCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_ReadRPM)
+                    .Build();
+
+            var responses = await QueryDeviceAsync(fanSelectCommand, fanRpmCommand);
+            HydroCommandResponse rpmResp;
+            if (responses.AreSuccessful && responses.TryGetResponseForCommand(fanRpmCommand, out rpmResp))
             {
-                int rpm = resp[5] << 8;
-                rpm += resp[4];
+                int rpm = rpmResp.ResponseData[1] << 8;
+                rpm += rpmResp.ResponseData[0];
                 return rpm;
             }
             return 0;
 
         }
 
+        public async Task<HydroFanInfo> GetFanInfoAsync(byte fanNr)
+        {
+            var fanSelectCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_Select)
+                    .WithData(new byte[] { fanNr })
+                    .Build();
+
+            var fanModeCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_Mode)
+                    .Build();
+
+            var fanRpmCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_ReadRPM)
+                    .Build();
+
+            var responses = await QueryDeviceAsync(fanSelectCommand, fanModeCommand, fanRpmCommand);
+            HydroCommandResponse fanModeResp, fanRpmResp;
+            if (responses.AreSuccessful && responses.TryGetResponseForCommand(fanModeCommand, out fanModeResp)
+                && responses.TryGetResponseForCommand(fanRpmCommand, out fanRpmResp))
+            {
+                var fanInfo = new HydroFanInfo()
+                {
+                    Number = fanNr,
+                    Rpm = (fanRpmResp.ResponseData[1] << 8) + fanRpmResp.ResponseData[0],
+                    Mode = (FanMode)fanModeResp.ResponseData[0]
+                };
+                return fanInfo;
+            }
+            return null;
+        }
+
         #endregion
 
-        private async Task<byte[]> QueryDeviceAsync(params byte[] bytes)
+        private async Task<HydroCommandResponses> QueryDeviceAsync(params HydroCommand[] commands)
         {
-            await hidOperationsSemaphoreSlim.WaitAsync();
+            await deviceIOLock.WaitAsync();
             try
             {
                 OpenDevice();
-                FillWriteBuffer(bytes);
-                var writeOk = await device.WriteAsync(writeBuffer, WriteTimeOut);
+                var payload = payloadGenerator.PayloadForCommands(commands);
+                var writeOk = await device.WriteAsync(payload, WriteTimeOut);
                 if (writeOk)
                 {
                     var inputReport = await device.ReadReportAsync(ReadTimeOut);
-                    return inputReport.ReadStatus == HidDeviceData.ReadStatus.Success ? inputReport.Data : null;
+                    if (inputReport.ReadStatus == HidDeviceData.ReadStatus.Success)
+                    {
+                        return HydroCommandResponses.Factory.FromDeviceResponse(inputReport.Data);
+                    }
                 }
-                return null;
+                return HydroCommandResponses.EmptyResponse;
             }
             finally
             {
-                hidOperationsSemaphoreSlim.Release();
+                deviceIOLock.Release();
             }
         }
 
@@ -236,17 +276,6 @@ namespace HydroLib
             device.OpenDevice(DeviceMode.Overlapped, DeviceMode.Overlapped, ShareMode.Exclusive);
             device.MonitorDeviceEvents = true;
             return device.IsOpen && device.IsConnected;
-        }
-
-        private void ClearBuffer()
-        {
-            Array.Clear(writeBuffer, 0, WriteBufferLength);
-        }
-
-        private void FillWriteBuffer(params byte[] bytes)
-        {
-            ClearBuffer();
-            Buffer.BlockCopy(bytes, 0, writeBuffer, 1, bytes.Count());
         }
 
         public void Dispose()

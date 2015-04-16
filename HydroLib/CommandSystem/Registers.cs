@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HydroLib
+namespace HydroLib.CommandSystem
 {
-    internal enum Commands : byte
+    internal enum Registers : byte
     {
         /*
 	     * R - 1 byte 
 	     * (H80 0x37, Cooling node 0x38, Lighting node 0x39, H100 0x3A, 80i 0x3B, 100i 0x3c -- 
 	     * this field as well as the version are common on all C-Link devices; but the rest aren't
 	     * */
+        [ReadOnly(true)]
         DeviceID = 0x00,
 
 
@@ -20,6 +22,7 @@ namespace HydroLib
          * R - 2 bytes
          * Firmware Version in BCD (for example 1.0.5 is 0x1005, or 0x05, 0x10 in little endianess)
          * */
+        [ReadOnly(true)]
         FirmwareID = 0x01,
 
 
@@ -27,6 +30,7 @@ namespace HydroLib
          * R - 8 bytes
          * Product name, zero-terminated - only present on the H80i and H100i
          * */
+        [ReadOnly(true)]
         ProductName = 0x02,
 
 
@@ -34,13 +38,14 @@ namespace HydroLib
          * R - 1 byte
          * Status, 0 okay, 0xFF bad
          * */
+        [ReadOnly(true)]
         Status = 0x03,
 
 
         /*
          * RW - 1 byte
          * Select current LED
-         * */
+         * */        
         LED_SelectCurrent = 0x04,
 
 
@@ -48,6 +53,7 @@ namespace HydroLib
          * R - 1 byte	 
          * Number of LEDs
          * */
+        [ReadOnly(true)]
         LED_Count = 0x05,
 
 
@@ -63,6 +69,7 @@ namespace HydroLib
          * R - 3 bytes
          * LED current color, RGB color of the selected LED
          * */
+        [ReadOnly(true)]
         LED_CurrentColor = 0x07,
 
 
@@ -105,6 +112,7 @@ namespace HydroLib
          * R - 1 byte
          * Number of temperature sensors
          * */
+        [ReadOnly(true)]
         TEMP_CountSensors = 0x0D,
 
 
@@ -112,6 +120,7 @@ namespace HydroLib
          * R - 2 bytes
          * Temperature as measured by selected sensor
          * */
+        [ReadOnly(true)]
         TEMP_Read = 0x0E,
 
 
@@ -133,6 +142,7 @@ namespace HydroLib
          * R - 1 byte
          * Number of fans
          * */
+        [ReadOnly(true)]
         FAN_Count = 0x11,
 
 
@@ -169,6 +179,7 @@ namespace HydroLib
          * R - 2 bytes
          * Current fan RPM
          * */
+        [ReadOnly(true)]
         FAN_ReadRPM = 0x16,
 
 
@@ -176,6 +187,7 @@ namespace HydroLib
          * R - 2 bytes
          * Maximum RPM recorded since power-on
          * */
+        [ReadOnly(true)]
         FAN_MaxRecordedRPM = 0x17,
 
 

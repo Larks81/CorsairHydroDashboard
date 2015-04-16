@@ -42,14 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands.cs" />
+    <Compile Include="CommandSystem\HydroCommandBuilder.cs" />
+    <Compile Include="CommandSystem\HydroCommandResponse.cs" />
+    <Compile Include="CommandSystem\HydroCommandResponses.cs" />
+    <Compile Include="CommandSystem\HydroCommandsPayloadGenerator.cs" />
+    <Compile Include="CommandSystem\Registers.cs" />
+    <Compile Include="CommandSystem\HydroCommand.cs" />
+    <Compile Include="FanMode.cs" />
     <Compile Include="HydroDevice.cs" />
     <Compile Include="HydroDeviceEnumerator.cs" />
+    <Compile Include="HydroFanInfo.cs" />
     <Compile Include="HydroLedInfo.cs" />
     <Compile Include="HydroNullDevice.cs" />
     <Compile Include="IHydroDevice.cs" />
     <Compile Include="LedMode.cs" />
-    <Compile Include="OpCodes.cs" />
+    <Compile Include="CommandSystem\OpCodes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

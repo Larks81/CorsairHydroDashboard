@@ -7,11 +7,13 @@ namespace HydroLib
     {
         Task<HydroLedInfo> GetLedInfoAsync();
 
+        Task<HydroFanInfo> GetFanInfoAsync(byte fanNr);
+
         Task<string> GetModelNameAsync();
         
         Task<int> GetNrOfFansAsync();
         
-        Task<int> GetRpmForFanNrAsync(byte fanNr);
+        //Task<int> GetRpmForFanNrAsync(byte fanNr);
         
         Task<int> GetTemperatureAsync();
         
