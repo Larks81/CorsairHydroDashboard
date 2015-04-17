@@ -13,5 +13,7 @@ namespace HydroLib
         public int Rpm { get; set; }
 
         public FanMode Mode { get; set; }
+
+        public bool IsPump { get; set; }
     }
 }

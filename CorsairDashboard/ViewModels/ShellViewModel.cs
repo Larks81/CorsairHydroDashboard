@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using CorsairDashboard.Caliburn;
+using CorsairDashboard.HydroDataProvider;
 using CorsairDashboard.ViewModels.Controls;
 using HydroLib;
 using System;
@@ -7,9 +8,11 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Reactive.Linq;
 
 namespace CorsairDashboard.ViewModels
 {
@@ -19,7 +22,7 @@ namespace CorsairDashboard.ViewModels
         private CancellationTokenSource updateStatsCancellationToken;
         private int nrOfFans;
 
-        public IHydroDevice HydroDevice { get; private set; }
+        public HydroDeviceDataProvider HydroDeviceDataProvider { get; private set; }
 
         public String WaterTemperature { get; private set; }
 
@@ -40,18 +43,38 @@ namespace CorsairDashboard.ViewModels
             SetupDevice();
             DisplayName = "Corsair Hydro Dashboard";
             MainMenu();
-            ModelName = await HydroDevice.GetModelNameAsync();
+            ModelName = await HydroDeviceDataProvider.ModelName;
             NotifyOfPropertyChange(() => ModelName);
 
-            nrOfFans = await HydroDevice.GetNrOfFansAsync();
+            nrOfFans = await HydroDeviceDataProvider.NumberOfFans;
             FansRpm = new BindableCollection<FanRpmViewModel>();
             for (int i = 0; i < nrOfFans; i++)
             {
-                FansRpm.Add(new FanRpmViewModel() { FanNr = i, Rpm = 1000 });
+                var fanVm = new FanRpmViewModel() { FanNr = i };
+                FansRpm.Add(fanVm);
+                HydroDeviceDataProvider.Fans[i]
+                    .Where(fanInfo => fanInfo != null)
+                    .Subscribe(
+                        fanInfo =>
+                        {
+                            fanVm.Rpm = fanInfo.Rpm;
+                        });
             }
             NotifyOfPropertyChange(() => FansRpm);
 
-            BeginUpdateStats();
+            HydroDeviceDataProvider.Temperature.Subscribe(Observer.Create<int>(temp =>
+            {
+                if (temp == 0)
+                {
+                    WaterTemperature = "N/A";
+                }
+                else
+                {
+                    WaterTemperature = temp.ToString() + " °C";
+                }
+                NotifyOfPropertyChange(() => WaterTemperature);
+            }));
+
         }
 
         protected override void OnDeactivate(bool close)
@@ -82,47 +105,9 @@ namespace CorsairDashboard.ViewModels
         private void SetupDevice()
         {
             var hydroEnumerator = new HydroDeviceEnumerator(canReturnNullDevice: true);
-            HydroDevice = hydroEnumerator.First();
-        }
-
-        private void BeginUpdateStats()
-        {
-            updateStatsCancellationToken = new CancellationTokenSource();
-            var token = updateStatsCancellationToken.Token;
-            Task.Run(async () =>
-            {
-                while (true)
-                {
-                    token.ThrowIfCancellationRequested();
-                    await UpdateWaterTemperature();
-                    await UpdateFans();
-                    await Task.Delay(500);
-                }
-            }, updateStatsCancellationToken.Token);
-        }
-
-        private async Task UpdateWaterTemperature()
-        {
-            var temp = await HydroDevice.GetTemperatureAsync();
-            if (temp == 0)
-            {
-                WaterTemperature = "N/A";
-            }
-            else
-            {
-                WaterTemperature = temp.ToString() + " °C";
-            }
-            NotifyOfPropertyChange(() => WaterTemperature);
-        }
-
-        private async Task UpdateFans()
-        {
-            for (int i = 0; i < nrOfFans; i++)
-            {
-                var rpm = await HydroDevice.GetRpmForFanNrAsync((byte)i);
-                var fanViewModel = FansRpm.ElementAt(i);
-                fanViewModel.Rpm = rpm;
-            }
+            var hydroDevice = hydroEnumerator.First();
+            HydroDeviceDataProvider = new HydroDeviceDataProvider(hydroDevice);
+            HydroDeviceDataProvider.BeginUpdate();
         }
     }
 }

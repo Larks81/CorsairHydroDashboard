@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace CorsairDashboard.Extensions
+namespace CorsairDashboard.Common.Extensions
 {
     public static class ColorExtensions
     {

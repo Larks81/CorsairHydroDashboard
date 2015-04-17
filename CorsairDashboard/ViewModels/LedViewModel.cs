@@ -20,17 +20,8 @@ namespace CorsairDashboard.ViewModels
         public LedViewModel(IShell shell)
             : base(shell)
         {
-            Shell.HydroDevice.GetLedInfoAsync()
-                .ContinueWith(t =>
-                {
-                    var ledInfo = t.Result;
-                    SingleColorLed = new SingleColorLedViewModel(shell, ledInfo);
-                    NotifyOfPropertyChange(() => SingleColorLed);
-                    
-                    CyclingColorLed = new CyclingColorLedViewModel(shell, ledInfo);
-                    NotifyOfPropertyChange(() => CyclingColorLed);
-
-                }, TaskScheduler.FromCurrentSynchronizationContext());
+            SingleColorLed = new SingleColorLedViewModel(shell);
+            CyclingColorLed = new CyclingColorLedViewModel(shell);
         }
     }
 }

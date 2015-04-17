@@ -46,6 +46,18 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -68,7 +80,6 @@
     </ApplicationDefinition>
     <Compile Include="Converters\ColorConverter.cs" />
     <Compile Include="Converters\SolidColorBrushConverter.cs" />
-    <Compile Include="Extensions\ColorExtensions.cs" />
     <Compile Include="ViewModels\ChildBaseViewModel.cs" />
     <Compile Include="ViewModels\Controls\FanRpmViewModel.cs" />
     <Compile Include="ViewModels\Controls\RangeColorChooserViewModel.cs" />
@@ -181,6 +192,14 @@
     <Resource Include="Resources\Entypo-license.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CorsairDashboard.Common\CorsairDashboard.Common.csproj">
+      <Project>{4c69b905-308a-4296-b761-a13c8965b827}</Project>
+      <Name>CorsairDashboard.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CorsairDashboard.HydroDataProvider\CorsairDashboard.HydroDataProvider.csproj">
+      <Project>{5b9a650e-c036-47a7-a3fb-95d072412edf}</Project>
+      <Name>CorsairDashboard.HydroDataProvider</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CorsairDashboard.Models\CorsairDashboard.Models.csproj">
       <Project>{55fed39c-b72e-4df1-8497-ee40f79e9b50}</Project>
       <Name>CorsairDashboard.Models</Name>

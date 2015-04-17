@@ -133,12 +133,13 @@ namespace HydroLib
             if (firstColor == null || secondColor == null)
                 throw new ArgumentNullException("first and second colors cannot be null");
 
+            var ledMode = thirdColor == null ? LedMode.TwoColorsCycle : LedMode.FourColorCycle;
+
             if (thirdColor == null)
                 thirdColor = new byte[] { 0, 0, 0 };
             if (fourthColor == null)
                 fourthColor = new byte[] { 0, 0, 0 };
-
-            var ledMode = thirdColor == null ? LedMode.TwoColorsCycle : LedMode.FourColorCycle;
+            
             var ledColorArray = firstColor.Concat(secondColor).Concat(thirdColor).Concat(fourthColor).ToArray();
 
             var ledSelectCommand =

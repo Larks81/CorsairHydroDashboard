@@ -11,18 +11,20 @@
             <Rectangle.Fill>
                 <VisualBrush Stretch="Fill" Visual="{StaticResource fan_icon}"></VisualBrush>
             </Rectangle.Fill>
-            <!--<Rectangle.RenderTransform>
+            <Rectangle.RenderTransform>
                 <RotateTransform CenterX="10" CenterY="10"></RotateTransform>
             </Rectangle.RenderTransform>
             <Rectangle.Triggers>
                 <EventTrigger RoutedEvent="Loaded">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)" To="-360" Duration="{Binding RotateAnimationDuration}" SpeedRatio="0.8" RepeatBehavior="Forever"/>
+                            <DoubleAnimation Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)" 
+                                             To="-360" Duration="0:0:2"
+                                             RepeatBehavior="Forever"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
-            </Rectangle.Triggers>-->
+            </Rectangle.Triggers>
         </Rectangle>
         <TextBlock x:Name="Description" VerticalAlignment="Center" Margin="8, 0"></TextBlock>
     </StackPanel>

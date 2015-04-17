@@ -8,7 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using CorsairDashboard.Extensions;
+using CorsairDashboard.Common.Extensions;
+using System.Reactive.Linq;
 
 namespace CorsairDashboard.ViewModels
 {
@@ -88,14 +89,22 @@ namespace CorsairDashboard.ViewModels
             }
         }
 
-        public CyclingColorLedViewModel(IShell shell, HydroLedInfo ledInfo) :
+        public CyclingColorLedViewModel(IShell shell) :
             base(shell)
-        {
-            hydroLedInfo = ledInfo;
+        {            
             canUpdateDevice = false;
             ranges = new RangeColorChooserViewModel[4];
-            SelectedNumberOfColor = ledInfo.Mode == LedMode.FourColorCycle ? NrOfColors.Four : NrOfColors.Two;
-            canUpdateDevice = true;
+
+            shell.HydroDeviceDataProvider.Led
+                .Where(ledInfo => ledInfo != null)
+                .Take(1)
+                .Subscribe(ledInfo =>
+                {
+                    hydroLedInfo = ledInfo;
+                    SelectedNumberOfColor = ledInfo.Mode == LedMode.FourColorCycle ? NrOfColors.Four : NrOfColors.Two;
+                    UpdateNrOfVisibleColorChoosers();                    
+                    canUpdateDevice = true;
+                });
         }
 
         void UpdateNrOfVisibleColorChoosers()
@@ -148,10 +157,11 @@ namespace CorsairDashboard.ViewModels
             if (!canUpdateDevice)
                 return;
 
-            await Shell.HydroDevice.SetLedCycleColorsAsync(FirstColorChooser.CurrentColor.ToByteArray(),
-                SecondColorChooser.CurrentColor.ToByteArray(),
-                ThirdColorChooser != null ? ThirdColorChooser.CurrentColor.ToByteArray() : null,
-                FourthColorChooser != null ? FourthColorChooser.CurrentColor.ToByteArray() : null);
+            await Shell.HydroDeviceDataProvider.SetLedCycleColorsAsync(
+                FirstColorChooser.CurrentColor,
+                SecondColorChooser.CurrentColor,
+                ThirdColorChooser != null ? ThirdColorChooser.CurrentColor : (Color?)null,
+                FourthColorChooser != null ? FourthColorChooser.CurrentColor : (Color?)null);
         }
     }
 }

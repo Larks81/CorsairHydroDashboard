@@ -1,4 +1,5 @@
-﻿using CorsairDashboard.ViewModels;
+﻿using CorsairDashboard.HydroDataProvider;
+using CorsairDashboard.ViewModels;
 using HydroLib;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace CorsairDashboard.Caliburn
 {
     public interface IShell
     {
-        IHydroDevice HydroDevice { get; }
+        HydroDeviceDataProvider HydroDeviceDataProvider { get; }
 
         void ChangeCurrentDisplayedViewModelTo(ChildBaseViewModel newViewModel);
     }

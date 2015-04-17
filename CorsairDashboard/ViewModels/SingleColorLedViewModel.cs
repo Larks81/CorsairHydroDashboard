@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reactive.Linq;
 
 namespace CorsairDashboard.ViewModels
 {
@@ -29,18 +30,22 @@ namespace CorsairDashboard.ViewModels
             }
         }
 
-        public SingleColorLedViewModel(IShell shell, HydroLedInfo ledInfo)
+        public SingleColorLedViewModel(IShell shell)
             : base(shell)
         {
             this.RangeColorChooser = new RangeColorChooserViewModel();
-            if (ledInfo != null)
-            {
-                var ledColor = ledInfo.Color1;
-                RangeColorChooser.R = ledColor[0];
-                RangeColorChooser.G = ledColor[1];
-                RangeColorChooser.B = ledColor[2];
-                Pulse = ledInfo.IsPulsing();
-            }
+
+            shell.HydroDeviceDataProvider.Led
+                .Where(ledInfo => ledInfo != null)
+                .Take(1)
+                .Subscribe(ledInfo =>
+                {
+                    var ledColor = ledInfo.Color1;
+                    RangeColorChooser.R = ledColor[0];
+                    RangeColorChooser.G = ledColor[1];
+                    RangeColorChooser.B = ledColor[2];
+                    Pulse = ledInfo.IsPulsing();
+                });
 
             RangeColorChooser.PropertyChanged += OnPropertyChanged; //leak?
             PropertyChanged += OnPropertyChanged;
@@ -50,8 +55,10 @@ namespace CorsairDashboard.ViewModels
         {
             if (e.PropertyName == "CurrentColor" || e.PropertyName == "Pulse")
             {
-                await Shell.HydroDevice.SetLedSingleColorAsync(RangeColorChooser.R, RangeColorChooser.G, RangeColorChooser.B, Pulse);
+                await Shell.HydroDeviceDataProvider.SetLedSingleColorAsync(RangeColorChooser.CurrentColor, Pulse);
             }
         }
+
+
     }
 }

@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorsairDashboard.Models", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydroLib", "HydroLib\HydroLib.csproj", "{1648CB03-4073-44C4-9448-276891592D2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorsairDashboard.HydroDataProvider", "CorsairDashboard.HydroDataProvider\CorsairDashboard.HydroDataProvider.csproj", "{5B9A650E-C036-47A7-A3FB-95D072412EDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorsairDashboard.Common", "CorsairDashboard.Common\CorsairDashboard.Common.csproj", "{4C69B905-308A-4296-B761-A13C8965B827}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{1648CB03-4073-44C4-9448-276891592D2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1648CB03-4073-44C4-9448-276891592D2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1648CB03-4073-44C4-9448-276891592D2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B9A650E-C036-47A7-A3FB-95D072412EDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B9A650E-C036-47A7-A3FB-95D072412EDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B9A650E-C036-47A7-A3FB-95D072412EDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B9A650E-C036-47A7-A3FB-95D072412EDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C69B905-308A-4296-B761-A13C8965B827}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C69B905-308A-4296-B761-A13C8965B827}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C69B905-308A-4296-B761-A13C8965B827}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C69B905-308A-4296-B761-A13C8965B827}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
