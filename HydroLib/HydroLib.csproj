@@ -48,6 +48,7 @@
     <Compile Include="CommandSystem\HydroCommandsPayloadGenerator.cs" />
     <Compile Include="CommandSystem\Registers.cs" />
     <Compile Include="CommandSystem\HydroCommand.cs" />
+    <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="FanMode.cs" />
     <Compile Include="HydroDevice.cs" />
     <Compile Include="HydroDeviceEnumerator.cs" />

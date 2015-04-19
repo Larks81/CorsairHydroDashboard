@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="CorsairDashboard.Views.Controls.FanEditors.FixedRpmFanEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="500">
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Text="Fan fixed Rpm: " Style="{StaticResource NormalSizeTextBlock}"></TextBlock>
+        <Slider x:Name="Value" Minimum="0" Maximum="3000" Width="200" Margin="10, 0"></Slider>
+        <TextBlock Text="{Binding Value, StringFormat={}{0:N0} Rpm}"  Style="{StaticResource SmallerSizeTextBlock}"></TextBlock>
+    </StackPanel>
+</UserControl>

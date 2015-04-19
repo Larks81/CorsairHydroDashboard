@@ -8,12 +8,35 @@ namespace HydroLib
 {
     public class HydroFanInfo
     {
-        public int Number { get; set; }
+        private readonly object settingValue;
 
-        public int Rpm { get; set; }
+        public int Number { get; private set; }
 
-        public FanMode Mode { get; set; }
+        public int Rpm { get; private set; }
 
-        public bool IsPump { get; set; }
+        public FanMode Mode { get; private set; }
+
+        public byte PwmValue
+        {
+            get { return (byte)settingValue; }
+        }
+
+        public UInt16 RpmValue
+        {
+            get { return (UInt16)settingValue; }
+        }
+
+        public byte[][] RpmsAndTempsTable
+        {
+            get { return (byte[][])settingValue; }
+        }
+
+        internal HydroFanInfo(int fanNr, int rpm, FanMode mode, object settingValue)
+        {
+            Number = fanNr;
+            Rpm = rpm;
+            Mode = mode;
+            this.settingValue = settingValue;
+        }
     }
 }

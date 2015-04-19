@@ -79,11 +79,18 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\ColorConverter.cs" />
+    <Compile Include="Converters\PercentConverter.cs" />
     <Compile Include="Converters\SolidColorBrushConverter.cs" />
+    <Compile Include="Models\FanModeDescription.cs" />
     <Compile Include="ViewModels\ChildBaseViewModel.cs" />
+    <Compile Include="ViewModels\Controls\FanEditors\FanEditorViewModelBase.cs" />
+    <Compile Include="ViewModels\Controls\FanEditors\FixedPwmFanEditorViewModel.cs" />
+    <Compile Include="ViewModels\Controls\FanEditors\FixedRpmFanEditorViewModel.cs" />
     <Compile Include="ViewModels\Controls\FanRpmViewModel.cs" />
     <Compile Include="ViewModels\Controls\RangeColorChooserViewModel.cs" />
     <Compile Include="ViewModels\CyclingColorLedViewModel.cs" />
+    <Compile Include="ViewModels\FansViewModel.cs" />
+    <Compile Include="ViewModels\FanViewModel.cs" />
     <Compile Include="ViewModels\LedViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
@@ -94,6 +101,12 @@
     <Compile Include="Caliburn\AppBootstrapper.cs" />
     <Compile Include="Caliburn\IShell.cs" />
     <Compile Include="ViewModels\SingleColorLedViewModel.cs" />
+    <Compile Include="Views\Controls\FanEditors\FixedPwmFanEditorView.xaml.cs">
+      <DependentUpon>FixedPwmFanEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\FanEditors\FixedRpmFanEditorView.xaml.cs">
+      <DependentUpon>FixedRpmFanEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\FanRpmView.xaml.cs">
       <DependentUpon>FanRpmView.xaml</DependentUpon>
     </Compile>
@@ -102,6 +115,12 @@
     </Compile>
     <Compile Include="Views\CyclingColorLedView.xaml.cs">
       <DependentUpon>CyclingColorLedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FansView.xaml.cs">
+      <DependentUpon>FansView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FanView.xaml.cs">
+      <DependentUpon>FanView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LedView.xaml.cs">
       <DependentUpon>LedView.xaml</DependentUpon>
@@ -123,9 +142,21 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\AppStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\FanEditors\FixedPwmFanEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\FanEditors\FixedRpmFanEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Controls\FanRpmView.xaml">
       <SubType>Designer</SubType>
@@ -136,6 +167,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CyclingColorLedView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FansView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FanView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -200,14 +239,13 @@
       <Project>{5b9a650e-c036-47a7-a3fb-95d072412edf}</Project>
       <Name>CorsairDashboard.HydroDataProvider</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CorsairDashboard.Models\CorsairDashboard.Models.csproj">
-      <Project>{55fed39c-b72e-4df1-8497-ee40f79e9b50}</Project>
-      <Name>CorsairDashboard.Models</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HydroLib\HydroLib.csproj">
       <Project>{1648cb03-4073-44c4-9448-276891592d2f}</Project>
       <Name>HydroLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\Icons\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using HydroLib.Extensions;
 
 namespace HydroLib
 {
@@ -139,7 +140,7 @@ namespace HydroLib
                 thirdColor = new byte[] { 0, 0, 0 };
             if (fourthColor == null)
                 fourthColor = new byte[] { 0, 0, 0 };
-            
+
             var ledColorArray = firstColor.Concat(secondColor).Concat(thirdColor).Concat(fourthColor).ToArray();
 
             var ledSelectCommand =
@@ -227,20 +228,107 @@ namespace HydroLib
                     .WithRegisterInferringOpCode(Registers.FAN_ReadRPM)
                     .Build();
 
-            var responses = await QueryDeviceAsync(fanSelectCommand, fanModeCommand, fanRpmCommand);
-            HydroCommandResponse fanModeResp, fanRpmResp;
+            var fanRpmSettingCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_FixedRPM)
+                    .Build();
+
+            var fanPwmSettingCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_FixedPWM)
+                    .Build();
+
+            var fanRpmTableSettingCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_RPMTable, nrOfBytesToRead: 0x0a)
+                    .Build();
+
+            var fanTempTableSettingCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_TempTable, nrOfBytesToRead: 0x0a)
+                    .Build();
+
+            var responses = await QueryDeviceAsync(fanSelectCommand, fanModeCommand, fanRpmCommand, fanRpmSettingCommand,
+                fanPwmSettingCommand, fanRpmTableSettingCommand, fanTempTableSettingCommand);
+            HydroCommandResponse fanModeResp, fanRpmResp, fanRpmSettingResp, fanPwmSettingResp, fanRpmTableResp, fanTempTableResp;
             if (responses.AreSuccessful && responses.TryGetResponseForCommand(fanModeCommand, out fanModeResp)
-                && responses.TryGetResponseForCommand(fanRpmCommand, out fanRpmResp))
+                && responses.TryGetResponseForCommand(fanRpmCommand, out fanRpmResp)
+                && responses.TryGetResponseForCommand(fanRpmSettingCommand, out fanRpmSettingResp)
+                && responses.TryGetResponseForCommand(fanPwmSettingCommand, out fanPwmSettingResp)
+                && responses.TryGetResponseForCommand(fanRpmTableSettingCommand, out fanRpmTableResp)
+                && responses.TryGetResponseForCommand(fanTempTableSettingCommand, out fanTempTableResp))
             {
-                var fanInfo = new HydroFanInfo()
+
+                object settingValue = null;
+                var fanMode = (FanMode)(fanModeResp.ResponseData[0] & 0x0e);
+                switch (fanMode)
                 {
-                    Number = fanNr,
-                    Rpm = (fanRpmResp.ResponseData[1] << 8) + fanRpmResp.ResponseData[0],
-                    Mode = (FanMode)fanModeResp.ResponseData[0]
-                };
+                    case FanMode.FixedPWM:
+                        settingValue = fanPwmSettingResp.ResponseData[0];
+                        break;
+                    case FanMode.FixedRPM:
+                        settingValue = fanRpmSettingResp.ResponseData.ToUInt16();
+                        break;
+                    case FanMode.Custom:
+
+                        break;
+                }
+
+                var fanInfo = new HydroFanInfo(
+                    fanNr: fanNr,
+                    rpm: fanRpmResp.ResponseData.ToUInt16(),
+                    mode: fanMode,
+                    settingValue: settingValue);
                 return fanInfo;
             }
             return null;
+        }
+
+        public async Task<bool> SetFanModeAndValue(byte fanNr, FanMode mode, object value)
+        {
+            var fanSelectCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_Select)
+                    .WithData(new byte[] { fanNr })
+                    .Build();
+
+            var fanSetModeCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_Mode)
+                    .WithData(new[] { (byte)mode })
+                    .Build();
+
+            HydroCommand fanSetValueCommand = null;
+            switch (mode)
+            {
+                case FanMode.FixedPWM:
+                    if (!(value is byte))
+                        throw new ArgumentException("value must be of byte type");
+
+                    fanSetValueCommand =
+                        new HydroCommandBuilder()
+                            .WithRegisterInferringOpCode(Registers.FAN_FixedPWM)
+                            .WithData(new[] { (byte)value })
+                            .Build();
+                    break;
+
+                case FanMode.FixedRPM:
+                    if (!(value is UInt16))
+                        throw new ArgumentException("value must be of UInt16 type");
+
+                    fanSetValueCommand =
+                        new HydroCommandBuilder()
+                            .WithRegisterInferringOpCode(Registers.FAN_FixedRPM)
+                            .WithData(((UInt16)value).ToLittleEndianByteArray())
+                            .Build();
+                    break;
+
+                case FanMode.Custom:
+                    break;
+            }
+
+            var responses = await QueryDeviceAsync(fanSelectCommand, fanSetModeCommand, fanSetValueCommand);
+            return responses.AreSuccessful;
         }
 
         #endregion

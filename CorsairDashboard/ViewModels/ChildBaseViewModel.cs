@@ -19,5 +19,15 @@ namespace CorsairDashboard.ViewModels
         {
             this.Shell = shell;
         }
+
+        public void ActivateManually()
+        {
+            OnActivate();
+        }
+
+        public void DeactivateManually()
+        {
+            OnDeactivate(false);
+        }
     }
 }

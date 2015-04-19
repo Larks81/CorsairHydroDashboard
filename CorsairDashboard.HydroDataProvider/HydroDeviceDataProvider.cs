@@ -139,7 +139,7 @@ namespace CorsairDashboard.HydroDataProvider
             }, updateStatsCancellationToken.Token);
         }
 
-        public Task SetLedCycleColorsAsync(Color color1, Color color2, Color? color3, Color? color4)
+        public Task<bool> SetLedCycleColorsAsync(Color color1, Color color2, Color? color3, Color? color4)
         {
             var ledTask = hydroDevice.SetLedCycleColorsAsync(
                 color1.ToByteArray(),
@@ -150,11 +150,21 @@ namespace CorsairDashboard.HydroDataProvider
             return ledTask;
         }
 
-        public Task SetLedSingleColorAsync(Color color, bool pulse)
+        public Task<bool> SetLedSingleColorAsync(Color color, bool pulse)
         {
             var ledTask = hydroDevice.SetLedSingleColorAsync(color.R, color.G, color.B, pulse);
             ledTask.ContinueWith(ok => ledInfoSubjectStateIsInvalid = true);
             return ledTask;
+        }
+
+        public Task<bool> SetPwmFanAsync(int fanNr, byte pwmDutyCycle)
+        {
+            return hydroDevice.SetFanModeAndValue((byte)fanNr, FanMode.FixedPWM, pwmDutyCycle);
+        }
+
+        public Task<bool> SetRpmFanAsync(int fanNr, UInt16 rpm)
+        {
+            return hydroDevice.SetFanModeAndValue((byte) fanNr, FanMode.FixedRPM, rpm);
         }
 
         public void Dispose()

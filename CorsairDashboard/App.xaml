@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="/Resources/Icons.xaml" />
                 <ResourceDictionary Source="/Resources/AppColors.xaml"/>
                 <ResourceDictionary Source="/Resources/AppIcons.xaml"/>
+                <ResourceDictionary Source="/Resources/AppStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

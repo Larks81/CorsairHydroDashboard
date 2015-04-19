@@ -12,6 +12,8 @@ namespace HydroLib
         Task<string> GetModelNameAsync();
         
         Task<int> GetNrOfFansAsync();
+
+        Task<bool> SetFanModeAndValue(byte fanNr, FanMode mode, object value);
         
         //Task<int> GetRpmForFanNrAsync(byte fanNr);
         

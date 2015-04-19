@@ -23,5 +23,10 @@ namespace CorsairDashboard.ViewModels
         {
             Shell.ChangeCurrentDisplayedViewModelTo(IoC.Get<LedViewModel>());
         }
+
+        public void Fans()
+        {
+            Shell.ChangeCurrentDisplayedViewModelTo(IoC.Get<FansViewModel>());
+        }
     }
 }

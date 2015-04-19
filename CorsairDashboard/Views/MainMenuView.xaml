@@ -11,7 +11,7 @@
             <metro:Tile x:Name="Leds">
                 <TextBlock Text="Leds" FontSize="20"></TextBlock>
             </metro:Tile>
-            <metro:Tile>
+            <metro:Tile x:Name="Fans">
                 <TextBlock Text="Fans" FontSize="20"></TextBlock>
             </metro:Tile>
             <metro:Tile>
