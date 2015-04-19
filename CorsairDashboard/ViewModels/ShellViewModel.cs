@@ -17,8 +17,8 @@ using System.Reactive.Linq;
 namespace CorsairDashboard.ViewModels
 {
     [Export(typeof(IShell))]
-    class ShellViewModel : Conductor<object>, IShell
-    {
+    public class ShellViewModel : ConductorWithFlyouts<object>, IShell
+    { 
         private CancellationTokenSource updateStatsCancellationToken;
         private int nrOfFans;
 
@@ -40,6 +40,8 @@ namespace CorsairDashboard.ViewModels
 
         public async void Start()
         {
+            WindowFlyouts.Add(new HardwareMonitorViewModel());
+
             SetupDevice();
             DisplayName = "Corsair Hydro Dashboard";
             MainMenu();
@@ -95,6 +97,11 @@ namespace CorsairDashboard.ViewModels
         public void MainMenu()
         {
             ActivateItem(IoC.Get<MainMenuViewModel>());
+        }
+
+        public void OpenHardwareMonitoring()
+        {
+            OpenFlyout<HardwareMonitorViewModel>();
         }
 
         public bool CanMainMenu()

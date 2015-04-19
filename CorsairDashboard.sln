@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorsairDashboard.HydroDataP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorsairDashboard.Common", "CorsairDashboard.Common\CorsairDashboard.Common.csproj", "{4C69B905-308A-4296-B761-A13C8965B827}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenHardwareMonitor.Reactive", "OpenHardwareMonitor.Reactive\OpenHardwareMonitor.Reactive.csproj", "{147934EB-39F8-4388-802E-D77C083AA6DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorsairDashboard.HardwareMonitoring", "CorsairDashboard.HardwareMonitoring\CorsairDashboard.HardwareMonitoring.csproj", "{725EB0A0-17AB-470D-94DB-BE5C65C6F0C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{4C69B905-308A-4296-B761-A13C8965B827}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C69B905-308A-4296-B761-A13C8965B827}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C69B905-308A-4296-B761-A13C8965B827}.Release|Any CPU.Build.0 = Release|Any CPU
+		{147934EB-39F8-4388-802E-D77C083AA6DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{147934EB-39F8-4388-802E-D77C083AA6DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{147934EB-39F8-4388-802E-D77C083AA6DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{147934EB-39F8-4388-802E-D77C083AA6DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{725EB0A0-17AB-470D-94DB-BE5C65C6F0C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{725EB0A0-17AB-470D-94DB-BE5C65C6F0C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{725EB0A0-17AB-470D-94DB-BE5C65C6F0C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{725EB0A0-17AB-470D-94DB-BE5C65C6F0C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

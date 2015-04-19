@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro">
       <HintPath>..\packages\Caliburn.Micro.Core.2.0.2\lib\net45\Caliburn.Micro.dll</HintPath>
@@ -78,6 +81,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Caliburn\ConductorWithFlyouts.cs" />
+    <Compile Include="Caliburn\FlyoutScreen.cs" />
     <Compile Include="Converters\ColorConverter.cs" />
     <Compile Include="Converters\PercentConverter.cs" />
     <Compile Include="Converters\SolidColorBrushConverter.cs" />
@@ -91,6 +96,7 @@
     <Compile Include="ViewModels\CyclingColorLedViewModel.cs" />
     <Compile Include="ViewModels\FansViewModel.cs" />
     <Compile Include="ViewModels\FanViewModel.cs" />
+    <Compile Include="ViewModels\HardwareMonitorViewModel.cs" />
     <Compile Include="ViewModels\LedViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
@@ -121,6 +127,9 @@
     </Compile>
     <Compile Include="Views\FanView.xaml.cs">
       <DependentUpon>FanView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HardwareMonitorView.xaml.cs">
+      <DependentUpon>HardwareMonitorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LedView.xaml.cs">
       <DependentUpon>LedView.xaml</DependentUpon>
@@ -178,6 +187,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\HardwareMonitorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LedView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -213,6 +226,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -234,6 +248,10 @@
     <ProjectReference Include="..\CorsairDashboard.Common\CorsairDashboard.Common.csproj">
       <Project>{4c69b905-308a-4296-b761-a13c8965b827}</Project>
       <Name>CorsairDashboard.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CorsairDashboard.HardwareMonitoring\CorsairDashboard.HardwareMonitoring.csproj">
+      <Project>{725eb0a0-17ab-470d-94db-be5c65c6f0c0}</Project>
+      <Name>CorsairDashboard.HardwareMonitoring</Name>
     </ProjectReference>
     <ProjectReference Include="..\CorsairDashboard.HydroDataProvider\CorsairDashboard.HydroDataProvider.csproj">
       <Project>{5b9a650e-c036-47a7-a3fb-95d072412edf}</Project>
