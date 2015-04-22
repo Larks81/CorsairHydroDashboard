@@ -164,7 +164,32 @@ namespace CorsairDashboard.HydroDataProvider
 
         public Task<bool> SetRpmFanAsync(int fanNr, UInt16 rpm)
         {
-            return hydroDevice.SetFanModeAndValue((byte) fanNr, FanMode.FixedRPM, rpm);
+            return hydroDevice.SetFanModeAndValue((byte)fanNr, FanMode.FixedRPM, rpm);
+        }
+
+        public Task<bool> SetFanModeToDefaultProfileAsync(int fanNr)
+        {
+            return hydroDevice.SetFanModeAndValue((byte)fanNr, FanMode.Default);
+        }
+
+        public Task<bool> SetFanModeToQuietProfileAsync(int fanNr)
+        {
+            return hydroDevice.SetFanModeAndValue((byte) fanNr, FanMode.Quiet);
+        }
+
+        public Task<bool> SetFanModeToBalancedProfileAsync(int fanNr)
+        {
+            return hydroDevice.SetFanModeAndValue((byte)fanNr, FanMode.Balanced);
+        }
+
+        public Task<bool> SetFanModeToPerformanceProfileAsync(int fanNr)
+        {
+            return hydroDevice.SetFanModeAndValue((byte)fanNr, FanMode.Performance);
+        }
+
+        public Task<bool> SetTemperatureBasedRpmFanAsync(int fanNr, int[] temperatures, int[] rpms)
+        {
+            return Task.FromResult(true);
         }
 
         public void Dispose()

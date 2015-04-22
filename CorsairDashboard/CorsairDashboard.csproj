@@ -91,6 +91,7 @@
     <Compile Include="ViewModels\Controls\FanEditors\FanEditorViewModelBase.cs" />
     <Compile Include="ViewModels\Controls\FanEditors\FixedPwmFanEditorViewModel.cs" />
     <Compile Include="ViewModels\Controls\FanEditors\FixedRpmFanEditorViewModel.cs" />
+    <Compile Include="ViewModels\Controls\FanEditors\TemperatureBasedRpmFanEditorViewModel.cs" />
     <Compile Include="ViewModels\Controls\FanRpmViewModel.cs" />
     <Compile Include="ViewModels\Controls\RangeColorChooserViewModel.cs" />
     <Compile Include="ViewModels\CyclingColorLedViewModel.cs" />
@@ -112,6 +113,9 @@
     </Compile>
     <Compile Include="Views\Controls\FanEditors\FixedRpmFanEditorView.xaml.cs">
       <DependentUpon>FixedRpmFanEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\FanEditors\TemperatureBasedRpmFanEditorView.xaml.cs">
+      <DependentUpon>TemperatureBasedRpmFanEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\FanRpmView.xaml.cs">
       <DependentUpon>FanRpmView.xaml</DependentUpon>
@@ -164,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Controls\FanEditors\FixedRpmFanEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\FanEditors\TemperatureBasedRpmFanEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

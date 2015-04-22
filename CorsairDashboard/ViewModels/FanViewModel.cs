@@ -91,9 +91,8 @@ namespace CorsairDashboard.ViewModels
                             case FanMode.Custom:
                                 break;
                         }
-                        
-                        canUpdateDevice = true;
                     }
+                    canUpdateDevice = true;
                 });
 
             base.OnActivate();
@@ -121,6 +120,7 @@ namespace CorsairDashboard.ViewModels
                     Editor = new FixedRpmFanEditorViewModel();
                     break;
                 case FanMode.Custom:
+                    Editor = new TemperatureBasedRpmFanEditorViewModel();
                     break;
             }
             if (Editor != null)
@@ -133,7 +133,9 @@ namespace CorsairDashboard.ViewModels
         private async void OnEditorPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             if (propertyChangedEventArgs.PropertyName == "Value")
+            {
                 await UpdateDevice();
+            }
         }
 
         private async Task UpdateDevice()
@@ -152,18 +154,26 @@ namespace CorsairDashboard.ViewModels
                     break;
 
                 case FanMode.Default:
+                    await Shell.HydroDeviceDataProvider.SetFanModeToDefaultProfileAsync(FanNumber);
                     break;
 
                 case FanMode.Quiet:
+                    await Shell.HydroDeviceDataProvider.SetFanModeToQuietProfileAsync(FanNumber);
                     break;
 
                 case FanMode.Balanced:
+                    await Shell.HydroDeviceDataProvider.SetFanModeToBalancedProfileAsync(FanNumber);
                     break;
 
                 case FanMode.Performance:
+                    await Shell.HydroDeviceDataProvider.SetFanModeToPerformanceProfileAsync(FanNumber);
                     break;
 
                 case FanMode.Custom:
+                    var tempsAndRpms = (int[][]) Editor.ValueForParent;
+                    var temps = tempsAndRpms[0];
+                    var rpms = tempsAndRpms[1];
+                    await Shell.HydroDeviceDataProvider.SetTemperatureBasedRpmFanAsync(FanNumber, temps, rpms);
                     break;
             }
 

@@ -284,7 +284,7 @@ namespace HydroLib
             return null;
         }
 
-        public async Task<bool> SetFanModeAndValue(byte fanNr, FanMode mode, object value)
+        public async Task<bool> SetFanModeAndValue(byte fanNr, FanMode mode, object value = null)
         {
             var fanSelectCommand =
                 new HydroCommandBuilder()
@@ -324,6 +324,10 @@ namespace HydroLib
                     break;
 
                 case FanMode.Custom:
+                    if (!(value is int[][]))
+                        throw new ArgumentException("value must be of int[][] type");
+
+
                     break;
             }
 
@@ -337,9 +341,10 @@ namespace HydroLib
         {
             await deviceIOLock.WaitAsync();
             try
-            {
+            {                
                 OpenDevice();
-                var payload = payloadGenerator.PayloadForCommands(commands);
+                var validCommands = commands.Where(command => command != null);
+                var payload = payloadGenerator.PayloadForCommands(validCommands);
                 var writeOk = await device.WriteAsync(payload, WriteTimeOut);
                 if (writeOk)
                 {
