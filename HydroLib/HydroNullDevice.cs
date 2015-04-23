@@ -57,8 +57,12 @@ namespace HydroLib
 
         public void Dispose() { }
 
-
         public Task<bool> SetFanModeAndValue(byte fanNr, FanMode mode, object value = null)
+        {
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> UpdateReferenceTemperatureForFanAsync(byte fanNr, UInt16 temperature)
         {
             return Task.FromResult(true);
         }

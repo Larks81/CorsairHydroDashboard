@@ -22,5 +22,7 @@ namespace HydroLib
         Task<bool> SetLedCycleColorsAsync(byte[] firstColor, byte[] secondColor, byte[] thirdColor, byte[] fourthColor);
         
         Task<bool> SetLedSingleColorAsync(byte red, byte green, byte blue, bool pulse);
+
+        Task<bool> UpdateReferenceTemperatureForFanAsync(byte fanNr, UInt16 temperature);
     }
 }

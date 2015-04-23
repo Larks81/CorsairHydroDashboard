@@ -335,6 +335,24 @@ namespace HydroLib
             return responses.AreSuccessful;
         }
 
+        public async Task<bool> UpdateReferenceTemperatureForFanAsync(byte fanNr, UInt16 temperature)
+        {
+            var fanSelectCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_Select)
+                    .WithData(new byte[] { fanNr })
+                    .Build();
+
+            var reportTemperatureCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_ReportExtTemp)
+                    .WithData(temperature.ToLittleEndianByteArray())
+                    .Build();
+
+            var responses = await QueryDeviceAsync(fanSelectCommand, reportTemperatureCommand);
+            return responses.AreSuccessful;
+        }
+
         #endregion
 
         private async Task<HydroCommandResponses> QueryDeviceAsync(params HydroCommand[] commands)
