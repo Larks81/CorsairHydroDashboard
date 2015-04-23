@@ -23,7 +23,7 @@ namespace HydroLib
 
         public UInt16 RpmValue
         {
-            get { return (UInt16)settingValue; }
+            get { return Convert.ToUInt16(settingValue); }
         }
 
         public byte[][] RpmsAndTempsTable

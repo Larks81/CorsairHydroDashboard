@@ -27,7 +27,7 @@ namespace HydroLib
 
         public Task<int> GetNrOfFansAsync()
         {
-            return Task.FromResult(1);
+            return Task.FromResult(2);
         }
 
         public Task<int> GetRpmForFanNrAsync(byte fanNr)
