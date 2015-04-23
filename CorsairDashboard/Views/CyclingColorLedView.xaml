@@ -9,6 +9,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         
         <StackPanel Orientation="Horizontal">
@@ -21,6 +22,12 @@
             <ContentControl x:Name="SecondColorChooser"></ContentControl>
             <ContentControl x:Name="ThirdColorChooser"></ContentControl>
             <ContentControl x:Name="FourthColorChooser"></ContentControl>
-        </StackPanel>               
+        </StackPanel>            
+        
+        <Rectangle Margin="10" Grid.Row="2" Height="60">
+            <Rectangle.Fill>
+                <LinearGradientBrush GradientStops="{Binding GradientStops}"></LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
     </Grid>
 </UserControl>

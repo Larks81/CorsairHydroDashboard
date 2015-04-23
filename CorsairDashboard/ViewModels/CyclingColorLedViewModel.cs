@@ -74,6 +74,25 @@ namespace CorsairDashboard.ViewModels
             }
         }
 
+        public GradientStopCollection GradientStops
+        {
+            get
+            {
+                var gradientStops = new List<GradientStop>();
+                gradientStops.Add(new GradientStop(FirstColorChooser.CurrentColor, 0));
+                if (selectedNrOfColor == NrOfColors.Two)
+                {
+                    gradientStops.Add(new GradientStop(SecondColorChooser.CurrentColor, 1));
+                } else
+                {
+                    gradientStops.Add(new GradientStop(SecondColorChooser.CurrentColor, 1.0/3.0));
+                    gradientStops.Add(new GradientStop(ThirdColorChooser.CurrentColor, 2.0/3.0));
+                    gradientStops.Add(new GradientStop(FourthColorChooser.CurrentColor, 1));
+                }
+                return new GradientStopCollection(gradientStops);
+            }
+        }
+
         public NrOfColors SelectedNumberOfColor
         {
             get { return selectedNrOfColor; }
@@ -84,6 +103,7 @@ namespace CorsairDashboard.ViewModels
                     selectedNrOfColor = value;
                     UpdateNrOfVisibleColorChoosers();
                     NotifyOfPropertyChange(() => SelectedNumberOfColor);
+                    NotifyOfPropertyChange(() => GradientStops);
                     UpdateDevice();
                 }
             }
@@ -148,6 +168,7 @@ namespace CorsairDashboard.ViewModels
         {
             if (e.PropertyName == "CurrentColor" || e.PropertyName == "SelectedNumberOfColor")
             {
+                NotifyOfPropertyChange(() => GradientStops);
                 await UpdateDevice();
             }
         }
