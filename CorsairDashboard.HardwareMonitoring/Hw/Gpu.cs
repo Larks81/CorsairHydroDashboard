@@ -2,41 +2,33 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CorsairDashboard.HardwareMonitoring.Hw
 {
-    public class Gpu : IHardware
+    [DataContract]
+    public class Gpu : Hardware
     {
-        private TemperatureSensor temperatureSensor;
-
-        public string Id { get; internal set; }
-
-        public string Name { get; internal set; }
-
-        public HardwareKind Kind { get; private set; }
-
-        public IEnumerable<IHardwareSensor> Sensors
+        [DataMember]
+        public override HardwareKind Kind
         {
             get
             {
-                yield return temperatureSensor;
+                return HardwareKind.GraphicCard;
             }
         }
 
-        public Gpu()
+        public Gpu(string id, string name)
         {
-            Kind = HardwareKind.GraphicCard;
+            Id = id;
+            Name = name;
         }
 
         public void SetTemperature(String sensorId, float temp)
         {
-            temperatureSensor = new TemperatureSensor()
-            {
-                Id = sensorId,
-                Value = temp
-            };
+            AddSensor(new TemperatureSensor(sensorId, temp));
         }
     }
 }

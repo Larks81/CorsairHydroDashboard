@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/CorsairDashboard.HardwareMonitoring.Hw" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/CorsairDashboard.HardwareMonitoring.Hw" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/CorsairDashboard.HardwareMonitoring" />
+  <xs:complexType name="Hdd">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/CorsairDashboard.HardwareMonitoring" base="q1:Hardware">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Hdd" nillable="true" type="tns:Hdd" />
+  <xs:complexType name="Cpu">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q2="http://schemas.datacontract.org/2004/07/CorsairDashboard.HardwareMonitoring" base="q2:Hardware">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Cpu" nillable="true" type="tns:Cpu" />
+  <xs:complexType name="Gpu">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q3="http://schemas.datacontract.org/2004/07/CorsairDashboard.HardwareMonitoring" base="q3:Hardware">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Gpu" nillable="true" type="tns:Gpu" />
+</xs:schema>

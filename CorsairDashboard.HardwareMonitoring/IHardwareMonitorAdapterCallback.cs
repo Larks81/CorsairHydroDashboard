@@ -2,6 +2,6 @@
 {
     public interface IHardwareMonitorAdapterCallback
     {
-        void UpdateHardware(IHardware newHardware);
+        void UpdateHardware(Hardware newHardware);
     }
 }

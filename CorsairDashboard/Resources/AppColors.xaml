@@ -2,10 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Color x:Key="MetroRedColor">#CCE51400</Color>
+    <Color x:Key="MetroRedSolidColor">#E51400</Color>
     <Color x:Key="MetroGreenColor">#CC60A917</Color>
     <Color x:Key="MetroBlueColor">#CC119EDA</Color>
     
     <SolidColorBrush x:Key="MetroRedColorBrush" Color="{StaticResource MetroRedColor}"></SolidColorBrush>
+    <SolidColorBrush x:Key="MetroRedSolidColorBrush" Color="{StaticResource MetroRedSolidColor}"></SolidColorBrush>
     <SolidColorBrush x:Key="MetroGreenColorBrush" Color="{StaticResource MetroGreenColor}"></SolidColorBrush>
     <SolidColorBrush x:Key="MetroBlueColorBrush" Color="{StaticResource MetroBlueColor}"></SolidColorBrush>
     

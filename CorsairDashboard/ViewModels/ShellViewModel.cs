@@ -1,28 +1,33 @@
-﻿using Caliburn.Micro;
-using CorsairDashboard.Caliburn;
-using CorsairDashboard.HydroDataProvider;
-using CorsairDashboard.ViewModels.Controls;
-using HydroLib;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Reactive.Linq;
+using System.ServiceModel;
+using System.Threading;
+using Caliburn.Micro;
+using CorsairDashboard.Caliburn;
+using CorsairDashboard.Common.Service;
+using CorsairDashboard.HydroService;
+using CorsairDashboard.ViewModels.Controls;
+using CorsairDashboard.ServiceWrapper;
+using CorsairDashboard.HardwareMonitorService;
 
 namespace CorsairDashboard.ViewModels
 {
     [Export(typeof(IShell))]
     public class ShellViewModel : ConductorWithFlyouts<object>, IShell
-    { 
-        private CancellationTokenSource updateStatsCancellationToken;
+    {
         private int nrOfFans;
+        private CorsairHydroServiceState serviceState;
+        private bool serviceFaulted;
+        private CorsairDashboard.HydroService.ICorsairHydroService hydroService;
+        private IHardwareMonitorService hwMonitorService;
 
         public HydroDeviceDataProvider HydroDeviceDataProvider { get; private set; }
+
+        public ReactiveHardwareMonitoring HardwareMonitoringProvider { get; private set; }
 
         public String WaterTemperature { get; private set; }
 
@@ -38,60 +43,118 @@ namespace CorsairDashboard.ViewModels
             }
         }
 
+        public CorsairHydroServiceState ServiceState
+        {
+            get { return serviceState; }
+            set
+            {
+                if (serviceState != value)
+                {
+                    serviceState = value;
+                    NotifyOfPropertyChange(() => ServiceState);
+                }
+            }
+        }
+
+        public bool ServiceFaulted
+        {
+            get { return serviceFaulted; }
+            set
+            {
+                if (serviceFaulted != value)
+                {
+                    serviceFaulted = value;
+                    NotifyOfPropertyChange(() => ServiceFaulted);
+                }
+            }
+        }
+
+        public bool ServiceBootedOk
+        {
+            get { return ServiceState == CorsairHydroServiceState.Ready; }
+        }
+
+        public ShellViewModel()
+        {
+            if (Execute.InDesignMode)
+                LoadDesignTimeData();
+        }
+
         public async void Start()
         {
-            WindowFlyouts.Add(new HardwareMonitorViewModel());
-
-            SetupDevice();
+            ServiceState = CorsairHydroServiceState.Bootstrapping;
             DisplayName = "Corsair Hydro Dashboard";
-            MainMenu();
-            ModelName = await HydroDeviceDataProvider.ModelName;
-            NotifyOfPropertyChange(() => ModelName);
 
-            nrOfFans = await HydroDeviceDataProvider.NumberOfFans;
-            FansRpm = new BindableCollection<FanRpmViewModel>();
-            for (int i = 0; i < nrOfFans; i++)
+            try
             {
-                var fanVm = new FanRpmViewModel() { FanNr = i };
-                FansRpm.Add(fanVm);
-                HydroDeviceDataProvider.Fans[i]
-                    .Where(fanInfo => fanInfo != null)
-                    .Subscribe(
-                        fanInfo =>
+                HardwareMonitoringProvider = new ReactiveHardwareMonitoring();
+                hwMonitorService = new HardwareMonitorServiceClient(new InstanceContext(HardwareMonitoringProvider));
+                await hwMonitorService.SubscribeAsync();
+
+                HydroDeviceDataProvider = new HydroDeviceDataProvider();
+                hydroService = new CorsairHydroServiceClient(new InstanceContext(HydroDeviceDataProvider));
+                await HydroDeviceDataProvider.Initialize(hydroService);
+
+                ServiceState = await hydroService.GetServiceStateAsync();
+                NotifyOfPropertyChange(() => ServiceBootedOk);
+
+                switch (ServiceState)
+                {
+                    case CorsairHydroServiceState.Ready:
+                        WindowFlyouts.Add(new HardwareMonitorViewModel(HardwareMonitoringProvider));
+                        MainMenu();
+                        ModelName = HydroDeviceDataProvider.ModelName;
+                        NotifyOfPropertyChange(() => ModelName);
+
+                        nrOfFans = await HydroDeviceDataProvider.NumberOfFans;
+                        FansRpm = new BindableCollection<FanRpmViewModel>();
+                        for (int i = 0; i < nrOfFans; i++)
                         {
-                            fanVm.Rpm = fanInfo.Rpm;
-                        });
-            }
-            NotifyOfPropertyChange(() => FansRpm);
+                            var fanVm = new FanRpmViewModel() { FanNr = i };
+                            FansRpm.Add(fanVm);
+                            HydroDeviceDataProvider.Fans.ElementAt(i)
+                                .Where(fanInfo => fanInfo != null)
+                                .Subscribe(
+                                    fanInfo =>
+                                    {
+                                        fanVm.Rpm = fanInfo.Rpm;
+                                    });
+                        }
+                        NotifyOfPropertyChange(() => FansRpm);
 
-            HydroDeviceDataProvider.Temperature.Subscribe(Observer.Create<int>(temp =>
+                        HydroDeviceDataProvider.Temperature.Subscribe(Observer.Create<int>(temp =>
+                        {
+                            if (temp == 0)
+                            {
+                                WaterTemperature = "N/A";
+                            }
+                            else
+                            {
+                                WaterTemperature = temp.ToString() + " °C";
+                            }
+                            NotifyOfPropertyChange(() => WaterTemperature);
+                        }));
+                        break;
+
+                }
+            }
+            catch (EndpointNotFoundException e)
             {
-                if (temp == 0)
-                {
-                    WaterTemperature = "N/A";
-                }
-                else
-                {
-                    WaterTemperature = temp.ToString() + " °C";
-                }
-                NotifyOfPropertyChange(() => WaterTemperature);
-            }));
+                ServiceFaulted = true;
+            }
 
         }
 
         protected override void OnDeactivate(bool close)
         {
-            if (updateStatsCancellationToken != null)
-            {
-                updateStatsCancellationToken.Cancel();
-            }
+            HydroDeviceDataProvider.Dispose();
+            hwMonitorService.Unsubscribe();            
             base.OnDeactivate(close);
         }
 
         public void ChangeCurrentDisplayedViewModelTo(ChildBaseViewModel newViewModel)
         {
             ActivateItem(newViewModel);
-            NotifyOfPropertyChange("MainMenu");
         }
 
         public void MainMenu()
@@ -109,12 +172,10 @@ namespace CorsairDashboard.ViewModels
             return true;
         }
 
-        private void SetupDevice()
+        private void LoadDesignTimeData()
         {
-            var hydroEnumerator = new HydroDeviceEnumerator(canReturnNullDevice: true);
-            var hydroDevice = hydroEnumerator.First();
-            HydroDeviceDataProvider = new HydroDeviceDataProvider(hydroDevice);
-            HydroDeviceDataProvider.BeginUpdate();
+            ServiceFaulted = false;
+            //ServiceState = CorsairHydroServiceState.SearchingDevice;
         }
     }
 }

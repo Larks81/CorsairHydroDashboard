@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HydroLib
 {
+    
     public enum FanMode : byte
     {
         FixedPWM = 0x02,

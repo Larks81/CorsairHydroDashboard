@@ -1,8 +1,7 @@
 ﻿using Caliburn.Micro;
 using CorsairDashboard.Caliburn;
-using CorsairDashboard.HardwareMonitoring;
-using CorsairDashboard.HardwareMonitoring.Adapters;
-using CorsairDashboard.HardwareMonitoring.Hw.Sensors;
+using CorsairDashboard.HardwareMonitorService;
+using CorsairDashboard.ServiceWrapper;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
@@ -16,27 +15,24 @@ namespace CorsairDashboard.ViewModels
 {
     public class HardwareMonitorViewModel : FlyoutScreen
     {
-        private HardwareList hardwareList;
-
         public BindableCollection<HardwareViewModel> Hardware { get; set; }
 
-        public HardwareMonitorViewModel()
+        public HardwareMonitorViewModel(ReactiveHardwareMonitoring hwMonitor)
             : base("Hardware Monitoring", Position.Right)
         {
             Hardware = new BindableCollection<HardwareViewModel>();
-            hardwareList = new HardwareList(new OpenHardwareMonitorAdapter());
 
-            hardwareList.GetSignalForHardwareOfKind(HardwareKind.Cpu)
+            hwMonitor.GetSignalForHardwareOfKind(HardwareKind.Cpu)
                 .Subscribe(AddHardwareSensorsData);
 
-            hardwareList.GetSignalForHardwareOfKind(HardwareKind.GraphicCard)
+            hwMonitor.GetSignalForHardwareOfKind(HardwareKind.GraphicCard)
                 .Subscribe(AddHardwareSensorsData);
 
-            hardwareList.GetSignalForHardwareOfKind(HardwareKind.HardDisk)
+            hwMonitor.GetSignalForHardwareOfKind(HardwareKind.HardDisk)
                 .Subscribe(AddHardwareSensorsData);
         }
 
-        private void AddHardwareSensorsData(IEnumerable<IHardware> hardwareList)
+        private void AddHardwareSensorsData(IEnumerable<Hardware> hardwareList)
         {
             foreach (var hardware in hardwareList)
             {
@@ -61,8 +57,7 @@ namespace CorsairDashboard.ViewModels
         }
 
         protected override void OnDeactivate(bool close)
-        {
-            hardwareList.Dispose();
+        {            
             base.OnDeactivate(close);
         }
     }

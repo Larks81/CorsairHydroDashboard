@@ -48,6 +48,7 @@
     <Reference Include="System.Reactive.PlatformServices">
       <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,25 +56,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HardwareList.cs" />
     <Compile Include="Hw\Gpu.cs" />
     <Compile Include="Hw\Hdd.cs" />
     <Compile Include="Hw\Sensors\TemperatureSensor.cs" />
     <Compile Include="Hw\Sensors\UsageSensor.cs" />
-    <Compile Include="IHardware.cs" />
+    <Compile Include="Hardware.cs" />
     <Compile Include="HardwareKind.cs" />
     <Compile Include="Hw\Cpu.cs" />
-    <Compile Include="Adapters\HardwareMonitoringAdapterBase.cs" />
     <Compile Include="IHardwareMonitorAdapterCallback.cs" />
-    <Compile Include="IHardwareSensor.cs" />
-    <Compile Include="Adapters\OpenHardwareMonitorAdapter.cs" />
+    <Compile Include="HardwareSensor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OpenHardwareMonitor.Reactive\OpenHardwareMonitor.Reactive.csproj">
-      <Project>{147934eb-39f8-4388-802e-d77c083aa6df}</Project>
-      <Name>OpenHardwareMonitor.Reactive</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

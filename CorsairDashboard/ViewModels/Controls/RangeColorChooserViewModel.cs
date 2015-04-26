@@ -75,6 +75,7 @@ namespace CorsairDashboard.ViewModels.Controls
                     NotifyOfPropertyChange(() => R);
                     NotifyOfPropertyChange(() => G);
                     NotifyOfPropertyChange(() => B);
+                    NotifyOfPropertyChange(() => CurrentColor);
                 }
             }
         }

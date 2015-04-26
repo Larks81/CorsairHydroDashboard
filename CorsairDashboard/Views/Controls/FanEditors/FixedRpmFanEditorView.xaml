@@ -7,7 +7,7 @@
              d:DesignHeight="300" d:DesignWidth="500">
     <StackPanel Orientation="Horizontal">
         <TextBlock Text="Fan fixed Rpm: " Style="{StaticResource NormalSizeTextBlock}"></TextBlock>
-        <Slider x:Name="Value" Minimum="0" Maximum="3000" Width="200" Margin="10, 0"></Slider>
+        <Slider x:Name="Value" Minimum="0" Maximum="{Binding MaxRpm}" Width="200" Margin="10, 0"></Slider>
         <TextBlock Text="{Binding Value, StringFormat={}{0:N0} Rpm}"  Style="{StaticResource SmallerSizeTextBlock}"></TextBlock>
     </StackPanel>
 </UserControl>

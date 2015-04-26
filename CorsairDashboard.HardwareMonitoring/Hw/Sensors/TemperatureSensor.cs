@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CorsairDashboard.HardwareMonitoring.Hw.Sensors
 {
-    public class TemperatureSensor : IHardwareSensor
+    [DataContract]
+    public class TemperatureSensor : HardwareSensor
     {
-        public string Id { get; internal set; }
-
-        public string Name
+        public TemperatureSensor(String sensorId, float value)
         {
-            get
-            {
-                return "Temperature";
-            }
+            Id = sensorId;
+            Name = "Temperature";
+            Value = value;
         }
-
-        public object Value { get; internal set; }
     }
 }

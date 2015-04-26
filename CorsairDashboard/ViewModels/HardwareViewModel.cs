@@ -1,6 +1,5 @@
 ﻿using Caliburn.Micro;
-using CorsairDashboard.HardwareMonitoring;
-using CorsairDashboard.HardwareMonitoring.Hw.Sensors;
+using CorsairDashboard.HardwareMonitorService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace CorsairDashboard.ViewModels
 
         public BindableCollection<SensorViewModel> Sensors { get; private set; }
 
-        public HardwareViewModel(IHardware hw)
+        public HardwareViewModel(Hardware hw)
         {
             Name = hw.Name;
             Sensors = new BindableCollection<SensorViewModel>();
@@ -44,14 +43,14 @@ namespace CorsairDashboard.ViewModels
             }
         }
 
-        public SensorViewModel(IHardwareSensor sensor)
+        public SensorViewModel(HardwareSensor sensor)
         {
             SensorId = sensor.Id;
             SensorName = sensor.Name;
             sensorType = sensor.GetType();
         }
 
-        public void Update(IHardwareSensor sensor)
+        public void Update(HardwareSensor sensor)
         {
             if (sensorType == typeof(TemperatureSensor))
             {
@@ -72,7 +71,7 @@ namespace CorsairDashboard.ViewModels
     {
         public String HardwareName { get; set; }
 
-        public SensorWithHardwareNameViewModel(IHardware hw, IHardwareSensor sensor)
+        public SensorWithHardwareNameViewModel(Hardware hw, HardwareSensor sensor)
             : base(sensor)
         {
             HardwareName = hw.Name;

@@ -2,41 +2,33 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CorsairDashboard.HardwareMonitoring.Hw
 {
-    public class Hdd : IHardware
+    [DataContract]
+    public class Hdd : Hardware
     {
-        private TemperatureSensor temperatureSensor;
-
-        public string Id { get; internal set; }
-
-        public string Name { get; internal set; }
-
-        public HardwareKind Kind { get; private set; }
-
-        public IEnumerable<IHardwareSensor> Sensors
+        public override HardwareKind Kind
         {
             get
             {
-                yield return temperatureSensor;
+                return HardwareKind.HardDisk;
             }
         }
 
-        public Hdd()
+        public Hdd(string id, string name)
         {
-            Kind = HardwareKind.HardDisk;
+            Id = id;
+            Name = name;
         }
 
         public void SetTemperature(String sensorId, float temp)
         {
-            temperatureSensor = new TemperatureSensor()
-            {
-                Id = sensorId,
-                Value = temp
-            };
+            AddSensor(new TemperatureSensor(sensorId, temp));
         }
     }
 }

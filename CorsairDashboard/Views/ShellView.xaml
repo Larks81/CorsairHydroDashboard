@@ -3,7 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:cal="http://www.caliburnproject.org"
-        Title="Corsair Hydro Dashboard" Height="609" Width="1027" ResizeMode="NoResize" Loaded="MetroWindow_Loaded">
+        xmlns:converters="clr-namespace:CorsairDashboard.Converters"
+        xmlns:common="clr-namespace:CorsairDashboard.Common.Service;assembly=CorsairDashboard.Common"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel="clr-namespace:CorsairDashboard.ViewModels"
+        mc:Ignorable="d"    
+        cal:Bind.AtDesignTime="True"
+        Title="Corsair Hydro Dashboard" Height="609" Width="1027" ResizeMode="NoResize" Loaded="MetroWindow_Loaded"        
+        d:DataContext="{d:DesignInstance viewModel:ShellViewModel, IsDesignTimeCreatable=True}">
     <metro:MetroWindow.RightWindowCommands>
         <metro:WindowCommands>
             <Button cal:Message.Attach="MainMenu">
@@ -57,37 +65,61 @@
     </metro:MetroWindow.Flyouts>
 
     <metro:MetroWindow.Resources>
+        <converters:ServiceStateToVisibilityConverter x:Key="ServiceStateConverter"></converters:ServiceStateToVisibilityConverter>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></converters:BooleanToVisibilityConverter>
         <Style x:Key="DevStatusTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"></Setter>
         </Style>
     </metro:MetroWindow.Resources>
 
-    <StackPanel>
-        <Border BorderBrush="{DynamicResource GrayBrush8}" BorderThickness="0, 0, 0, 1">
-            <Grid Margin="10">
-                <StackPanel>
-                    <TextBlock Text="Corsair Hydro Dashboard" HorizontalAlignment="Center" FontSize="50" />
-                    <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
-                        <TextBlock x:Name="ModelName" Text="H100i" Style="{StaticResource DevStatusTextStyle}"></TextBlock>
-                        <TextBlock Text="  |  " Style="{StaticResource DevStatusTextStyle}"></TextBlock>
-                        <TextBlock Text="Water temp: " Style="{StaticResource DevStatusTextStyle}"></TextBlock>
-                        <TextBlock x:Name="WaterTemperature" Text="N/A" Style="{StaticResource DevStatusTextStyle}"></TextBlock>
-                        <TextBlock Text="  |  " Style="{StaticResource DevStatusTextStyle}"></TextBlock>
-                        <ItemsControl x:Name="FansRpm" Width="1000" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"></StackPanel>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </StackPanel>
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <Grid Margin="10, 50">
-            <ContentControl x:Name="ActiveItem" />
+    <Grid>
+        <Grid Visibility="{Binding ServiceBootedOk, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=false}">
+            <StackPanel VerticalAlignment="Center">
+                <metro:ProgressRing IsActive="True" IsLarge="True"></metro:ProgressRing>
+                <!--<TextBlock Text="Looking for a Hydro device..." Style="{StaticResource BigSizeTextBlock}"
+                           HorizontalAlignment="Center" Margin="0,20,0,0"
+                           Visibility="{Binding ServiceState, Converter={StaticResource ServiceStateConverter}, ConverterParameter={x:Static common:CorsairHydroServiceState.SearchingDevice}}"/>-->
+                <TextBlock Text="Connection to the service in progress..." Style="{StaticResource BigSizeTextBlock}"
+                           HorizontalAlignment="Center" Margin="0,20,0,0"
+                           Visibility="{Binding ServiceState, Converter={StaticResource ServiceStateConverter}, ConverterParameter={x:Static common:CorsairHydroServiceState.Bootstrapping}}"/>
+            </StackPanel>
         </Grid>
 
-    </StackPanel>
+        <Grid x:Name="ServiceFaulted" Background="{StaticResource MetroRedSolidColorBrush}" >
+            <StackPanel Margin="0, 50">
+                <TextBlock Text=":(" HorizontalAlignment="Center" FontSize="160"></TextBlock>
+                <TextBlock Text="The CorsairHydro Service is unreachable." HorizontalAlignment="Center" Style="{StaticResource BigSizeTextBlock}" Margin="0,20,0,5"></TextBlock>
+                <TextBlock Text="Please be sure the service is up and running!" HorizontalAlignment="Center" Style="{StaticResource BigSizeTextBlock}"></TextBlock>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Visibility="{Binding ServiceState, Converter={StaticResource ServiceStateConverter}, ConverterParameter={x:Static common:CorsairHydroServiceState.Ready}}">
+            <Border BorderBrush="{DynamicResource GrayBrush8}" BorderThickness="0, 0, 0, 1">
+                <Grid Margin="10">
+                    <StackPanel>
+                        <TextBlock Text="Corsair Hydro Dashboard" HorizontalAlignment="Center" FontSize="50" />
+                        <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                            <TextBlock x:Name="ModelName" Text="H100i" Style="{StaticResource DevStatusTextStyle}"></TextBlock>
+                            <TextBlock Text="  |  " Style="{StaticResource DevStatusTextStyle}"></TextBlock>
+                            <TextBlock Text="Water temp: " Style="{StaticResource DevStatusTextStyle}"></TextBlock>
+                            <TextBlock x:Name="WaterTemperature" Text="N/A" Style="{StaticResource DevStatusTextStyle}"></TextBlock>
+                            <TextBlock Text="  |  " Style="{StaticResource DevStatusTextStyle}"></TextBlock>
+                            <ItemsControl x:Name="FansRpm" Width="1000" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"></StackPanel>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Margin="10, 50">
+                <ContentControl x:Name="ActiveItem" />
+            </Grid>
+
+        </StackPanel>
+    </Grid>
 </metro:MetroWindow>

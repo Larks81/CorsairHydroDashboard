@@ -1,13 +1,13 @@
 ﻿using Caliburn.Micro;
 using CorsairDashboard.Caliburn;
 using CorsairDashboard.ViewModels.Controls;
-using HydroLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 
 namespace CorsairDashboard.ViewModels
 {
@@ -36,10 +36,9 @@ namespace CorsairDashboard.ViewModels
             this.RangeColorChooser = new RangeColorChooserViewModel();
 
             shell.HydroDeviceDataProvider.Led
-                .Where(ledInfo => ledInfo != null)
-                .Take(1)
-                .Subscribe(ledInfo =>
+                .ContinueWith(task =>
                 {
+                    var ledInfo = task.Result;
                     var ledColor = ledInfo.Color1;
                     RangeColorChooser.R = ledColor[0];
                     RangeColorChooser.G = ledColor[1];

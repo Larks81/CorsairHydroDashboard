@@ -8,8 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reactive.Linq;
+using CorsairDashboard.HydroService;
 using CorsairDashboard.ViewModels.Controls.FanEditors;
-using HydroLib;
 
 namespace CorsairDashboard.ViewModels
 {
@@ -66,7 +66,7 @@ namespace CorsairDashboard.ViewModels
 
         protected override void OnActivate()
         {
-            Shell.HydroDeviceDataProvider.Fans[FanNumber]
+            Shell.HydroDeviceDataProvider.Fans.ElementAt(FanNumber)
                 .Where(fanInfo => fanInfo != null)
                 .Subscribe(fanInfo =>
                 {
@@ -87,8 +87,10 @@ namespace CorsairDashboard.ViewModels
                                 break;
                             case FanMode.FixedRPM:
                                 Editor.SetInitialValue(fanInfo.RpmValue);
+                                ((FixedRpmFanEditorViewModel) Editor).MaxRpm = (UInt16)(fanInfo.MaxRpm + 150);
                                 break;
                             case FanMode.Custom:
+                                Editor.SetInitialValue(fanInfo.RpmsAndTempsTable);
                                 break;
                         }
                     }
@@ -120,7 +122,7 @@ namespace CorsairDashboard.ViewModels
                     Editor = new FixedRpmFanEditorViewModel();
                     break;
                 case FanMode.Custom:
-                    Editor = new TemperatureBasedRpmFanEditorViewModel();
+                    Editor = new TemperatureBasedRpmFanEditorViewModel(Shell.HardwareMonitoringProvider);
                     break;
             }
             if (Editor != null)
@@ -132,7 +134,7 @@ namespace CorsairDashboard.ViewModels
 
         private async void OnEditorPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (propertyChangedEventArgs.PropertyName == "Value")
+            if (propertyChangedEventArgs.PropertyName == "Value" || propertyChangedEventArgs.PropertyName == "ValueForParent")
             {
                 await UpdateDevice();
             }
@@ -170,10 +172,11 @@ namespace CorsairDashboard.ViewModels
                     break;
 
                 case FanMode.Custom:
-                    var tempsAndRpms = (int[][]) Editor.ValueForParent;
-                    var temps = tempsAndRpms[0];
-                    var rpms = tempsAndRpms[1];
-                    await Shell.HydroDeviceDataProvider.SetTemperatureBasedRpmFanAsync(FanNumber, temps, rpms);
+                    var tempsRpmsSensorId = (Tuple<UInt16[], UInt16[], String>) Editor.ValueForParent;
+                    if (tempsRpmsSensorId != null)
+                    {
+                        await Shell.HydroDeviceDataProvider.SetTemperatureBasedRpmFanAsync(FanNumber, tempsRpmsSensorId.Item1, tempsRpmsSensorId.Item2, tempsRpmsSensorId.Item3);                       
+                    }
                     break;
             }
 

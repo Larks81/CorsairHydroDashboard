@@ -15,8 +15,6 @@ namespace HydroLib
 
         Task<bool> SetFanModeAndValue(byte fanNr, FanMode mode, object value = null);
         
-        //Task<int> GetRpmForFanNrAsync(byte fanNr);
-        
         Task<int> GetTemperatureAsync();
         
         Task<bool> SetLedCycleColorsAsync(byte[] firstColor, byte[] secondColor, byte[] thirdColor, byte[] fourthColor);

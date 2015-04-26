@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CorsairDashboard.HydroDataProvider
+namespace CorsairDashboard.ServiceWrapper
 {
     internal class TaskCachedResult<T>
     {
@@ -23,6 +24,11 @@ namespace CorsairDashboard.HydroDataProvider
                     return Task.FromResult(value);
                 }
             }
+        }
+
+        public void Invalidate()
+        {
+            value = nullValue;
         }
 
         public TaskCachedResult(Task<T> task, T nullValue = default(T))

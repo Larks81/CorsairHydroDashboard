@@ -52,7 +52,7 @@ namespace HydroLib
 
         public Task<HydroFanInfo> GetFanInfoAsync(byte fanNr)
         {
-            return Task.FromResult(new HydroFanInfo(fanNr, 2000, FanMode.FixedRPM, (byte) 230));
+            return Task.FromResult(new HydroFanInfo(fanNr, 2000, 2500, FanMode.FixedRPM, (byte) 230));
         }
 
         public void Dispose() { }

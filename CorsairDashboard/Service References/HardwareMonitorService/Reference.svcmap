@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="00b27758-0857-48e1-bdf7-f55011aba231" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="net.pipe://localhost/CorsairHydroHardwareMonitorService/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="7b349151-edb2-49a2-92e0-dd90fcf088df" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroHardwareMonitorService/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="790d6a71-d16c-4e5c-b1ca-4dea6d7c86e0" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroHardwareMonitorService/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="6bf76f15-fcfa-4a1b-ad50-0f4b9bb3cc92" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroHardwareMonitorService/mex" />
+    <MetadataFile FileName="CorsairDashboard.HardwareMonitoring.Hw.xsd" MetadataType="Schema" ID="3fa28375-d60d-4756-91ac-13a904663b26" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroHardwareMonitorService/mex" />
+    <MetadataFile FileName="CorsairDashboard.HardwareMonitoring.xsd" MetadataType="Schema" ID="b8a74d29-80fd-4f55-801b-39f21ef39b89" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroHardwareMonitorService/mex" />
+    <MetadataFile FileName="CorsairDashboard.HardwareMonitoring.Hw.Sensors.xsd" MetadataType="Schema" ID="71fbe6f6-91e7-4c4e-8384-68fd10dadc7a" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroHardwareMonitorService/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

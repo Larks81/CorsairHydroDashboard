@@ -2,57 +2,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CorsairDashboard.HardwareMonitoring.Hw
 {
-    public class Cpu : IHardware
+    [DataContract]
+    public class Cpu : Hardware
     {
-        private TemperatureSensor temperatureSensor;
-        private readonly List<UsageSensor> usageSensors;
-
-        public string Id { get; internal set; }
-
-        public string Name { get; internal set; }
-
-        public HardwareKind Kind { get; private set; }
-
-        public IEnumerable<IHardwareSensor> Sensors
+        [DataMember]
+        public override HardwareKind Kind
         {
             get
             {
-                yield return temperatureSensor;
-                foreach (var usageSensor in usageSensors)
-                {
-                    yield return usageSensor;
-                }
-            }
+                return HardwareKind.Cpu;
+            }        
         }
 
-        public Cpu()
+        public Cpu(string id, string name)
         {
-            Kind = HardwareKind.Cpu;
-            usageSensors = new List<UsageSensor>();
+            Id = id;
+            Name = name;
         }
 
         public void SetTemperature(String sensorId, float temp)
         {
-            temperatureSensor = new TemperatureSensor()
-            {
-                Id = sensorId,
-                Value = temp
-            };
+            AddSensor(new TemperatureSensor(sensorId, temp));
         }
 
         public void SetUsageForCore(String sensorId, int core, float usage)
         {
-            usageSensors.Add(new UsageSensor()
-            {
-                Id = sensorId,
-                Name = String.Format("Core #{0} usage", core),
-                Value = usage
-            });
+            AddSensor(new UsageSensor(sensorId, core, usage));
         }
     }
 }

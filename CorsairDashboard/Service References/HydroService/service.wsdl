@@ -1,0 +1,349 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="HydroWSService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="NetNamedPipeBinding_ICorsairHydroService_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1">
+        </msb:BinaryEncoding>
+        <wsam:Addressing>
+          <wsp:Policy>
+            <wsam:AnonymousResponses>
+            </wsam:AnonymousResponses>
+          </wsp:Policy>
+        </wsam:Addressing>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/CorsairDashboard.Common.Service" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/HydroLib" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/System" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ICorsairHydroService_GetServiceState_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetServiceState" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_GetServiceState_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetServiceStateResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_GetConnectedDevicesInfo_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetConnectedDevicesInfo" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_GetConnectedDevicesInfo_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetConnectedDevicesInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_ForceRefreshConnectedDevicesInfo_InputMessage">
+    <wsdl:part name="parameters" element="tns:ForceRefreshConnectedDevicesInfo" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SubscribeForUpdateForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:SubscribeForUpdateForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_UnsubscribeForUpdateForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:UnsubscribeForUpdateForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_GetNumberOfFansForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetNumberOfFansForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_GetNumberOfFansForDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetNumberOfFansForDeviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_GetLedInfoForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLedInfoForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_GetLedInfoForDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLedInfoForDeviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetLedCycleColorsForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetLedCycleColorsForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetLedCycleColorsForDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetLedCycleColorsForDeviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetLedSingleColorForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetLedSingleColorForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetLedSingleColorForDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetLedSingleColorForDeviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetPwmFanForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetPwmFanForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetPwmFanForDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetPwmFanForDeviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetRpmFanForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetRpmFanForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetRpmFanForDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetRpmFanForDeviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetFanModeToDefaultProfileForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetFanModeToDefaultProfileForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetFanModeToDefaultProfileForDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetFanModeToDefaultProfileForDeviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetFanModeToQuietProfileForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetFanModeToQuietProfileForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetFanModeToQuietProfileForDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetFanModeToQuietProfileForDeviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetFanModeToBalancedProfileForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetFanModeToBalancedProfileForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetFanModeToBalancedProfileForDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetFanModeToBalancedProfileForDeviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetFanModeToPerformanceProfileForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetFanModeToPerformanceProfileForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetFanModeToPerformanceProfileForDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetFanModeToPerformanceProfileForDeviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetTemperatureBasedRpmFanForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetTemperatureBasedRpmFanForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetTemperatureBasedRpmFanForDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetTemperatureBasedRpmFanForDeviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_OnWaterTemperatureUpdateForDevice_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnWaterTemperatureUpdateForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_OnFanInfoUpdateForDevice_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnFanInfoUpdateForDevice" />
+  </wsdl:message>
+  <wsdl:portType name="ICorsairHydroService">
+    <wsdl:operation name="GetServiceState">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/GetServiceState" message="tns:ICorsairHydroService_GetServiceState_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/GetServiceStateResponse" message="tns:ICorsairHydroService_GetServiceState_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetConnectedDevicesInfo">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/GetConnectedDevicesInfo" message="tns:ICorsairHydroService_GetConnectedDevicesInfo_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/GetConnectedDevicesInfoResponse" message="tns:ICorsairHydroService_GetConnectedDevicesInfo_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ForceRefreshConnectedDevicesInfo">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/ForceRefreshConnectedDevicesInfo" message="tns:ICorsairHydroService_ForceRefreshConnectedDevicesInfo_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SubscribeForUpdateForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/SubscribeForUpdateForDevice" message="tns:ICorsairHydroService_SubscribeForUpdateForDevice_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UnsubscribeForUpdateForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/UnsubscribeForUpdateForDevice" message="tns:ICorsairHydroService_UnsubscribeForUpdateForDevice_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNumberOfFansForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/GetNumberOfFansForDevice" message="tns:ICorsairHydroService_GetNumberOfFansForDevice_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/GetNumberOfFansForDeviceResponse" message="tns:ICorsairHydroService_GetNumberOfFansForDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLedInfoForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/GetLedInfoForDevice" message="tns:ICorsairHydroService_GetLedInfoForDevice_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/GetLedInfoForDeviceResponse" message="tns:ICorsairHydroService_GetLedInfoForDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetLedCycleColorsForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/SetLedCycleColorsForDevice" message="tns:ICorsairHydroService_SetLedCycleColorsForDevice_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/SetLedCycleColorsForDeviceResponse" message="tns:ICorsairHydroService_SetLedCycleColorsForDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetLedSingleColorForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/SetLedSingleColorForDevice" message="tns:ICorsairHydroService_SetLedSingleColorForDevice_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/SetLedSingleColorForDeviceResponse" message="tns:ICorsairHydroService_SetLedSingleColorForDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetPwmFanForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/SetPwmFanForDevice" message="tns:ICorsairHydroService_SetPwmFanForDevice_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/SetPwmFanForDeviceResponse" message="tns:ICorsairHydroService_SetPwmFanForDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetRpmFanForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/SetRpmFanForDevice" message="tns:ICorsairHydroService_SetRpmFanForDevice_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/SetRpmFanForDeviceResponse" message="tns:ICorsairHydroService_SetRpmFanForDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetFanModeToDefaultProfileForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/SetFanModeToDefaultProfileForDevice" message="tns:ICorsairHydroService_SetFanModeToDefaultProfileForDevice_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/SetFanModeToDefaultProfileForDeviceResponse" message="tns:ICorsairHydroService_SetFanModeToDefaultProfileForDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetFanModeToQuietProfileForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/SetFanModeToQuietProfileForDevice" message="tns:ICorsairHydroService_SetFanModeToQuietProfileForDevice_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/SetFanModeToQuietProfileForDeviceResponse" message="tns:ICorsairHydroService_SetFanModeToQuietProfileForDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetFanModeToBalancedProfileForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/SetFanModeToBalancedProfileForDevice" message="tns:ICorsairHydroService_SetFanModeToBalancedProfileForDevice_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/SetFanModeToBalancedProfileForDeviceResponse" message="tns:ICorsairHydroService_SetFanModeToBalancedProfileForDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetFanModeToPerformanceProfileForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/SetFanModeToPerformanceProfileForDevice" message="tns:ICorsairHydroService_SetFanModeToPerformanceProfileForDevice_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/SetFanModeToPerformanceProfileForDeviceResponse" message="tns:ICorsairHydroService_SetFanModeToPerformanceProfileForDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetTemperatureBasedRpmFanForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/SetTemperatureBasedRpmFanForDevice" message="tns:ICorsairHydroService_SetTemperatureBasedRpmFanForDevice_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/SetTemperatureBasedRpmFanForDeviceResponse" message="tns:ICorsairHydroService_SetTemperatureBasedRpmFanForDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="OnWaterTemperatureUpdateForDevice">
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/OnWaterTemperatureUpdateForDevice" message="tns:ICorsairHydroService_OnWaterTemperatureUpdateForDevice_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="OnFanInfoUpdateForDevice">
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/OnFanInfoUpdateForDevice" message="tns:ICorsairHydroService_OnFanInfoUpdateForDevice_OutputCallbackMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="NetNamedPipeBinding_ICorsairHydroService" type="tns:ICorsairHydroService">
+    <wsp:PolicyReference URI="#NetNamedPipeBinding_ICorsairHydroService_policy">
+    </wsp:PolicyReference>
+    <soap12:binding transport="http://schemas.microsoft.com/soap/named-pipe" />
+    <wsdl:operation name="GetServiceState">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/GetServiceState" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetConnectedDevicesInfo">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/GetConnectedDevicesInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ForceRefreshConnectedDevicesInfo">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/ForceRefreshConnectedDevicesInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="SubscribeForUpdateForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/SubscribeForUpdateForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="UnsubscribeForUpdateForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/UnsubscribeForUpdateForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="GetNumberOfFansForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/GetNumberOfFansForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLedInfoForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/GetLedInfoForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetLedCycleColorsForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/SetLedCycleColorsForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetLedSingleColorForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/SetLedSingleColorForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetPwmFanForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/SetPwmFanForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetRpmFanForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/SetRpmFanForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetFanModeToDefaultProfileForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/SetFanModeToDefaultProfileForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetFanModeToQuietProfileForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/SetFanModeToQuietProfileForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetFanModeToBalancedProfileForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/SetFanModeToBalancedProfileForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetFanModeToPerformanceProfileForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/SetFanModeToPerformanceProfileForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetTemperatureBasedRpmFanForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/SetTemperatureBasedRpmFanForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnWaterTemperatureUpdateForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/OnWaterTemperatureUpdateForDevice" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnFanInfoUpdateForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/OnFanInfoUpdateForDevice" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="HydroWSService">
+    <wsdl:port name="NetNamedPipeBinding_ICorsairHydroService" binding="tns:NetNamedPipeBinding_ICorsairHydroService">
+      <soap12:address location="net.pipe://localhost/CorsairHydroService" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.pipe://localhost/CorsairHydroService</wsa10:Address>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

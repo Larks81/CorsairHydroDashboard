@@ -9,6 +9,7 @@ namespace CorsairDashboard.ViewModels.Controls.FanEditors
     public class FixedRpmFanEditorViewModel : FanEditorViewModelBase
     {
         private UInt16 value;
+        private UInt16 maxRpm;
 
         public UInt16 Value
         {
@@ -19,6 +20,19 @@ namespace CorsairDashboard.ViewModels.Controls.FanEditors
                 {
                     this.value = value;
                     NotifyOfPropertyChange(() => Value);
+                }
+            }
+        }
+
+        public UInt16 MaxRpm
+        {
+            get { return maxRpm; }
+            set
+            {
+                if (maxRpm != value)
+                {
+                    maxRpm = value;
+                    NotifyOfPropertyChange(() => MaxRpm);
                 }
             }
         }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="a7cd1460-cc4a-4144-becd-7f352f443025" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="net.pipe://localhost/CorsairHydroService/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="c461945a-77b8-4adb-a138-46093e3f61bc" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroService/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="8b90f211-cba5-4ec8-9f0f-fbdbef3d9d38" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroService/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="c1a1468a-1a42-415c-bef5-4999dd2e9b94" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroService/mex" />
+    <MetadataFile FileName="CorsairDashboard.Common.Service.xsd" MetadataType="Schema" ID="348482e0-a768-46fb-9006-fa456746c30c" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroService/mex" />
+    <MetadataFile FileName="HydroLib.xsd" MetadataType="Schema" ID="4459c279-1bfd-4b13-b10b-9adcf1b8c73a" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroService/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="13116162-1df8-49c7-a282-dc4fcc7efaea" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroService/mex" />
+    <MetadataFile FileName="System.xsd" MetadataType="Schema" ID="1d1c75bf-d38c-42aa-aa31-4dd2da92de31" SourceId="1" SourceUrl="net.pipe://localhost/CorsairHydroService/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

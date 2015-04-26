@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CorsairDashboard.HydroDataProvider")]
+[assembly: AssemblyTitle("CorsairDashboard.WindowsService")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CorsairDashboard.HydroDataProvider")]
+[assembly: AssemblyProduct("CorsairDashboard.WindowsService")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("476749f0-58de-4a63-9aad-65d161abc05f")]
+[assembly: Guid("e0ceb462-f80a-4312-abb8-1a0deabef2fd")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -34,3 +34,5 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "Log4net.config", Watch = true)]

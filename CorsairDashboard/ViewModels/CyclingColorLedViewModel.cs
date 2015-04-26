@@ -1,7 +1,6 @@
 ﻿using Caliburn.Micro;
 using CorsairDashboard.Caliburn;
 using CorsairDashboard.ViewModels.Controls;
-using HydroLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using CorsairDashboard.Common.Extensions;
 using System.Reactive.Linq;
+using CorsairDashboard.HydroService;
 
 namespace CorsairDashboard.ViewModels
 {
@@ -78,15 +78,19 @@ namespace CorsairDashboard.ViewModels
         {
             get
             {
+                if (!canUpdateDevice)
+                    return null;
+
                 var gradientStops = new List<GradientStop>();
                 gradientStops.Add(new GradientStop(FirstColorChooser.CurrentColor, 0));
                 if (selectedNrOfColor == NrOfColors.Two)
                 {
                     gradientStops.Add(new GradientStop(SecondColorChooser.CurrentColor, 1));
-                } else
+                }
+                else
                 {
-                    gradientStops.Add(new GradientStop(SecondColorChooser.CurrentColor, 1.0/3.0));
-                    gradientStops.Add(new GradientStop(ThirdColorChooser.CurrentColor, 2.0/3.0));
+                    gradientStops.Add(new GradientStop(SecondColorChooser.CurrentColor, 1.0 / 3.0));
+                    gradientStops.Add(new GradientStop(ThirdColorChooser.CurrentColor, 2.0 / 3.0));
                     gradientStops.Add(new GradientStop(FourthColorChooser.CurrentColor, 1));
                 }
                 return new GradientStopCollection(gradientStops);
@@ -111,51 +115,49 @@ namespace CorsairDashboard.ViewModels
 
         public CyclingColorLedViewModel(IShell shell) :
             base(shell)
-        {            
+        {
             canUpdateDevice = false;
             ranges = new RangeColorChooserViewModel[4];
 
             shell.HydroDeviceDataProvider.Led
-                .Where(ledInfo => ledInfo != null)
-                .Take(1)
-                .Subscribe(ledInfo =>
-                {
-                    hydroLedInfo = ledInfo;
-                    SelectedNumberOfColor = ledInfo.Mode == LedMode.FourColorCycle ? NrOfColors.Four : NrOfColors.Two;
-                    UpdateNrOfVisibleColorChoosers();                    
-                    canUpdateDevice = true;
-                });
+               .ContinueWith(task =>
+               {
+                   hydroLedInfo = task.Result;
+                   SelectedNumberOfColor = hydroLedInfo.Mode == LedMode.FourColorCycle ? NrOfColors.Four : NrOfColors.Two;
+                   UpdateNrOfVisibleColorChoosers();
+                   canUpdateDevice = true;
+               });
         }
 
         void UpdateNrOfVisibleColorChoosers()
         {
             if (FirstColorChooser == null)
             {
-                FirstColorChooser = new RangeColorChooserViewModel();
-                FirstColorChooser.CurrentColor = hydroLedInfo.Color1.ToColor();
+                FirstColorChooser = new RangeColorChooserViewModel();                
                 FirstColorChooser.PropertyChanged += OnRangeColorChooserPropertyChanged;
             }
             if (SecondColorChooser == null)
             {
                 SecondColorChooser = new RangeColorChooserViewModel();
-                SecondColorChooser.CurrentColor = hydroLedInfo.Color2.ToColor();
                 SecondColorChooser.PropertyChanged += OnRangeColorChooserPropertyChanged;
             }
+            FirstColorChooser.CurrentColor = hydroLedInfo.Color1.ToColor();
+            SecondColorChooser.CurrentColor = hydroLedInfo.Color2.ToColor();
 
             if (SelectedNumberOfColor == NrOfColors.Four)
             {
                 if (ThirdColorChooser == null)
                 {
                     ThirdColorChooser = new RangeColorChooserViewModel();
-                    ThirdColorChooser.CurrentColor = hydroLedInfo.Color3.ToColor();
                     ThirdColorChooser.PropertyChanged += OnRangeColorChooserPropertyChanged;
                 }
                 if (FourthColorChooser == null)
                 {
                     FourthColorChooser = new RangeColorChooserViewModel();
-                    FourthColorChooser.CurrentColor = hydroLedInfo.Color4.ToColor();
                     FourthColorChooser.PropertyChanged += OnRangeColorChooserPropertyChanged;
                 }
+                ThirdColorChooser.CurrentColor = hydroLedInfo.Color3.ToColor();
+                FourthColorChooser.CurrentColor = hydroLedInfo.Color4.ToColor();
             }
             else
             {

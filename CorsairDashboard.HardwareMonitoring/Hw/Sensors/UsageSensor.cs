@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CorsairDashboard.HardwareMonitoring.Hw.Sensors
 {
-    public class UsageSensor : IHardwareSensor
+    [DataContract]
+    public class UsageSensor : HardwareSensor
     {
-        public string Id { get; internal set; }
-
-        public string Name { get; internal set; }
-
-        public object Value { get; internal set; }
+        public UsageSensor(String sensorId, int coreNr, float usage)
+        {
+            Id = sensorId;
+            Name = String.Format("Core #{0} usage", coreNr);
+            Value = usage;
+        }
     }
 }

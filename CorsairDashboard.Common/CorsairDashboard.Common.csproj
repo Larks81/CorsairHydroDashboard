@@ -33,6 +33,8 @@
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,7 +44,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="PauseToken\PauseToken.cs" />
+    <Compile Include="PauseToken\PauseTokenSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\ConnectedDeviceInfo.cs" />
+    <Compile Include="Service\ICorsairHydroServiceCallback.cs" />
+    <Compile Include="Service\ICorsairHydroService.cs" />
+    <Compile Include="Service\CorsairHydroServiceState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HydroLib\HydroLib.csproj">
+      <Project>{1648cb03-4073-44c4-9448-276891592d2f}</Project>
+      <Name>HydroLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

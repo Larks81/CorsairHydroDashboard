@@ -33,9 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="Caliburn.Micro">
       <HintPath>..\packages\Caliburn.Micro.Core.2.0.2\lib\net45\Caliburn.Micro.dll</HintPath>
@@ -61,6 +59,11 @@
     <Reference Include="System.Reactive.PlatformServices">
       <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
+    <Reference Include="System.Reactive.Runtime.Remoting">
+      <HintPath>..\packages\Rx-Remoting.2.2.5\lib\net45\System.Reactive.Runtime.Remoting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -83,10 +86,27 @@
     </ApplicationDefinition>
     <Compile Include="Caliburn\ConductorWithFlyouts.cs" />
     <Compile Include="Caliburn\FlyoutScreen.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\ColorConverter.cs" />
     <Compile Include="Converters\PercentConverter.cs" />
+    <Compile Include="Converters\ServiceStateToVisibilityConverter.cs" />
     <Compile Include="Converters\SolidColorBrushConverter.cs" />
     <Compile Include="Models\FanModeDescription.cs" />
+    <Compile Include="Service References\HardwareMonitorService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\HydroService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceWrapper\HydroDeviceDataProvider.cs" />
+    <Compile Include="ServiceWrapper\HydroFanInfo.cs" />
+    <Compile Include="ServiceWrapper\HydroLedInfo.cs" />
+    <Compile Include="ServiceWrapper\ReactiveHardwareMonitoring.cs" />
+    <Compile Include="ServiceWrapper\TaskCachedResult.cs" />
     <Compile Include="ViewModels\ChildBaseViewModel.cs" />
     <Compile Include="ViewModels\Controls\FanEditors\FanEditorViewModelBase.cs" />
     <Compile Include="ViewModels\Controls\FanEditors\FixedPwmFanEditorViewModel.cs" />
@@ -235,13 +255,51 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.manifest" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\CorsairDashboard.Common.Service.ConnectedDeviceInfo.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Service References\HardwareMonitorService\CorsairDashboard.HardwareMonitoring.Hw.Sensors.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HardwareMonitorService\CorsairDashboard.HardwareMonitoring.Hw.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HardwareMonitorService\CorsairDashboard.HardwareMonitoring.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HardwareMonitorService\service.wsdl" />
+    <None Include="Service References\HardwareMonitorService\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HardwareMonitorService\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HydroService\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HydroService\CorsairDashboard.Common.Service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HydroService\CorsairDashboard.HydroService.HydroLedInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\HydroService\HydroLib.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HydroService\service.wsdl" />
+    <None Include="Service References\HydroService\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HydroService\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HydroService\System.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>
@@ -258,21 +316,40 @@
       <Project>{4c69b905-308a-4296-b761-a13c8965b827}</Project>
       <Name>CorsairDashboard.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CorsairDashboard.HardwareMonitoring\CorsairDashboard.HardwareMonitoring.csproj">
-      <Project>{725eb0a0-17ab-470d-94db-be5c65c6f0c0}</Project>
-      <Name>CorsairDashboard.HardwareMonitoring</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CorsairDashboard.HydroDataProvider\CorsairDashboard.HydroDataProvider.csproj">
-      <Project>{5b9a650e-c036-47a7-a3fb-95d072412edf}</Project>
-      <Name>CorsairDashboard.HydroDataProvider</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HydroLib\HydroLib.csproj">
-      <Project>{1648cb03-4073-44c4-9448-276891592d2f}</Project>
-      <Name>HydroLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Icons\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\HardwareMonitorService\" />
+    <WCFMetadataStorage Include="Service References\HydroService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\HydroService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\HydroService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\HydroService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\HardwareMonitorService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\HardwareMonitorService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\HardwareMonitorService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

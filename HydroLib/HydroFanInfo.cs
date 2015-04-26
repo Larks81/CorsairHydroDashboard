@@ -1,42 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
+using System.ServiceModel;
 
 namespace HydroLib
 {
+    [DataContract]
+    [KnownType(typeof(Tuple<UInt16[], UInt16[]>))]
+    [ServiceKnownType(typeof(Tuple<UInt16[], UInt16[]>))]
     public class HydroFanInfo
     {
-        private readonly object settingValue;
-
+        [DataMember]
         public int Number { get; private set; }
 
+        [DataMember]
         public int Rpm { get; private set; }
 
+        [DataMember]
+        public int MaxRpm { get; private set; }
+
+        [DataMember]
         public FanMode Mode { get; private set; }
 
-        public byte PwmValue
-        {
-            get { return (byte)settingValue; }
-        }
+        [DataMember]        
+        public object RawValue { get; private set; }
 
-        public UInt16 RpmValue
-        {
-            get { return Convert.ToUInt16(settingValue); }
-        }
-
-        public byte[][] RpmsAndTempsTable
-        {
-            get { return (byte[][])settingValue; }
-        }
-
-        internal HydroFanInfo(int fanNr, int rpm, FanMode mode, object settingValue)
+        internal HydroFanInfo(int fanNr, int rpm, int maxRpm, FanMode mode, object settingValue)
         {
             Number = fanNr;
             Rpm = rpm;
+            MaxRpm = maxRpm;
             Mode = mode;
-            this.settingValue = settingValue;
+            RawValue = settingValue;
         }
     }
 }

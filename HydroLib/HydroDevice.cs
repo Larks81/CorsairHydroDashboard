@@ -228,6 +228,11 @@ namespace HydroLib
                     .WithRegisterInferringOpCode(Registers.FAN_ReadRPM)
                     .Build();
 
+            var fanMaxRpmCommand =
+                new HydroCommandBuilder()
+                    .WithRegisterInferringOpCode(Registers.FAN_MaxRecordedRPM)
+                    .Build();
+
             var fanRpmSettingCommand =
                 new HydroCommandBuilder()
                     .WithRegisterInferringOpCode(Registers.FAN_FixedRPM)
@@ -248,17 +253,17 @@ namespace HydroLib
                     .WithRegisterInferringOpCode(Registers.FAN_TempTable, nrOfBytesToRead: 0x0a)
                     .Build();
 
-            var responses = await QueryDeviceAsync(fanSelectCommand, fanModeCommand, fanRpmCommand, fanRpmSettingCommand,
+            var responses = await QueryDeviceAsync(fanSelectCommand, fanModeCommand, fanRpmCommand, fanMaxRpmCommand, fanRpmSettingCommand,
                 fanPwmSettingCommand, fanRpmTableSettingCommand, fanTempTableSettingCommand);
-            HydroCommandResponse fanModeResp, fanRpmResp, fanRpmSettingResp, fanPwmSettingResp, fanRpmTableResp, fanTempTableResp;
+            HydroCommandResponse fanModeResp, fanRpmResp, fanMaxRpmResp, fanRpmSettingResp, fanPwmSettingResp, fanRpmTableResp, fanTempTableResp;
             if (responses.AreSuccessful && responses.TryGetResponseForCommand(fanModeCommand, out fanModeResp)
                 && responses.TryGetResponseForCommand(fanRpmCommand, out fanRpmResp)
+                && responses.TryGetResponseForCommand(fanMaxRpmCommand, out fanMaxRpmResp)
                 && responses.TryGetResponseForCommand(fanRpmSettingCommand, out fanRpmSettingResp)
                 && responses.TryGetResponseForCommand(fanPwmSettingCommand, out fanPwmSettingResp)
                 && responses.TryGetResponseForCommand(fanRpmTableSettingCommand, out fanRpmTableResp)
                 && responses.TryGetResponseForCommand(fanTempTableSettingCommand, out fanTempTableResp))
             {
-
                 object settingValue = null;
                 var fanMode = (FanMode)(fanModeResp.ResponseData[0] & 0x0e);
                 switch (fanMode)
@@ -270,12 +275,24 @@ namespace HydroLib
                         settingValue = fanRpmSettingResp.ResponseData.ToUInt16();
                         break;
                     case FanMode.Custom:
+                        var temps = new UInt16[5];
+                        var rpms = new UInt16[5];
+                        byte[] buffer = new byte[2];
+                        for (int i = 0; i < 10; i += 2)
+                        {
+                            Buffer.BlockCopy(fanTempTableResp.ResponseData, i, buffer, 0, 2);
+                            temps[i / 2] = (UInt16)(buffer.ToUInt16() / 256);
 
+                            Buffer.BlockCopy(fanRpmTableResp.ResponseData, i, buffer, 0, 2);
+                            rpms[i / 2] = buffer.ToUInt16();
+                        }
+                        settingValue = new Tuple<UInt16[], UInt16[]>(temps, rpms);
                         break;
                 }
 
                 var fanInfo = new HydroFanInfo(
                     fanNr: fanNr,
+                    maxRpm: fanMaxRpmResp.ResponseData.ToUInt16(),
                     rpm: fanRpmResp.ResponseData.ToUInt16(),
                     mode: fanMode,
                     settingValue: settingValue);
@@ -298,14 +315,15 @@ namespace HydroLib
                     .WithData(new[] { (byte)mode })
                     .Build();
 
-            HydroCommand fanSetValueCommand = null;
+            HydroCommand fanSetValueCommand1 = null;
+            HydroCommand fanSetValueCommand2 = null;
             switch (mode)
             {
                 case FanMode.FixedPWM:
                     if (!(value is byte))
-                        throw new ArgumentException("value must be of byte type");
+                        throw new ArgumentException("value must be of type byte");
 
-                    fanSetValueCommand =
+                    fanSetValueCommand1 =
                         new HydroCommandBuilder()
                             .WithRegisterInferringOpCode(Registers.FAN_FixedPWM)
                             .WithData(new[] { (byte)value })
@@ -314,9 +332,9 @@ namespace HydroLib
 
                 case FanMode.FixedRPM:
                     if (!(value is UInt16))
-                        throw new ArgumentException("value must be of UInt16 type");
+                        throw new ArgumentException("value must be of type UInt16");
 
-                    fanSetValueCommand =
+                    fanSetValueCommand1 =
                         new HydroCommandBuilder()
                             .WithRegisterInferringOpCode(Registers.FAN_FixedRPM)
                             .WithData(((UInt16)value).ToLittleEndianByteArray())
@@ -324,14 +342,28 @@ namespace HydroLib
                     break;
 
                 case FanMode.Custom:
-                    if (!(value is int[][]))
-                        throw new ArgumentException("value must be of int[][] type");
+                    if (!(value is Tuple<UInt16[], UInt16[]>))
+                        throw new ArgumentException("value must be of type Tuple<UInt16[], UInt16[]>");
 
+                    var tempsAndRpms = (Tuple<UInt16[], UInt16[]>)value;
+                    var temps = tempsAndRpms.Item1.Select(temp => (ushort)(temp * 256)).ToArray();
+
+                    fanSetValueCommand1 =
+                        new HydroCommandBuilder()
+                            .WithRegisterInferringOpCode(Registers.FAN_TempTable)
+                            .WithData(temps.ToLittleEndianByteArray())
+                            .Build();
+
+                    fanSetValueCommand2 =
+                        new HydroCommandBuilder()
+                            .WithRegisterInferringOpCode(Registers.FAN_RPMTable)
+                            .WithData(tempsAndRpms.Item2.ToLittleEndianByteArray())
+                            .Build();
 
                     break;
             }
 
-            var responses = await QueryDeviceAsync(fanSelectCommand, fanSetModeCommand, fanSetValueCommand);
+            var responses = await QueryDeviceAsync(fanSelectCommand, fanSetModeCommand, fanSetValueCommand1, fanSetValueCommand2);
             return responses.AreSuccessful;
         }
 
@@ -343,10 +375,11 @@ namespace HydroLib
                     .WithData(new byte[] { fanNr })
                     .Build();
 
+            var hydroTemperature = (UInt16)(temperature * 256.0 + 0.5);
             var reportTemperatureCommand =
                 new HydroCommandBuilder()
                     .WithRegisterInferringOpCode(Registers.FAN_ReportExtTemp)
-                    .WithData(temperature.ToLittleEndianByteArray())
+                    .WithData(hydroTemperature.ToLittleEndianByteArray())
                     .Build();
 
             var responses = await QueryDeviceAsync(fanSelectCommand, reportTemperatureCommand);
@@ -359,7 +392,7 @@ namespace HydroLib
         {
             await deviceIOLock.WaitAsync();
             try
-            {                
+            {
                 OpenDevice();
                 var validCommands = commands.Where(command => command != null);
                 var payload = payloadGenerator.PayloadForCommands(validCommands);
