@@ -250,6 +250,43 @@ namespace CorsairDashboard.WindowsService
             return hydroDevices[deviceId].SetFanModeAndValue((byte)fanNr, FanMode.Performance).Result;
         }
 
+        public bool SetLedSingleColorForDevice(Guid deviceId, HydroColor color, bool pulse)
+        {
+            return hydroDevices[deviceId].SetLedModeAndValue(LedMode.StaticColor, color).Result;
+        }
+
+        public HydroLedInfo GetLedInfoForDevice(Guid deviceId)
+        {
+            return hydroDevices[deviceId].GetLedInfoAsync().Result;
+        }
+
+        public bool SetLedTemperatureBasedColorForDevice(Guid deviceId, ushort[] temperatures, HydroColor[] colors)
+        {
+            return hydroDevices[deviceId].SetLedModeAndValue(LedMode.TemperatureBased,
+                new Tuple<UInt16[], HydroColor[]>(temperatures, colors)).Result;
+        }
+
+        public bool SetLedCycleColorsForDevice(Guid deviceId, HydroColor color1, HydroColor color2, HydroColor color3,
+            HydroColor color4)
+        {
+            var colors = new List<HydroColor>()
+            {
+                color1, color2
+            };
+            LedMode ledMode;
+            if (color3 == null)
+            {
+                ledMode = LedMode.TwoColorsCycle;
+            }
+            else
+            {
+                ledMode = LedMode.FourColorCycle;
+                colors.Add(color3);
+                colors.Add(color4);
+            }
+            return hydroDevices[deviceId].SetLedModeAndValue(ledMode, colors).Result;
+        }
+
         public bool SetTemperatureBasedRpmFanForDevice(Guid deviceId, int fanNr, UInt16[] temperatures, UInt16[] rpms, string sensorId)
         {
             var tempsAndRpms = new Tuple<UInt16[], UInt16[]>(temperatures, rpms);
@@ -260,21 +297,6 @@ namespace CorsairDashboard.WindowsService
                 hwMonitor.InternalSubscribe(this);
             }
             return result;
-        }
-
-        public bool SetLedSingleColorForDevice(Guid deviceId, byte[] color, bool pulse)
-        {
-            return hydroDevices[deviceId].SetLedSingleColorAsync(color[0], color[1], color[2], pulse).Result;
-        }
-
-        public bool SetLedCycleColorsForDevice(Guid deviceId, byte[] color1, byte[] color2, byte[] color3, byte[] color4)
-        {
-            return hydroDevices[deviceId].SetLedCycleColorsAsync(color1, color2, color3, color4).Result;
-        }
-
-        public HydroLedInfo GetLedInfoForDevice(Guid deviceId)
-        {
-            return hydroDevices[deviceId].GetLedInfoAsync().Result;
         }
 
         #endregion

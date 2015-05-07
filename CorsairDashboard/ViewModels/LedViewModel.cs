@@ -16,12 +16,15 @@ namespace CorsairDashboard.ViewModels
 
         public CyclingColorLedViewModel CyclingColorLed { get; set; }
 
+        public TemperatureBasedLedViewModel TemperatureBasedLed { get; set; }
+
         [ImportingConstructor]
         public LedViewModel(IShell shell)
             : base(shell)
         {
             SingleColorLed = new SingleColorLedViewModel(shell);
             CyclingColorLed = new CyclingColorLedViewModel(shell);
+            TemperatureBasedLed = new TemperatureBasedLedViewModel(shell);
         }
     }
 }

@@ -3,14 +3,25 @@
   <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
   <xs:complexType name="HydroLedInfo">
     <xs:sequence>
-      <xs:element minOccurs="0" name="Color1" nillable="true" type="xs:base64Binary" />
-      <xs:element minOccurs="0" name="Color2" nillable="true" type="xs:base64Binary" />
-      <xs:element minOccurs="0" name="Color3" nillable="true" type="xs:base64Binary" />
-      <xs:element minOccurs="0" name="Color4" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="Color1" nillable="true" type="tns:HydroColor" />
+      <xs:element minOccurs="0" name="Color2" nillable="true" type="tns:HydroColor" />
+      <xs:element minOccurs="0" name="Color3" nillable="true" type="tns:HydroColor" />
+      <xs:element minOccurs="0" name="Color4" nillable="true" type="tns:HydroColor" />
       <xs:element minOccurs="0" name="Mode" type="tns:LedMode" />
+      <xs:element minOccurs="0" name="TemperatureMax" type="xs:unsignedShort" />
+      <xs:element minOccurs="0" name="TemperatureMed" type="xs:unsignedShort" />
+      <xs:element minOccurs="0" name="TemperatureMin" type="xs:unsignedShort" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="HydroLedInfo" nillable="true" type="tns:HydroLedInfo" />
+  <xs:complexType name="HydroColor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="B" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="G" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="R" type="xs:unsignedByte" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="HydroColor" nillable="true" type="tns:HydroColor" />
   <xs:simpleType name="LedMode">
     <xs:annotation>
       <xs:appinfo>
@@ -44,6 +55,12 @@
     </xs:restriction>
   </xs:simpleType>
   <xs:element name="LedMode" nillable="true" type="tns:LedMode" />
+  <xs:complexType name="ArrayOfHydroColor">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="HydroColor" nillable="true" type="tns:HydroColor" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfHydroColor" nillable="true" type="tns:ArrayOfHydroColor" />
   <xs:complexType name="HydroFanInfo">
     <xs:sequence>
       <xs:element minOccurs="0" name="MaxRpm" type="xs:int" />

@@ -33,10 +33,13 @@ namespace CorsairDashboard.Common.Service
         HydroLedInfo GetLedInfoForDevice(Guid deviceId);
 
         [OperationContract]
-        bool SetLedCycleColorsForDevice(Guid deviceId, byte[] color1, byte[] color2, byte[] color3, byte[] color4);
+        bool SetLedTemperatureBasedColorForDevice(Guid deviceId, UInt16[] temperatures, HydroColor[] colors);
 
         [OperationContract]
-        bool SetLedSingleColorForDevice(Guid deviceId, byte[] color, bool pulse);
+        bool SetLedCycleColorsForDevice(Guid deviceId, HydroColor color1, HydroColor color2, HydroColor color3, HydroColor color4);
+
+        [OperationContract]
+        bool SetLedSingleColorForDevice(Guid deviceId, HydroColor color, bool pulse);
 
         [OperationContract]
         bool SetPwmFanForDevice(Guid deviceId, int fanNr, byte pwmDutyCycle);

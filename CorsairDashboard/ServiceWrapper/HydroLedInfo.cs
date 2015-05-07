@@ -10,7 +10,7 @@ namespace CorsairDashboard.HydroService
     {
         public bool IsPulsing()
         {
-            return Mode == LedMode.TwoColorsCycle && Color2.SequenceEqual(new byte[] { 0, 0, 0 });
+            return Mode == LedMode.TwoColorsCycle && Color2.ToByteArray().SequenceEqual(new byte[] { 0, 0, 0 });
         }
     }
 }

@@ -12,10 +12,10 @@ namespace HydroLib
         {
             return Task.FromResult(new HydroLedInfo()
             {
-                Color1 = new byte[] { 0x33, 0xf1, 0x90 },
-                Color2 = new byte[3],
-                Color3 = new byte[3],
-                Color4 = new byte[3],
+                Color1 = new HydroColor(0x33, 0xf1, 0x90),
+                Color2 = new HydroColor(0, 0, 0),
+                Color3 = new HydroColor(0, 0, 0),
+                Color4 = new HydroColor(0, 0, 0),
                 Mode = LedMode.StaticColor
             });
         }
@@ -40,19 +40,14 @@ namespace HydroLib
             return Task.FromResult(new Random().Next(18, 26));
         }
 
-        public Task<bool> SetLedCycleColorsAsync(byte[] firstColor, byte[] secondColor, byte[] thirdColor, byte[] fourthColor)
-        {
-            return Task.FromResult(true);
-        }
-
-        public Task<bool> SetLedSingleColorAsync(byte red, byte green, byte blue, bool pulse)
+        public Task<bool> SetLedModeAndValue(LedMode mode, object value)
         {
             return Task.FromResult(true);
         }
 
         public Task<HydroFanInfo> GetFanInfoAsync(byte fanNr)
         {
-            return Task.FromResult(new HydroFanInfo(fanNr, 2000, 2500, FanMode.FixedRPM, (byte) 230));
+            return Task.FromResult(new HydroFanInfo(fanNr, 2000, 2500, FanMode.FixedRPM, (byte)230));
         }
 
         public void Dispose() { }

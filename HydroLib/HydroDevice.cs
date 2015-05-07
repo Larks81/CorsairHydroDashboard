@@ -3,6 +3,7 @@ using HydroLib.CommandSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -76,95 +77,170 @@ namespace HydroLib
                 new HydroCommandBuilder()
                     .WithRegisterInferringOpCode(Registers.LED_Mode)
                     .Build();
-            var ledColorsCommand =
-                new HydroCommandBuilder()
-                    .WithRegisterInferringOpCode(Registers.LED_CycleColors, nrOfBytesToRead: 0x0c)
-                    .Build();
-            var responses = await QueryDeviceAsync(ledModeCommand, ledColorsCommand);
-            HydroCommandResponse modeResp, colorResp;
-            if (responses.AreSuccessful && responses.TryGetResponseForCommand(ledModeCommand, out modeResp)
-                && responses.TryGetResponseForCommand(ledColorsCommand, out colorResp))
+
+            var responses = await QueryDeviceAsync(ledModeCommand);
+            HydroCommandResponse modeResp;
+            if (responses.TryGetResponseForCommand(ledModeCommand, out modeResp) && modeResp.IsSuccessful)
             {
                 var mode = (LedMode)modeResp.ResponseData[0];
-                var colorArray = colorResp.ResponseData;
-                var color1 = new[] { colorArray[0], colorArray[1], colorArray[2] };
-                var color2 = new[] { colorArray[3], colorArray[4], colorArray[5] };
-                var color3 = new[] { colorArray[6], colorArray[7], colorArray[8] };
-                var color4 = new[] { colorArray[9], colorArray[10], colorArray[11] };
-                return new HydroLedInfo()
+                if (mode == LedMode.TemperatureBased)
                 {
-                    Mode = mode,
-                    Color1 = color1,
-                    Color2 = color2,
-                    Color3 = color3,
-                    Color4 = color4
-                };
+                    var ledColorsCommand =
+                       new HydroCommandBuilder()
+                           .WithRegisterInferringOpCode(Registers.LED_TemperatureModeColors, nrOfBytesToRead: 0x09)
+                           .Build();
+
+                    var ledTemperaturesCommand =
+                        new HydroCommandBuilder()
+                            .WithRegisterInferringOpCode(Registers.LED_TemperatureMode, nrOfBytesToRead: 0x06)
+                            .Build();
+
+                    HydroCommandResponse colorResp, tempResp;
+                    responses = await QueryDeviceAsync(ledColorsCommand, ledTemperaturesCommand);
+                    if (responses.AreSuccessful &&
+                        responses.TryGetResponseForCommand(ledColorsCommand, out colorResp) &&
+                        responses.TryGetResponseForCommand(ledTemperaturesCommand, out tempResp))
+                    {
+                        var colorArray = colorResp.ResponseData;
+                        var color1 = new[] { colorArray[0], colorArray[1], colorArray[2] };
+                        var color2 = new[] { colorArray[3], colorArray[4], colorArray[5] };
+                        var color3 = new[] { colorArray[6], colorArray[7], colorArray[8] };
+                        var tempsArray = tempResp.ResponseData;
+                        var tempMin = tempsArray[1];
+                        var tempMed = tempsArray[3];
+                        var tempMax = tempsArray[5];
+                        return new HydroLedInfo()
+                        {
+                            Mode = mode,
+                            Color1 = new HydroColor(color1),
+                            Color2 = new HydroColor(color2),
+                            Color3 = new HydroColor(color3),
+                            TemperatureMin = tempMin,
+                            TemperatureMed = tempMed,
+                            TemperatureMax = tempMax
+                        };
+                    }
+                }
+                else
+                {
+                    var ledColorsCommand =
+                        new HydroCommandBuilder()
+                            .WithRegisterInferringOpCode(Registers.LED_CycleColors, nrOfBytesToRead: 0x0c)
+                            .Build();
+
+                    HydroCommandResponse colorResp;
+                    responses = await QueryDeviceAsync(ledColorsCommand);
+                    if (responses.TryGetResponseForCommand(ledColorsCommand, out colorResp)
+                        && colorResp.IsSuccessful)
+                    {
+                        var colorArray = colorResp.ResponseData;
+                        var color1 = new[] { colorArray[0], colorArray[1], colorArray[2] };
+                        var color2 = new[] { colorArray[3], colorArray[4], colorArray[5] };
+                        var color3 = new[] { colorArray[6], colorArray[7], colorArray[8] };
+                        var color4 = new[] { colorArray[9], colorArray[10], colorArray[11] };
+                        return new HydroLedInfo()
+                        {
+                            Mode = mode,
+                            Color1 = new HydroColor(color1),
+                            Color2 = new HydroColor(color2),
+                            Color3 = new HydroColor(color3),
+                            Color4 = new HydroColor(color4)
+                        };
+                    }
+                }
             }
             return null;
         }
 
-        public async Task<bool> SetLedSingleColorAsync(byte red, byte green, byte blue, bool pulse)
+        public async Task<bool> SetLedModeAndValue(LedMode mode, object value)
         {
             var ledSelectCommand =
                 new HydroCommandBuilder()
                     .WithRegisterInferringOpCode(Registers.LED_SelectCurrent)
                     .WithData(new byte[] { 0x00 })
                     .Build();
+
             var ledModeCommand =
                 new HydroCommandBuilder()
                     .WithRegisterInferringOpCode(Registers.LED_Mode)
-                    .WithData(new byte[] { pulse ? (byte)LedMode.TwoColorsCycle : (byte)LedMode.StaticColor })
-                    .Build();
-            var ledColorCommand =
-                new HydroCommandBuilder()
-                    .WithRegisterInferringOpCode(Registers.LED_CycleColors)
-                    .WithData(new byte[] { red, green, blue, 0x00, 0x00, 0x00 })
+                    .WithData(new byte[] { (byte)mode })
                     .Build();
 
-            var responses = await QueryDeviceAsync(ledSelectCommand, ledModeCommand, ledColorCommand);
-            if (responses.AreSuccessful)
+            HydroCommand ledColorCommand = null;
+            HydroCommand ledTempCommand = null;
+            switch (mode)
             {
-                return true;
+                case LedMode.StaticColor:
+                    if (!(value is HydroColor))
+                        throw new ArgumentException("value must be of type HydroColor");
+
+                    var staticColor = (HydroColor) value;
+                    ledColorCommand =
+                        new HydroCommandBuilder()
+                           .WithRegisterInferringOpCode(Registers.LED_CycleColors)
+                           .WithData(staticColor.ToByteArray())
+                           .Build();
+                    break;
+
+                case LedMode.TwoColorsCycle:
+                    if (!(value is IEnumerable<HydroColor>))
+                        throw new ArgumentException("value must be of type HydroColor");
+
+                    var twoColorsArray = ((IEnumerable<HydroColor>) value).ToArray();
+                    if (twoColorsArray.Length != 2) 
+                        throw new ArgumentException("value must have a length of 2");                    
+
+                    ledColorCommand =
+                        new HydroCommandBuilder()
+                            .WithRegisterInferringOpCode(Registers.LED_CycleColors)
+                            .WithData(twoColorsArray.SelectMany(c => c.ToByteArray()).ToArray())
+                            .Build();
+                    break;
+
+                case LedMode.FourColorCycle:
+                    if (!(value is IEnumerable<HydroColor>))
+                        throw new ArgumentException("value must be of type HydroColor");
+
+                    var fourColorsArray = ((IEnumerable<HydroColor>) value).ToArray();
+                    if (fourColorsArray.Length != 4) 
+                        throw new ArgumentException("value must have a length of 4");                    
+
+                    ledColorCommand =
+                        new HydroCommandBuilder()
+                            .WithRegisterInferringOpCode(Registers.LED_CycleColors)
+                            .WithData(fourColorsArray.SelectMany(c => c.ToByteArray()).ToArray())
+                            .Build();
+                    break;
+
+                case LedMode.TemperatureBased:
+                    if (!(value is Tuple<UInt16[], HydroColor[]>))
+                        throw new ArgumentException("value must be of type Tuple<UInt16[], HydroColor[]>");
+
+                    var tuple = (Tuple<UInt16[], HydroColor[]>) value;
+                    var temps = tuple.Item1;
+                    var colors = tuple.Item2;
+                    if (temps.Length != 3 || colors.Length != 3)
+                        throw new ArgumentException("the value is of the right type but it must contains 3 temps and 3 colors");
+
+                    ledColorCommand =
+                        new HydroCommandBuilder()
+                            .WithRegisterInferringOpCode(Registers.LED_TemperatureModeColors)
+                            .WithData(colors.SelectMany(c => c.ToByteArray()).ToArray())
+                            .Build();
+
+                    ledTempCommand =
+                        new HydroCommandBuilder()
+                            .WithRegisterInferringOpCode(Registers.LED_TemperatureMode)
+                            .WithData(temps.SelectMany(t => new byte[] { 0, (byte)t }).ToArray())
+                            .Build();
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException("mode");
             }
-            return false;
-        }
 
-        public async Task<bool> SetLedCycleColorsAsync(byte[] firstColor, byte[] secondColor, byte[] thirdColor, byte[] fourthColor)
-        {
-            if (firstColor == null || secondColor == null)
-                throw new ArgumentNullException("first and second colors cannot be null");
-
-            var ledMode = thirdColor == null ? LedMode.TwoColorsCycle : LedMode.FourColorCycle;
-
-            if (thirdColor == null)
-                thirdColor = new byte[] { 0, 0, 0 };
-            if (fourthColor == null)
-                fourthColor = new byte[] { 0, 0, 0 };
-
-            var ledColorArray = firstColor.Concat(secondColor).Concat(thirdColor).Concat(fourthColor).ToArray();
-
-            var ledSelectCommand =
-                new HydroCommandBuilder()
-                    .WithRegisterInferringOpCode(Registers.LED_SelectCurrent)
-                    .WithData(new byte[] { 0x00 })
-                    .Build();
-            var ledModeCommand =
-                new HydroCommandBuilder()
-                    .WithRegisterInferringOpCode(Registers.LED_Mode)
-                    .WithData(new byte[] { (byte)ledMode })
-                    .Build();
-            var ledColorCommand =
-                new HydroCommandBuilder()
-                    .WithRegisterInferringOpCode(Registers.LED_CycleColors)
-                    .WithData(ledColorArray)
-                    .Build();
-
-            var responses = await QueryDeviceAsync(ledSelectCommand, ledModeCommand, ledColorCommand);
-            if (responses.AreSuccessful)
-            {
-                return true;
-            }
-            return false;
+            var responses = await QueryDeviceAsync(ledSelectCommand, ledModeCommand, ledColorCommand, ledTempCommand);
+            return responses.AreSuccessful;
         }
 
         #endregion Leds

@@ -31,5 +31,15 @@ namespace HydroLib.Extensions
         {
             return (UInt16)((val[1] << 8) + val[0]);
         }
+
+        public static UInt16 ToUInt16(this IEnumerable<byte> val)
+        {
+            return ToUInt16(val.ToArray());
+        }
+
+        public static UInt16 ToUInt16(this IEnumerable<byte> val, int startIndex)
+        {
+            return ToUInt16(val.Skip(startIndex).Take(2).ToArray());
+        }
     }
 }

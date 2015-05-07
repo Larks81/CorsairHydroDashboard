@@ -88,21 +88,31 @@ namespace CorsairDashboard.ServiceWrapper
             ledInfo = new TaskCachedResult<HydroLedInfo>(service.GetLedInfoForDeviceAsync(currentDeviceInfo.DeviceId));
         }
 
+        public Task<bool> SetLedTemperatureBaseColorsAsync(UInt16 minTemp, UInt16 medTemp, UInt16 maxTemp,
+            Color minTempColor, Color medTempColor, Color maxTempColor)
+        {
+            var task = service.SetLedTemperatureBasedColorForDeviceAsync(currentDeviceInfo.DeviceId,
+                new[] { minTemp, medTemp, maxTemp },
+                new[] { (HydroColor)minTempColor, (HydroColor)medTempColor, (HydroColor)maxTempColor });
+            task.ContinueWith(res => ledInfo.Invalidate());
+            return task;
+        }
+
         public Task<bool> SetLedCycleColorsAsync(Color color1, Color color2, Color? color3, Color? color4)
         {
             var task = service.SetLedCycleColorsForDeviceAsync(
                 currentDeviceInfo.DeviceId,
-                color1.ToByteArray(),
-                color2.ToByteArray(),
-                color3 != null ? color3.Value.ToByteArray() : null,
-                color4 != null ? color4.Value.ToByteArray() : null);
+                (HydroColor)color1,
+                (HydroColor)color2,
+                color3 != null ? (HydroColor)color3.Value : null,
+                color4 != null ? (HydroColor)color4.Value : null);
             task.ContinueWith(res => ledInfo.Invalidate());
             return task;
         }
 
         public Task<bool> SetLedSingleColorAsync(Color color, bool pulse)
         {
-            var task = service.SetLedSingleColorForDeviceAsync(currentDeviceInfo.DeviceId, color.ToByteArray(), pulse);
+            var task = service.SetLedSingleColorForDeviceAsync(currentDeviceInfo.DeviceId, (HydroColor)color, pulse);
             task.ContinueWith(res => ledInfo.Invalidate());
             return task;
         }

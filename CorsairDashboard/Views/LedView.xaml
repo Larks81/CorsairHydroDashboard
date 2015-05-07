@@ -15,7 +15,7 @@
         </TabItem>
         
         <TabItem Header="Temperature based">
-            
+            <ContentControl x:Name="TemperatureBasedLed"></ContentControl>
         </TabItem>
     </TabControl>
     

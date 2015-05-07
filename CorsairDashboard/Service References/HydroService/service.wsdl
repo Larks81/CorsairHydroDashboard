@@ -57,6 +57,12 @@
   <wsdl:message name="ICorsairHydroService_GetLedInfoForDevice_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetLedInfoForDeviceResponse" />
   </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetLedTemperatureBasedColorForDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetLedTemperatureBasedColorForDevice" />
+  </wsdl:message>
+  <wsdl:message name="ICorsairHydroService_SetLedTemperatureBasedColorForDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetLedTemperatureBasedColorForDeviceResponse" />
+  </wsdl:message>
   <wsdl:message name="ICorsairHydroService_SetLedCycleColorsForDevice_InputMessage">
     <wsdl:part name="parameters" element="tns:SetLedCycleColorsForDevice" />
   </wsdl:message>
@@ -142,6 +148,10 @@
     <wsdl:operation name="GetLedInfoForDevice">
       <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/GetLedInfoForDevice" message="tns:ICorsairHydroService_GetLedInfoForDevice_InputMessage" />
       <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/GetLedInfoForDeviceResponse" message="tns:ICorsairHydroService_GetLedInfoForDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetLedTemperatureBasedColorForDevice">
+      <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/SetLedTemperatureBasedColorForDevice" message="tns:ICorsairHydroService_SetLedTemperatureBasedColorForDevice_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/ICorsairHydroService/SetLedTemperatureBasedColorForDeviceResponse" message="tns:ICorsairHydroService_SetLedTemperatureBasedColorForDevice_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="SetLedCycleColorsForDevice">
       <wsdl:input wsam:Action="http://tempuri.org/ICorsairHydroService/SetLedCycleColorsForDevice" message="tns:ICorsairHydroService_SetLedCycleColorsForDevice_InputMessage" />
@@ -237,6 +247,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetLedInfoForDevice">
       <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/GetLedInfoForDevice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetLedTemperatureBasedColorForDevice">
+      <soap12:operation soapAction="http://tempuri.org/ICorsairHydroService/SetLedTemperatureBasedColorForDevice" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

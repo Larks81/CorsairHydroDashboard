@@ -13,10 +13,5 @@ namespace CorsairDashboard.Common.Extensions
         {
             return Color.FromRgb(arr[0], arr[1], arr[2]);
         }
-
-        public static byte[] ToByteArray(this Color c)
-        {
-            return new byte[] { c.R, c.G, c.B };
-        }
     }
 }

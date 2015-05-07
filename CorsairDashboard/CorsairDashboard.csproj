@@ -102,6 +102,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="ServiceWrapper\HydroColor.cs" />
     <Compile Include="ServiceWrapper\HydroDeviceDataProvider.cs" />
     <Compile Include="ServiceWrapper\HydroFanInfo.cs" />
     <Compile Include="ServiceWrapper\HydroLedInfo.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Caliburn\AppBootstrapper.cs" />
     <Compile Include="Caliburn\IShell.cs" />
     <Compile Include="ViewModels\SingleColorLedViewModel.cs" />
+    <Compile Include="ViewModels\TemperatureBasedLedViewModel.cs" />
     <Compile Include="Views\Controls\FanEditors\FixedPwmFanEditorView.xaml.cs">
       <DependentUpon>FixedPwmFanEditorView.xaml</DependentUpon>
     </Compile>
@@ -167,6 +169,9 @@
     </Compile>
     <Compile Include="Views\SingleColorLedView.xaml.cs">
       <DependentUpon>SingleColorLedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TemperatureBasedLedView.xaml.cs">
+      <DependentUpon>TemperatureBasedLedView.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\AppColors.xaml">
       <SubType>Designer</SubType>
@@ -233,6 +238,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SingleColorLedView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TemperatureBasedLedView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

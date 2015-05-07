@@ -40,9 +40,9 @@ namespace CorsairDashboard.ViewModels
                 {
                     var ledInfo = task.Result;
                     var ledColor = ledInfo.Color1;
-                    RangeColorChooser.R = ledColor[0];
-                    RangeColorChooser.G = ledColor[1];
-                    RangeColorChooser.B = ledColor[2];
+                    RangeColorChooser.R = ledColor.R;
+                    RangeColorChooser.G = ledColor.G;
+                    RangeColorChooser.B = ledColor.B;
                     Pulse = ledInfo.IsPulsing();
                 });
 

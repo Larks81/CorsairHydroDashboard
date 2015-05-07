@@ -23,19 +23,28 @@ namespace CorsairDashboard.HydroService {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte[] Color1Field;
+        private CorsairDashboard.HydroService.HydroColor Color1Field;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte[] Color2Field;
+        private CorsairDashboard.HydroService.HydroColor Color2Field;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte[] Color3Field;
+        private CorsairDashboard.HydroService.HydroColor Color3Field;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte[] Color4Field;
+        private CorsairDashboard.HydroService.HydroColor Color4Field;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private CorsairDashboard.HydroService.LedMode ModeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private ushort TemperatureMaxField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private ushort TemperatureMedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private ushort TemperatureMinField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -48,7 +57,7 @@ namespace CorsairDashboard.HydroService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public byte[] Color1 {
+        public CorsairDashboard.HydroService.HydroColor Color1 {
             get {
                 return this.Color1Field;
             }
@@ -61,7 +70,7 @@ namespace CorsairDashboard.HydroService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public byte[] Color2 {
+        public CorsairDashboard.HydroService.HydroColor Color2 {
             get {
                 return this.Color2Field;
             }
@@ -74,7 +83,7 @@ namespace CorsairDashboard.HydroService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public byte[] Color3 {
+        public CorsairDashboard.HydroService.HydroColor Color3 {
             get {
                 return this.Color3Field;
             }
@@ -87,7 +96,7 @@ namespace CorsairDashboard.HydroService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public byte[] Color4 {
+        public CorsairDashboard.HydroService.HydroColor Color4 {
             get {
                 return this.Color4Field;
             }
@@ -108,6 +117,122 @@ namespace CorsairDashboard.HydroService {
                 if ((this.ModeField.Equals(value) != true)) {
                     this.ModeField = value;
                     this.RaisePropertyChanged("Mode");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public ushort TemperatureMax {
+            get {
+                return this.TemperatureMaxField;
+            }
+            set {
+                if ((this.TemperatureMaxField.Equals(value) != true)) {
+                    this.TemperatureMaxField = value;
+                    this.RaisePropertyChanged("TemperatureMax");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public ushort TemperatureMed {
+            get {
+                return this.TemperatureMedField;
+            }
+            set {
+                if ((this.TemperatureMedField.Equals(value) != true)) {
+                    this.TemperatureMedField = value;
+                    this.RaisePropertyChanged("TemperatureMed");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public ushort TemperatureMin {
+            get {
+                return this.TemperatureMinField;
+            }
+            set {
+                if ((this.TemperatureMinField.Equals(value) != true)) {
+                    this.TemperatureMinField = value;
+                    this.RaisePropertyChanged("TemperatureMin");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="HydroColor", Namespace="http://schemas.datacontract.org/2004/07/HydroLib")]
+    [System.SerializableAttribute()]
+    public partial class HydroColor : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte BField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte GField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte RField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public byte B {
+            get {
+                return this.BField;
+            }
+            set {
+                if ((this.BField.Equals(value) != true)) {
+                    this.BField = value;
+                    this.RaisePropertyChanged("B");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public byte G {
+            get {
+                return this.GField;
+            }
+            set {
+                if ((this.GField.Equals(value) != true)) {
+                    this.GField = value;
+                    this.RaisePropertyChanged("G");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public byte R {
+            get {
+                return this.RField;
+            }
+            set {
+                if ((this.RField.Equals(value) != true)) {
+                    this.RField = value;
+                    this.RaisePropertyChanged("R");
                 }
             }
         }
@@ -147,7 +272,9 @@ namespace CorsairDashboard.HydroService {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.Common.Service.ConnectedDeviceInfo[]))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.Common.Service.ConnectedDeviceInfo))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HydroService.HydroLedInfo))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HydroService.HydroColor))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HydroService.LedMode))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HydroService.HydroColor[]))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HydroService.FanMode))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(ushort[]))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(System.Tuple<ushort[], ushort[]>))]
@@ -328,17 +455,25 @@ namespace CorsairDashboard.HydroService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICorsairHydroService/GetLedInfoForDevice", ReplyAction="http://tempuri.org/ICorsairHydroService/GetLedInfoForDeviceResponse")]
         System.Threading.Tasks.Task<CorsairDashboard.HydroService.HydroLedInfo> GetLedInfoForDeviceAsync(System.Guid deviceId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICorsairHydroService/SetLedCycleColorsForDevice", ReplyAction="http://tempuri.org/ICorsairHydroService/SetLedCycleColorsForDeviceResponse")]
-        bool SetLedCycleColorsForDevice(System.Guid deviceId, byte[] color1, byte[] color2, byte[] color3, byte[] color4);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICorsairHydroService/SetLedTemperatureBasedColorForDevice", ReplyAction="http://tempuri.org/ICorsairHydroService/SetLedTemperatureBasedColorForDeviceRespo" +
+            "nse")]
+        bool SetLedTemperatureBasedColorForDevice(System.Guid deviceId, ushort[] temperatures, CorsairDashboard.HydroService.HydroColor[] colors);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICorsairHydroService/SetLedTemperatureBasedColorForDevice", ReplyAction="http://tempuri.org/ICorsairHydroService/SetLedTemperatureBasedColorForDeviceRespo" +
+            "nse")]
+        System.Threading.Tasks.Task<bool> SetLedTemperatureBasedColorForDeviceAsync(System.Guid deviceId, ushort[] temperatures, CorsairDashboard.HydroService.HydroColor[] colors);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICorsairHydroService/SetLedCycleColorsForDevice", ReplyAction="http://tempuri.org/ICorsairHydroService/SetLedCycleColorsForDeviceResponse")]
-        System.Threading.Tasks.Task<bool> SetLedCycleColorsForDeviceAsync(System.Guid deviceId, byte[] color1, byte[] color2, byte[] color3, byte[] color4);
+        bool SetLedCycleColorsForDevice(System.Guid deviceId, CorsairDashboard.HydroService.HydroColor color1, CorsairDashboard.HydroService.HydroColor color2, CorsairDashboard.HydroService.HydroColor color3, CorsairDashboard.HydroService.HydroColor color4);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICorsairHydroService/SetLedCycleColorsForDevice", ReplyAction="http://tempuri.org/ICorsairHydroService/SetLedCycleColorsForDeviceResponse")]
+        System.Threading.Tasks.Task<bool> SetLedCycleColorsForDeviceAsync(System.Guid deviceId, CorsairDashboard.HydroService.HydroColor color1, CorsairDashboard.HydroService.HydroColor color2, CorsairDashboard.HydroService.HydroColor color3, CorsairDashboard.HydroService.HydroColor color4);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICorsairHydroService/SetLedSingleColorForDevice", ReplyAction="http://tempuri.org/ICorsairHydroService/SetLedSingleColorForDeviceResponse")]
-        bool SetLedSingleColorForDevice(System.Guid deviceId, byte[] color, bool pulse);
+        bool SetLedSingleColorForDevice(System.Guid deviceId, CorsairDashboard.HydroService.HydroColor color, bool pulse);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICorsairHydroService/SetLedSingleColorForDevice", ReplyAction="http://tempuri.org/ICorsairHydroService/SetLedSingleColorForDeviceResponse")]
-        System.Threading.Tasks.Task<bool> SetLedSingleColorForDeviceAsync(System.Guid deviceId, byte[] color, bool pulse);
+        System.Threading.Tasks.Task<bool> SetLedSingleColorForDeviceAsync(System.Guid deviceId, CorsairDashboard.HydroService.HydroColor color, bool pulse);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICorsairHydroService/SetPwmFanForDevice", ReplyAction="http://tempuri.org/ICorsairHydroService/SetPwmFanForDeviceResponse")]
         bool SetPwmFanForDevice(System.Guid deviceId, int fanNr, byte pwmDutyCycle);
@@ -487,19 +622,27 @@ namespace CorsairDashboard.HydroService {
             return base.Channel.GetLedInfoForDeviceAsync(deviceId);
         }
         
-        public bool SetLedCycleColorsForDevice(System.Guid deviceId, byte[] color1, byte[] color2, byte[] color3, byte[] color4) {
+        public bool SetLedTemperatureBasedColorForDevice(System.Guid deviceId, ushort[] temperatures, CorsairDashboard.HydroService.HydroColor[] colors) {
+            return base.Channel.SetLedTemperatureBasedColorForDevice(deviceId, temperatures, colors);
+        }
+        
+        public System.Threading.Tasks.Task<bool> SetLedTemperatureBasedColorForDeviceAsync(System.Guid deviceId, ushort[] temperatures, CorsairDashboard.HydroService.HydroColor[] colors) {
+            return base.Channel.SetLedTemperatureBasedColorForDeviceAsync(deviceId, temperatures, colors);
+        }
+        
+        public bool SetLedCycleColorsForDevice(System.Guid deviceId, CorsairDashboard.HydroService.HydroColor color1, CorsairDashboard.HydroService.HydroColor color2, CorsairDashboard.HydroService.HydroColor color3, CorsairDashboard.HydroService.HydroColor color4) {
             return base.Channel.SetLedCycleColorsForDevice(deviceId, color1, color2, color3, color4);
         }
         
-        public System.Threading.Tasks.Task<bool> SetLedCycleColorsForDeviceAsync(System.Guid deviceId, byte[] color1, byte[] color2, byte[] color3, byte[] color4) {
+        public System.Threading.Tasks.Task<bool> SetLedCycleColorsForDeviceAsync(System.Guid deviceId, CorsairDashboard.HydroService.HydroColor color1, CorsairDashboard.HydroService.HydroColor color2, CorsairDashboard.HydroService.HydroColor color3, CorsairDashboard.HydroService.HydroColor color4) {
             return base.Channel.SetLedCycleColorsForDeviceAsync(deviceId, color1, color2, color3, color4);
         }
         
-        public bool SetLedSingleColorForDevice(System.Guid deviceId, byte[] color, bool pulse) {
+        public bool SetLedSingleColorForDevice(System.Guid deviceId, CorsairDashboard.HydroService.HydroColor color, bool pulse) {
             return base.Channel.SetLedSingleColorForDevice(deviceId, color, pulse);
         }
         
-        public System.Threading.Tasks.Task<bool> SetLedSingleColorForDeviceAsync(System.Guid deviceId, byte[] color, bool pulse) {
+        public System.Threading.Tasks.Task<bool> SetLedSingleColorForDeviceAsync(System.Guid deviceId, CorsairDashboard.HydroService.HydroColor color, bool pulse) {
             return base.Channel.SetLedSingleColorForDeviceAsync(deviceId, color, pulse);
         }
         
