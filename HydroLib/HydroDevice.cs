@@ -341,7 +341,10 @@ namespace HydroLib
                 && responses.TryGetResponseForCommand(fanTempTableSettingCommand, out fanTempTableResp))
             {
                 object settingValue = null;
-                var fanMode = (FanMode)(fanModeResp.ResponseData[0] & 0x0e);
+                var fanModeByteResponse = fanModeResp.ResponseData[0];
+                var fanMode = (FanMode)(fanModeByteResponse & 0x0e);
+                var isConnected = (fanModeByteResponse >> 7) == 1;
+                var isFourPin = (fanModeByteResponse & 1) == 1;
                 switch (fanMode)
                 {
                     case FanMode.FixedPWM:
@@ -368,6 +371,8 @@ namespace HydroLib
 
                 var fanInfo = new HydroFanInfo(
                     fanNr: fanNr,
+                    isConnected: isConnected,
+                    isFourPin: isFourPin,
                     maxRpm: fanMaxRpmResp.ResponseData.ToUInt16(),
                     rpm: fanRpmResp.ResponseData.ToUInt16(),
                     mode: fanMode,

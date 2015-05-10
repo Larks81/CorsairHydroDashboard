@@ -284,6 +284,12 @@ namespace CorsairDashboard.HydroService {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool IsConnectedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool IsFourPinFanField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int MaxRpmField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -305,6 +311,32 @@ namespace CorsairDashboard.HydroService {
             }
             set {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool IsConnected {
+            get {
+                return this.IsConnectedField;
+            }
+            set {
+                if ((this.IsConnectedField.Equals(value) != true)) {
+                    this.IsConnectedField = value;
+                    this.RaisePropertyChanged("IsConnected");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool IsFourPinFan {
+            get {
+                return this.IsFourPinFanField;
+            }
+            set {
+                if ((this.IsFourPinFanField.Equals(value) != true)) {
+                    this.IsFourPinFanField = value;
+                    this.RaisePropertyChanged("IsFourPinFan");
+                }
             }
         }
         

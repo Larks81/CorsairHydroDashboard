@@ -13,6 +13,12 @@ namespace HydroLib
         public int Number { get; private set; }
 
         [DataMember]
+        public bool IsConnected { get; private set; }
+
+        [DataMember]
+        public bool IsFourPinFan { get; private set; }
+
+        [DataMember]
         public int Rpm { get; private set; }
 
         [DataMember]
@@ -24,9 +30,11 @@ namespace HydroLib
         [DataMember]        
         public object RawValue { get; private set; }
 
-        internal HydroFanInfo(int fanNr, int rpm, int maxRpm, FanMode mode, object settingValue)
+        internal HydroFanInfo(int fanNr, bool isConnected, bool isFourPin, int rpm, int maxRpm, FanMode mode, object settingValue)
         {
             Number = fanNr;
+            IsConnected = isConnected;
+            IsFourPinFan = isFourPin;
             Rpm = rpm;
             MaxRpm = maxRpm;
             Mode = mode;

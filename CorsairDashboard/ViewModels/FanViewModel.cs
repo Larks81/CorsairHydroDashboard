@@ -18,6 +18,34 @@ namespace CorsairDashboard.ViewModels
         private FanModeDescription selectedMode;
         private int rpm;
         private bool canUpdateDevice;
+        private bool isConnected;
+        private bool is4PinFan;
+
+        public bool IsConnected
+        {
+            get { return isConnected; }
+            set
+            {
+                if (isConnected != value)
+                {
+                    isConnected = value;
+                    NotifyOfPropertyChange(() => IsConnected);
+                }
+            }
+        }
+
+        public bool Is4PinFan
+        {
+            get { return is4PinFan; }
+            set
+            {
+                if (is4PinFan != value)
+                {
+                    is4PinFan = value;
+                    NotifyOfPropertyChange(() => Is4PinFan);
+                }
+            }
+        }
 
         public int FanNumber { get; set; }
 
@@ -77,6 +105,8 @@ namespace CorsairDashboard.ViewModels
 
                     rpm = fanInfo.Rpm;
                     NotifyOfPropertyChange(() => Rpm);
+                    IsConnected = fanInfo.IsConnected;
+                    Is4PinFan = fanInfo.IsFourPinFan;
 
                     if (Editor != null && !Editor.InitialValueSet)
                     {

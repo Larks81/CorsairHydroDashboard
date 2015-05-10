@@ -12,24 +12,29 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel>
-            <Rectangle Width="100" Height="100">
-                <Rectangle.Fill>
-                    <VisualBrush Stretch="Fill" Visual="{StaticResource fan_icon}"></VisualBrush>
-                </Rectangle.Fill>
-                <Rectangle.RenderTransform>
-                    <RotateTransform CenterX="50" CenterY="50"></RotateTransform>
-                </Rectangle.RenderTransform>
-                <Rectangle.Triggers>
+            <Image Width="200" Height="200" Source="/CorsairDashboard;component/Resources/Images/fan_big.png" >
+               <Image.RenderTransform>
+                    <RotateTransform CenterX="100" CenterY="100"></RotateTransform>
+                </Image.RenderTransform>
+                <Image.Triggers>
                     <EventTrigger RoutedEvent="Loaded">
                         <BeginStoryboard>
                             <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)" To="-360" Duration="{Binding RotateAnimationDuration}" SpeedRatio="0.8" RepeatBehavior="Forever"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)" To="-360" Duration="0:0:1" SpeedRatio="0.8" RepeatBehavior="Forever"/>
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
-                </Rectangle.Triggers>
-            </Rectangle>
+                </Image.Triggers>
+            </Image>
             <TextBlock x:Name="Rpm" Text="2000 Rpm" HorizontalAlignment="Center" Margin="0, 15" Style="{StaticResource NormalSizeTextBlock}"></TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Is connected ?" Style="{StaticResource NormalSizeTextBlock}"/>
+                <TextBlock Text="{Binding IsConnected}" Style="{StaticResource NormalSizeTextBlock}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Is 4 Pin ?" Style="{StaticResource NormalSizeTextBlock}"/>
+                <TextBlock Text="{Binding Is4PinFan}" Style="{StaticResource NormalSizeTextBlock}"/>
+            </StackPanel>
         </StackPanel>
 
         <Grid Grid.Column="1" VerticalAlignment="Center" Margin="30, 0">

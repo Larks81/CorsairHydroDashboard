@@ -63,6 +63,8 @@
   <xs:element name="ArrayOfHydroColor" nillable="true" type="tns:ArrayOfHydroColor" />
   <xs:complexType name="HydroFanInfo">
     <xs:sequence>
+      <xs:element minOccurs="0" name="IsConnected" type="xs:boolean" />
+      <xs:element minOccurs="0" name="IsFourPinFan" type="xs:boolean" />
       <xs:element minOccurs="0" name="MaxRpm" type="xs:int" />
       <xs:element minOccurs="0" name="Mode" type="tns:FanMode" />
       <xs:element minOccurs="0" name="Number" type="xs:int" />
