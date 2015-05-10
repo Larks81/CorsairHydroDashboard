@@ -382,7 +382,7 @@ namespace HydroLib
             return null;
         }
 
-        public async Task<bool> SetFanModeAndValue(byte fanNr, FanMode mode, object value = null)
+        public async Task<bool> SetFanModeAndValue(byte fanNr, FanMode mode, bool useExternalTemperatureSensorInCustomMode = false, object value = null)
         {
             var fanSelectCommand =
                 new HydroCommandBuilder()
@@ -390,10 +390,15 @@ namespace HydroLib
                     .WithData(new byte[] { fanNr })
                     .Build();
 
+            var fanModeValue = (byte)mode;
+            if (mode == FanMode.Custom && useExternalTemperatureSensorInCustomMode)
+            {
+                fanModeValue |= 0x70;
+            }
             var fanSetModeCommand =
                 new HydroCommandBuilder()
                     .WithRegisterInferringOpCode(Registers.FAN_Mode)
-                    .WithData(new[] { (byte)mode })
+                    .WithData(new[] { fanModeValue })
                     .Build();
 
             HydroCommand fanSetValueCommand1 = null;

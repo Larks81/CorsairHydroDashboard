@@ -13,7 +13,7 @@ namespace HydroLib
         
         Task<int> GetNrOfFansAsync();
 
-        Task<bool> SetFanModeAndValue(byte fanNr, FanMode mode, object value = null);
+        Task<bool> SetFanModeAndValue(byte fanNr, FanMode mode, bool useExternalTemperatureSensorInCustomMode = false, object value = null);
         
         Task<int> GetTemperatureAsync();
 

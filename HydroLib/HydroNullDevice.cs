@@ -30,6 +30,11 @@ namespace HydroLib
             return Task.FromResult(2);
         }
 
+        public Task<bool> SetFanModeAndValue(byte fanNr, FanMode mode, bool useExternalTemperatureSensorInCustomMode = false, object value = null)
+        {
+            return Task.FromResult(true);
+        }
+
         public Task<int> GetRpmForFanNrAsync(byte fanNr)
         {
             return Task.FromResult(1995);
@@ -51,11 +56,6 @@ namespace HydroLib
         }
 
         public void Dispose() { }
-
-        public Task<bool> SetFanModeAndValue(byte fanNr, FanMode mode, object value = null)
-        {
-            return Task.FromResult(true);
-        }
 
         public Task<bool> UpdateReferenceTemperatureForFanAsync(byte fanNr, UInt16 temperature)
         {

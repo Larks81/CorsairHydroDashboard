@@ -222,12 +222,12 @@ namespace CorsairDashboard.WindowsService
 
         public bool SetPwmFanForDevice(Guid deviceId, int fanNr, byte pwmDutyCycle)
         {
-            return hydroDevices[deviceId].SetFanModeAndValue((byte)fanNr, FanMode.FixedPWM, pwmDutyCycle).Result;
+            return hydroDevices[deviceId].SetFanModeAndValue((byte)fanNr, FanMode.FixedPWM, false, pwmDutyCycle).Result;
         }
 
         public bool SetRpmFanForDevice(Guid deviceId, int fanNr, ushort rpm)
         {
-            return hydroDevices[deviceId].SetFanModeAndValue((byte)fanNr, FanMode.FixedRPM, rpm).Result;
+            return hydroDevices[deviceId].SetFanModeAndValue((byte)fanNr, FanMode.FixedRPM, false, rpm).Result;
         }
 
         public bool SetFanModeToDefaultProfileForDevice(Guid deviceId, int fanNr)
@@ -290,7 +290,7 @@ namespace CorsairDashboard.WindowsService
         public bool SetTemperatureBasedRpmFanForDevice(Guid deviceId, int fanNr, UInt16[] temperatures, UInt16[] rpms, string sensorId)
         {
             var tempsAndRpms = new Tuple<UInt16[], UInt16[]>(temperatures, rpms);
-            var result = hydroDevices[deviceId].SetFanModeAndValue((byte)fanNr, FanMode.Custom, tempsAndRpms).Result;
+            var result = hydroDevices[deviceId].SetFanModeAndValue((byte)fanNr, FanMode.Custom, true, tempsAndRpms).Result;
             if (result)
             {
                 ServiceSettings.SetFanSensorId(deviceId, fanNr, sensorId);
