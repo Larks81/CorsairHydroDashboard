@@ -10,25 +10,25 @@ namespace HydroLib
     public class HydroFanInfo
     {
         [DataMember]
-        public int Number { get; private set; }
+        public int Number { get; internal set; }
 
         [DataMember]
-        public bool IsConnected { get; private set; }
+        public bool IsConnected { get; internal set; }
 
         [DataMember]
-        public bool IsFourPinFan { get; private set; }
+        public bool IsFourPinFan { get; internal set; }
 
         [DataMember]
-        public int Rpm { get; private set; }
+        public int Rpm { get; internal set; }
 
         [DataMember]
-        public int MaxRpm { get; private set; }
+        public int MaxRpm { get; internal set; }
 
         [DataMember]
-        public FanMode Mode { get; private set; }
+        public FanMode Mode { get; internal set; }
 
-        [DataMember]        
-        public object RawValue { get; private set; }
+        [DataMember]
+        public object RawValue { get; internal set; }
 
         internal HydroFanInfo(int fanNr, bool isConnected, bool isFourPin, int rpm, int maxRpm, FanMode mode, object settingValue)
         {
