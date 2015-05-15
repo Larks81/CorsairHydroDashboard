@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WCFCallbackManager.cs" />
     <Compile Include="CorsairHydroService.cs">
       <SubType>Component</SubType>
     </Compile>

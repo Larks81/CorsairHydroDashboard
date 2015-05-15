@@ -19,7 +19,7 @@ namespace CorsairDashboard.WindowsService
     {
         private CorsairHydroServiceState serviceState;
         private Dictionary<Guid, IHydroDevice> hydroDevices;
-        private Dictionary<Guid, List<ICorsairHydroServiceCallback>> callbacks;
+        private WCFCallbackManager<Guid, ICorsairHydroServiceCallback> callbackManager;
         private CancellationTokenSource updateStatsCancellationToken;
         private HardwareMonitorService hwMonitor;
         private ILog log;
@@ -31,7 +31,7 @@ namespace CorsairDashboard.WindowsService
             this.log = log;
             this.hwMonitor = hwMonitor;
             serviceState = CorsairHydroServiceState.Ready;
-            callbacks = new Dictionary<Guid, List<ICorsairHydroServiceCallback>>();
+            callbackManager = new WCFCallbackManager<Guid, ICorsairHydroServiceCallback>();
             hydroDevices = new Dictionary<Guid, IHydroDevice>();
             updateStatsCancellationToken = new CancellationTokenSource();
             cachedNrOfFans = new Dictionary<Guid, int>();
@@ -99,85 +99,27 @@ namespace CorsairDashboard.WindowsService
         public void SubscribeForUpdateForDevice(Guid deviceId)
         {
             log.Info("Registering a client's subscription..");
-            List<ICorsairHydroServiceCallback> callbacksForDeviceId;
-            if (!callbacks.TryGetValue(deviceId, out callbacksForDeviceId))
-            {
-                callbacksForDeviceId = new List<ICorsairHydroServiceCallback>();
-                callbacks.Add(deviceId, callbacksForDeviceId);
-            }
-
             var callback = OperationContext.Current.GetCallbackChannel<ICorsairHydroServiceCallback>();
-            if (!callbacksForDeviceId.Contains(callback))
-            {
-                OperationContext.Current.Channel.Closed += OnChannelClosedOrFaulted;
-                OperationContext.Current.Channel.Faulted += OnChannelClosedOrFaulted;
-                callbacksForDeviceId.Add(callback);
-                log.InfoFormat("Client subscription for device {0} confirmed", deviceId);
-            }
-            else
-            {
-                log.WarnFormat("Client subscription ignored beacuse already added");
-            }
-        }
-
-        void OnChannelClosedOrFaulted(object sender, EventArgs e)
-        {
-            var callback = sender as ICorsairHydroServiceCallback;
-            if (callback != null)
-            {
-                var lists = callbacks.Where(kvp => kvp.Value.Contains(callback)).Select(kvp => kvp.Value);
-                foreach (var callbacksList in lists)
-                {
-                    callbacksList.Remove(callback);
-                }
-                log.Warn("Closed a faulted connection");
-            }
-            else
-            {
-                log.WarnFormat("Cannot close a faulted channel");
-            }
+            callbackManager.SubscribeClientForGroup(deviceId, callback);
         }
 
         public void UnsubscribeForUpdateForDevice(Guid deviceId)
         {
-            try
-            {
-                var callback = OperationContext.Current.GetCallbackChannel<ICorsairHydroServiceCallback>();
-                callbacks[deviceId].Remove(callback);
-                log.InfoFormat("Client unsubscription for device {0} confirmed", deviceId);
-            }
-            catch (Exception e)
-            {
-                log.ErrorFormat("Cannot unsubscribe client for device {0}:\n{1}", deviceId, e);
-            }
+            var callback = OperationContext.Current.GetCallbackChannel<ICorsairHydroServiceCallback>();
+            callbackManager.UnsubscribeClientFromGroup(deviceId, callback);
+            log.InfoFormat("Client unsubscription for device {0} confirmed", deviceId);
         }
 
         private void NotifyForTemperatureChange(Guid deviceId, int temperature)
         {
-            List<ICorsairHydroServiceCallback> callbacksForDeviceId;
-            if (callbacks.TryGetValue(deviceId, out callbacksForDeviceId))
-            {
-                callbacksForDeviceId.ForEach(c => c.OnWaterTemperatureUpdateForDevice(deviceId, temperature));
-            }
+            callbackManager.NotifyAllClientsOfGroup(deviceId,
+                callback => callback.OnWaterTemperatureUpdateForDevice(deviceId, temperature));
         }
 
         private void NotifyForFanInfoChange(Guid deviceId, HydroFanInfo fanInfo)
         {
-            List<ICorsairHydroServiceCallback> callbacksForDeviceId;
-            if (callbacks.TryGetValue(deviceId, out callbacksForDeviceId))
-            {
-                callbacksForDeviceId.ForEach(c =>
-                {
-                    try
-                    {
-                        c.OnFanInfoUpdateForDevice(deviceId, fanInfo);
-                    }
-                    catch (Exception e)
-                    {
-                        log.Error(e);
-                    }
-                });
-            }
+            callbackManager.NotifyAllClientsOfGroup(deviceId,
+                callback => callback.OnFanInfoUpdateForDevice(deviceId, fanInfo));
         }
 
         #endregion
@@ -316,6 +258,8 @@ namespace CorsairDashboard.WindowsService
 
         public void Dispose()
         {
+            callbackManager.Dispose();
+            callbackManager = null;
             log.Info("Saving settings...");
             ServiceSettings.SaveSettings();
             log.Info("Settings saved");

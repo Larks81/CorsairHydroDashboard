@@ -16,13 +16,14 @@ namespace CorsairDashboard.WindowsService.HardwareMonitoring
     public partial class HardwareMonitorService : ServiceBase, IHardwareMonitorService
     {
         const String NetNamedPipeUri = "net.pipe://localhost/CorsairHydroHardwareMonitorService";
+        const int CallbackDefaultGroupId = 1; //no grouping in callback manager needed
 
         private readonly ILog log = LogManager.GetLogger("HwMonitorLogger");
         private ServiceHost serviceHost;
         private Computer computer;
         private CancellationTokenSource updateCancellationTokenSource;
         private PauseTokenSource pauseTokenSource;
-        private List<IHardwareMonitorServiceCallback> callbacks;
+        private WCFCallbackManager<int, IHardwareMonitorServiceCallback> callbackManager;
         private Thread hwMonitorThread;
 
         public HardwareMonitorService()
@@ -34,7 +35,7 @@ namespace CorsairDashboard.WindowsService.HardwareMonitoring
         {
             log.Info("Service started");
 
-            callbacks = new List<IHardwareMonitorServiceCallback>();
+            callbackManager = new WCFCallbackManager<int, IHardwareMonitorServiceCallback>();
             updateCancellationTokenSource = new CancellationTokenSource();
             pauseTokenSource = new PauseTokenSource() { IsPaused = true };
             computer = new Computer()
@@ -54,6 +55,8 @@ namespace CorsairDashboard.WindowsService.HardwareMonitoring
 
         protected override void OnStop()
         {
+            callbackManager.Dispose();
+            callbackManager = null;
             computer.Close();
             pauseTokenSource.IsPaused = false;
             updateCancellationTokenSource.Cancel();
@@ -150,11 +153,8 @@ namespace CorsairDashboard.WindowsService.HardwareMonitoring
 
                     if (cHw != null)
                     {
-                        log.InfoFormat("Sending hw monitoring updates to {0} callback(s)", callbacks.Count);
-                        foreach (var hardwareMonitorServiceCallback in callbacks)
-                        {
-                            hardwareMonitorServiceCallback.OnHardwareMonitorUpdate(cHw);
-                        }
+                        callbackManager.NotifyAllClientsOfGroup(CallbackDefaultGroupId,
+                            callback => callback.OnHardwareMonitorUpdate(cHw));
                     }
                 }
 
@@ -180,18 +180,9 @@ namespace CorsairDashboard.WindowsService.HardwareMonitoring
 
         public void InternalSubscribe(IHardwareMonitorServiceCallback callback)
         {
-            log.Info("Registering a client's subscription..");
-            if (!callbacks.Contains(callback))
-            {
-                callbacks.Add(callback);
-                log.Info("Client subscription confirmed");
-                if (pauseTokenSource.IsPaused)
-                    pauseTokenSource.IsPaused = false;
-            }
-            else
-            {
-                log.Info("Client already registered");
-            }
+            callbackManager.SubscribeClientForGroup(CallbackDefaultGroupId, callback);
+            if (pauseTokenSource.IsPaused)
+                pauseTokenSource.IsPaused = false;
         }
 
         public void Unsubscribe()
@@ -202,9 +193,8 @@ namespace CorsairDashboard.WindowsService.HardwareMonitoring
 
         public void InternalUnsubscribe(IHardwareMonitorServiceCallback callback)
         {
-            callbacks.Remove(callback);
-            log.Info("Client unsubscription confirmed");
-            if (!callbacks.Any() && !pauseTokenSource.IsPaused)
+            callbackManager.UnsubscribeClientFromGroup(CallbackDefaultGroupId, callback);
+            if (!callbackManager.HasAnyClientForGroup(CallbackDefaultGroupId) && !pauseTokenSource.IsPaused)
                 pauseTokenSource.IsPaused = true;
         }
     }
