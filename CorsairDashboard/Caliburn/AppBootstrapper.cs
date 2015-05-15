@@ -9,12 +9,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
+using CorsairDashboard.Settings;
+using MahApps.Metro;
+using System.Data.Entity;
+using CorsairDashboard.Common.SqliteMigrations;
 
 namespace CorsairDashboard.Caliburn
 {
     public class AppBootstrapper : BootstrapperBase
     {
         private CompositionContainer container;
+        private ISettings settings;
 
         public AppBootstrapper()
         {
@@ -23,6 +28,10 @@ namespace CorsairDashboard.Caliburn
 
         protected override void Configure()
         {
+            Database.SetInitializer<SettingsContext>(new SqliteMigrationsInitializer<SettingsContext>());
+            settings = new SettingsContext();
+            settings.Initialize();
+
             ConfigureIoC();
             ConfigureValueConverters();
         }
@@ -54,6 +63,8 @@ namespace CorsairDashboard.Caliburn
             var batch = new CompositionBatch();
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
+            batch.AddExportedValue<IWindowManager>(new MahAppsWindowManager());
+            batch.AddExportedValue<ISettings>(settings);
             batch.AddExportedValue(container);
             container.Compose(batch);
         }
@@ -83,7 +94,21 @@ namespace CorsairDashboard.Caliburn
 
         protected override void OnStartup(object sender, System.Windows.StartupEventArgs e)
         {
+            var accentColor = settings.AccentColor;
+            var themeColor = settings.ThemeColor;
+            var accent = ThemeManager.Accents.First(a => a.Name == accentColor);
+            var theme = ThemeManager.AppThemes.First(t => t.Name == themeColor);
+            ThemeManager.ChangeAppStyle(Application, accent, theme);
+            
             DisplayRootViewFor<IShell>();
+        }
+
+        protected override void OnExit(object sender, EventArgs e)
+        {
+            settings.SaveSettings();
+            settings = null;
+
+            base.OnExit(sender, e);
         }
     }
 }

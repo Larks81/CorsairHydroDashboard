@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reactive.Linq;
 using CorsairDashboard.HydroService;
+using CorsairDashboard.Settings;
 using CorsairDashboard.ViewModels.Controls.FanEditors;
 
 namespace CorsairDashboard.ViewModels
@@ -21,6 +22,7 @@ namespace CorsairDashboard.ViewModels
         private bool canUpdateDevice;
         private bool isConnected;
         private bool is4PinFan;
+        private String label;
 
         public bool IsConnected
         {
@@ -79,6 +81,23 @@ namespace CorsairDashboard.ViewModels
             }
         }
 
+        public String Label
+        {
+            get
+            {
+                return label;
+            }
+            set
+            {
+                if (label != value)
+                {
+                    label = value;
+                    Shell.Settings.SetLabelForFan(Shell.HydroDeviceDataProvider.SelectedDeviceId, FanNumber, value);
+                    NotifyOfPropertyChange(() => Label);
+                }
+            }
+        }
+
         public int Rpm
         {
             get { return rpm; }
@@ -109,6 +128,7 @@ namespace CorsairDashboard.ViewModels
             : base(shell)
         {
             FanNumber = fanNr;
+            label = Shell.Settings.GetLabelForFan(Shell.HydroDeviceDataProvider.SelectedDeviceId, fanNr);
             Modes = new BindableCollection<FanModeDescription>(FanModeDescription.GetFanModeDescriptions());
         }
 
@@ -137,7 +157,7 @@ namespace CorsairDashboard.ViewModels
                                 break;
                             case FanMode.FixedRPM:
                                 Editor.SetInitialValue(fanInfo.RpmValue);
-                                ((FixedRpmFanEditorViewModel) Editor).MaxRpm = (UInt16)(fanInfo.MaxRpm + 150);
+                                ((FixedRpmFanEditorViewModel) Editor).MaxRpm = (UInt16)(fanInfo.MaxRpm + Shell.Settings.MaxRpmDelta);
                                 break;
                             case FanMode.Custom:
                                 Editor.SetInitialValue(fanInfo.RmpsTempsAndSensorId);

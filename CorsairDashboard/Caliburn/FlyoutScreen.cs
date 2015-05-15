@@ -2,6 +2,7 @@
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace CorsairDashboard.Caliburn
         private String header;
         private bool isOpen, isPinned;
         private Position position;
+        private FlyoutTheme theme;
         
         public String Header 
         {
@@ -36,6 +38,14 @@ namespace CorsairDashboard.Caliburn
                 {
                     isOpen = value;
                     NotifyOfPropertyChange(() => IsOpen);
+                    if (isOpen)
+                    {
+                        OnActivate();
+                    }
+                    else
+                    {
+                        OnDeactivate(true);
+                    }
                 }
             }
         }
@@ -66,10 +76,27 @@ namespace CorsairDashboard.Caliburn
             }
         }
 
-        protected FlyoutScreen(String header, Position position)
+        public FlyoutTheme Theme
         {
+            get { return theme; }
+            set
+            {
+                if (theme != value)
+                {
+                    theme = value;
+                    NotifyOfPropertyChange(() => Theme);
+                }
+            }
+        }
+
+        protected IShell Shell { get; private set; }
+
+        protected FlyoutScreen(IShell shell, String header, Position position)
+        {
+            Shell = shell;
             this.header = header;
             this.position = position;
+            theme = FlyoutTheme.Inverse;
         }
 
         public void ToggleOpen()

@@ -24,6 +24,14 @@ namespace CorsairDashboard.ServiceWrapper
         private List<IObservable<HydroFanInfo>> fansInfo;
         private ConnectedDeviceInfo currentDeviceInfo;
 
+        public Guid SelectedDeviceId
+        {
+            get
+            {
+                return currentDeviceInfo != null ? currentDeviceInfo.DeviceId : Guid.Empty;
+            }
+        }
+
         public IObservable<int> Temperature
         {
             get { return temperatureSubject; }

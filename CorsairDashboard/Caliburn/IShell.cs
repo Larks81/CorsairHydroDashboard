@@ -1,4 +1,5 @@
 ﻿using CorsairDashboard.ServiceWrapper;
+using CorsairDashboard.Settings;
 using CorsairDashboard.ViewModels;
 
 namespace CorsairDashboard.Caliburn
@@ -8,6 +9,8 @@ namespace CorsairDashboard.Caliburn
         HydroDeviceDataProvider HydroDeviceDataProvider { get; }
 
         ReactiveHardwareMonitoring HardwareMonitoringProvider { get; }
+
+        ISettings Settings { get; }
 
         void ChangeCurrentDisplayedViewModelTo(ChildBaseViewModel newViewModel);
     }

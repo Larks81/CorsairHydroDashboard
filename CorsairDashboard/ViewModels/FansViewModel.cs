@@ -6,6 +6,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CorsairDashboard.Settings;
 
 namespace CorsairDashboard.ViewModels
 {
@@ -55,7 +56,7 @@ namespace CorsairDashboard.ViewModels
                     //pump
                 }
                 else
-                {
+                {                    
                     Fans.Add(new FanViewModel(Shell, i));
                 }
             }

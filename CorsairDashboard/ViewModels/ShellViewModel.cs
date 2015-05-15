@@ -13,6 +13,7 @@ using CorsairDashboard.HydroService;
 using CorsairDashboard.ViewModels.Controls;
 using CorsairDashboard.ServiceWrapper;
 using CorsairDashboard.HardwareMonitorService;
+using CorsairDashboard.Settings;
 
 namespace CorsairDashboard.ViewModels
 {
@@ -24,10 +25,13 @@ namespace CorsairDashboard.ViewModels
         private bool serviceFaulted;
         private CorsairDashboard.HydroService.ICorsairHydroService hydroService;
         private IHardwareMonitorService hwMonitorService;
+        private IWindowManager windowManager;
 
         public HydroDeviceDataProvider HydroDeviceDataProvider { get; private set; }
 
         public ReactiveHardwareMonitoring HardwareMonitoringProvider { get; private set; }
+
+        public ISettings Settings { get; private set; }
 
         public String WaterTemperature { get; private set; }
 
@@ -73,9 +77,12 @@ namespace CorsairDashboard.ViewModels
         {
             get { return ServiceState == CorsairHydroServiceState.Ready; }
         }
-
-        public ShellViewModel()
+        
+        [ImportingConstructor]
+        public ShellViewModel(IWindowManager windowManager, ISettings settings)
         {
+            Settings = settings;
+            this.windowManager = windowManager;
             if (Execute.InDesignMode)
                 LoadDesignTimeData();
         }
@@ -101,7 +108,8 @@ namespace CorsairDashboard.ViewModels
                 switch (ServiceState)
                 {
                     case CorsairHydroServiceState.Ready:
-                        WindowFlyouts.Add(new HardwareMonitorViewModel(HardwareMonitoringProvider));
+                        WindowFlyouts.Add(new SettingsViewModel(this));
+                        WindowFlyouts.Add(new HardwareMonitorViewModel(this, HardwareMonitoringProvider));
                         MainMenu();
                         ModelName = HydroDeviceDataProvider.ModelName;
                         NotifyOfPropertyChange(() => ModelName);
@@ -165,6 +173,12 @@ namespace CorsairDashboard.ViewModels
         public void OpenHardwareMonitoring()
         {
             OpenFlyout<HardwareMonitorViewModel>();
+        }
+
+        public void OpenSettings()
+        {
+
+            OpenFlyout<SettingsViewModel>();
         }
 
         public bool CanMainMenu()

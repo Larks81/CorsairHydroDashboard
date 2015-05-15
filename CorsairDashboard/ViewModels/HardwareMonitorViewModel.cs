@@ -17,8 +17,8 @@ namespace CorsairDashboard.ViewModels
     {
         public BindableCollection<HardwareViewModel> Hardware { get; set; }
 
-        public HardwareMonitorViewModel(ReactiveHardwareMonitoring hwMonitor)
-            : base("Hardware Monitoring", Position.Right)
+        public HardwareMonitorViewModel(IShell shell, ReactiveHardwareMonitoring hwMonitor)
+            : base(shell, "Hardware Monitoring", Position.Right)
         {
             Hardware = new BindableCollection<HardwareViewModel>();
 
