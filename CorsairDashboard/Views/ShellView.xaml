@@ -93,7 +93,11 @@
             </StackPanel>
         </Grid>
 
-        <StackPanel Visibility="{Binding ServiceState, Converter={StaticResource ServiceStateConverter}, ConverterParameter={x:Static common:CorsairHydroServiceState.Ready}}">
+        <Grid Visibility="{Binding ServiceState, Converter={StaticResource ServiceStateConverter}, ConverterParameter={x:Static common:CorsairHydroServiceState.Ready}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
             <Border BorderBrush="{DynamicResource GrayBrush8}" BorderThickness="0, 0, 0, 1">
                 <Grid Margin="10">
                     <StackPanel>
@@ -116,10 +120,10 @@
                 </Grid>
             </Border>
 
-            <Grid Margin="10, 50">
+            <Grid Margin="10, 50" Grid.Row="1">
                 <ContentControl x:Name="ActiveItem" />
             </Grid>
 
-        </StackPanel>
+        </Grid>
     </Grid>
 </metro:MetroWindow>

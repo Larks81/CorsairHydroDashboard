@@ -8,39 +8,41 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        
+        <Border Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="{DynamicResource BlackBrush}" Width="250">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="130px"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
 
-        <StackPanel>
-            <Image Width="200" Height="200" Source="/CorsairDashboard;component/Resources/Images/fan_big.png" >
-               <Image.RenderTransform>
-                    <RotateTransform CenterX="100" CenterY="100"></RotateTransform>
-                </Image.RenderTransform>
-                <Image.Triggers>
-                    <EventTrigger RoutedEvent="Loaded">
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)" To="-360" Duration="0:0:1" SpeedRatio="0.8" RepeatBehavior="Forever"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Image.Triggers>
-            </Image>
-            <TextBlock x:Name="Rpm" Text="2000 Rpm" HorizontalAlignment="Center" Margin="0, 15" Style="{StaticResource NormalSizeTextBlock}"></TextBlock>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Is connected ?" Style="{StaticResource NormalSizeTextBlock}"/>
-                <TextBlock Text="{Binding IsConnected}" Style="{StaticResource NormalSizeTextBlock}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Is 4 Pin ?" Style="{StaticResource NormalSizeTextBlock}"/>
-                <TextBlock Text="{Binding Is4PinFan}" Style="{StaticResource NormalSizeTextBlock}"/>
-            </StackPanel>
-        </StackPanel>
+                <TextBlock Text="Actual Rpms:" Style="{StaticResource NormalSizeTextBlock}" HorizontalAlignment="Right" Padding="10, 0"></TextBlock>
+                <TextBlock Text="{Binding Rpm, StringFormat={}{0} Rpm}" Grid.Column="1" Style="{StaticResource NormalSizeTextBlock}"></TextBlock>
 
-        <Grid Grid.Column="1" VerticalAlignment="Center" Margin="30, 0">
+                <TextBlock Text="Max Rpms:" Style="{StaticResource NormalSizeTextBlock}" HorizontalAlignment="Right" Padding="10, 0" Grid.Row="1"></TextBlock>
+                <TextBlock Text="{Binding MaxRpm, StringFormat={}{0} Rpm}" Grid.Column="1" Style="{StaticResource NormalSizeTextBlock}" Grid.Row="1"></TextBlock>
+
+                <TextBlock Text="Connected:" Style="{StaticResource NormalSizeTextBlock}" HorizontalAlignment="Right" Padding="10, 0" Grid.Row="2"/>
+                <TextBlock Text="{Binding IsConnected}" Style="{StaticResource NormalSizeTextBlock}" Grid.Row="2" Grid.Column="1"/>
+
+                <TextBlock Text="4 Pin, PWM:" Style="{StaticResource NormalSizeTextBlock}" HorizontalAlignment="Right" Padding="10, 0" Grid.Row="3"/>
+                <TextBlock Text="{Binding Is4PinFan}" Style="{StaticResource NormalSizeTextBlock}" Grid.Row="3" Grid.Column="2"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="30, 0">
             <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -51,7 +53,7 @@
             <ComboBox Grid.Row="0" Grid.Column="1" Width="150" HorizontalAlignment="Left" ItemsSource="{Binding Modes}" SelectedItem="{Binding SelectedMode}"></ComboBox>
 
             <ContentControl x:Name="Editor" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 20"></ContentControl>
-            
+
         </Grid>
     </Grid>
 </UserControl>

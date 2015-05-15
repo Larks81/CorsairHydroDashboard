@@ -17,6 +17,7 @@ namespace CorsairDashboard.ViewModels
     {
         private FanModeDescription selectedMode;
         private int rpm;
+        private int maxRpm;
         private bool canUpdateDevice;
         private bool isConnected;
         private bool is4PinFan;
@@ -78,9 +79,28 @@ namespace CorsairDashboard.ViewModels
             }
         }
 
-        public String Rpm
+        public int Rpm
         {
-            get { return String.Format("{0} RPM", rpm); }
+            get { return rpm; }
+            set {
+                if (rpm != value) {
+                    rpm = value;
+                    NotifyOfPropertyChange(() => Rpm);
+                }
+            }
+        }
+
+        public int MaxRpm
+        {
+            get { return maxRpm; }
+            set
+            {
+                if (maxRpm != value)
+                {
+                    maxRpm = value;
+                    NotifyOfPropertyChange(() => MaxRpm);
+                }
+            }
         }
 
         public FanEditorViewModelBase Editor { get; private set; }
@@ -103,8 +123,8 @@ namespace CorsairDashboard.ViewModels
                         SelectedMode = Modes.First(fmd => fmd.Value == (byte)fanInfo.Mode);
                     }
 
-                    rpm = fanInfo.Rpm;
-                    NotifyOfPropertyChange(() => Rpm);
+                    Rpm = fanInfo.Rpm;
+                    MaxRpm = fanInfo.MaxRpm;
                     IsConnected = fanInfo.IsConnected;
                     Is4PinFan = fanInfo.IsFourPinFan;
 
