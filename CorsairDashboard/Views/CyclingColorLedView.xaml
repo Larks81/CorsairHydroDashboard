@@ -13,18 +13,26 @@
         </Grid.RowDefinitions>
         
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Number of colors: " VerticalAlignment="Center"></TextBlock>
-            <ComboBox x:Name="NumberOfColors"></ComboBox>
+            <TextBlock Text="Number of colors: " VerticalAlignment="Center" Style="{StaticResource NormalSizeTextBlock}"></TextBlock>
+            <ComboBox x:Name="NumberOfColors" Margin="10" Width="80"></ComboBox>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0, 10">
-            <ContentControl x:Name="FirstColorChooser"></ContentControl>
-            <ContentControl x:Name="SecondColorChooser"></ContentControl>
-            <ContentControl x:Name="ThirdColorChooser"></ContentControl>
-            <ContentControl x:Name="FourthColorChooser"></ContentControl>
-        </StackPanel>            
-        
-        <Rectangle Margin="10" Grid.Row="2" Height="60">
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            
+            
+            <ContentControl x:Name="FirstColorChooser" Grid.Column="0"></ContentControl>
+            <ContentControl x:Name="SecondColorChooser" Grid.Column="1"></ContentControl>
+            <ContentControl x:Name="ThirdColorChooser" Grid.Column="2"></ContentControl>
+            <ContentControl x:Name="FourthColorChooser" Grid.Column="3"></ContentControl>
+        </Grid>
+
+        <Rectangle Margin="10,20,10,0" Grid.Row="2" Height="60">
             <Rectangle.Fill>
                 <LinearGradientBrush GradientStops="{Binding GradientStops}"></LinearGradientBrush>
             </Rectangle.Fill>

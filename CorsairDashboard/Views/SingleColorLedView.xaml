@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <StackPanel>
-        <TextBlock>Single </TextBlock>
+    <StackPanel Margin="10">
         <ContentControl x:Name="RangeColorChooser"></ContentControl>
         <CheckBox x:Name="Pulse" Margin="10, 20">Pulse</CheckBox>
     </StackPanel>

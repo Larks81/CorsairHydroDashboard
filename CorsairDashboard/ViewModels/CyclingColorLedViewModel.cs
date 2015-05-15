@@ -123,9 +123,9 @@ namespace CorsairDashboard.ViewModels
                .ContinueWith(task =>
                {
                    hydroLedInfo = task.Result;
-                   SelectedNumberOfColor = hydroLedInfo.Mode == LedMode.FourColorCycle ? NrOfColors.Four : NrOfColors.Two;
-                   UpdateNrOfVisibleColorChoosers();
+                   SelectedNumberOfColor = hydroLedInfo.Mode == LedMode.FourColorCycle ? NrOfColors.Four : NrOfColors.Two;                   
                    canUpdateDevice = true;
+                   NotifyOfPropertyChange(() => GradientStops);
                });
         }
 
@@ -161,8 +161,16 @@ namespace CorsairDashboard.ViewModels
             }
             else
             {
-                ThirdColorChooser = null;
-                FourthColorChooser = null;
+                if (ThirdColorChooser != null)
+                {
+                    ThirdColorChooser.PropertyChanged -= OnRangeColorChooserPropertyChanged;
+                    ThirdColorChooser = null;
+                }
+                if (FourthColorChooser != null)
+                {
+                    FourthColorChooser.PropertyChanged -= OnRangeColorChooserPropertyChanged;
+                    FourthColorChooser = null;
+                }
             }
         }
 
