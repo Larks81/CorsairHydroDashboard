@@ -75,6 +75,7 @@ namespace CorsairDashboard.WindowsService
                                 }
 
                                 var fanInfo = await hydroDevice.GetFanInfoAsync(i);
+                                fanInfo.ExternalSensorId = sensorId;
                                 NotifyForFanInfoChange(deviceId, fanInfo);
                             }
                         }
@@ -232,7 +233,8 @@ namespace CorsairDashboard.WindowsService
         public bool SetTemperatureBasedRpmFanForDevice(Guid deviceId, int fanNr, UInt16[] temperatures, UInt16[] rpms, string sensorId)
         {
             var tempsAndRpms = new Tuple<UInt16[], UInt16[]>(temperatures, rpms);
-            var result = hydroDevices[deviceId].SetFanModeAndValue((byte)fanNr, FanMode.Custom, true, tempsAndRpms).Result;
+            var useExternalTempSensor = !String.IsNullOrEmpty(sensorId);
+            var result = hydroDevices[deviceId].SetFanModeAndValue((byte)fanNr, FanMode.Custom, useExternalTempSensor, tempsAndRpms).Result;
             if (result)
             {
                 ServiceSettings.SetFanSensorId(deviceId, fanNr, sensorId);

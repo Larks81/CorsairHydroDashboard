@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -49,13 +50,26 @@ namespace CorsairDashboard.ViewModels.Controls.FanEditors
             }
         }
 
-        private SensorWithHardwareNameViewModel selectedSensor;
+        public class SensorViewModel
+        {
+            public String Id { get; set; }
+
+            public String Name { get; set; }
+
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+
+        private readonly SensorViewModel internalWaterTemperatureSensor = new SensorViewModel() { Id = null, Name = "Internal water sensor" };
+        private SensorViewModel selectedSensor;
 
         public BindableCollection<TemperatureRpmViewModel> TemperaturesAndRpms { get; private set; }
 
-        public BindableCollection<SensorWithHardwareNameViewModel> Sensors { get; set; }
+        public BindableCollection<SensorViewModel> Sensors { get; set; }
 
-        public SensorWithHardwareNameViewModel SelectedSensor
+        public SensorViewModel SelectedSensor
         {
             get { return selectedSensor; }
             set
@@ -73,15 +87,29 @@ namespace CorsairDashboard.ViewModels.Controls.FanEditors
         {
             TemperaturesAndRpms = new BindableCollection<TemperatureRpmViewModel>();
 
-            Sensors = new BindableCollection<SensorWithHardwareNameViewModel>();
+            Sensors = new BindableCollection<SensorViewModel>()
+            {
+                internalWaterTemperatureSensor
+            };
 
             hwMonitor.GetSignalForHardwareOfKind(HardwareKind.Cpu)
+                .Where(hwList => hwList != null && hwList.Any())
+                .TakeWhile(CanTakeHardwareSensorUpdates)
                 .Subscribe(AddHardwareSensorsData);
 
             hwMonitor.GetSignalForHardwareOfKind(HardwareKind.GraphicCard)
+                .Where(hwList => hwList != null && hwList.Any())
+                .TakeWhile(CanTakeHardwareSensorUpdates)
                 .Subscribe(AddHardwareSensorsData);
 
             hwMonitor.GetSignalForHardwareOfKind(HardwareKind.HardDisk)
+                .Where(hwList => hwList != null && hwList.Any())
+                .TakeWhile(CanTakeHardwareSensorUpdates)
+                .Subscribe(AddHardwareSensorsData);
+
+            hwMonitor.GetSignalForHardwareOfKind(HardwareKind.Mainboard)
+                .Where(hwList => hwList != null && hwList.Any())
+                .TakeWhile(CanTakeHardwareSensorUpdates)
                 .Subscribe(AddHardwareSensorsData);
         }
 
@@ -100,22 +128,55 @@ namespace CorsairDashboard.ViewModels.Controls.FanEditors
                 return new Tuple<UInt16[], UInt16[], String>(
                     TemperaturesAndRpms.Select(t => t.Temperature).ToArray(),
                     TemperaturesAndRpms.Select(t => t.Rpm).ToArray(),
-                    SelectedSensor.SensorId);
+                    SelectedSensor.Id);
             }
         }
 
         public override void SetInitialValue(object value)
         {
-            var tempsAndRpms = (Tuple<UInt16[], UInt16[]>)value;
-            var temps = tempsAndRpms.Item1;
-            var rpms = tempsAndRpms.Item2;
-            for (int i = 0; i < temps.Length; i++)
+            if (value != null)
             {
-                var vm = new TemperatureRpmViewModel(temps[i], rpms[i]);
-                vm.PropertyChanged += TemperatureRpmViewModelPropertyChanged;
-                TemperaturesAndRpms.Add(vm);
+                var tempsRpmsAndSensorId = (Tuple<UInt16[], UInt16[], String>)value;
+                var temps = tempsRpmsAndSensorId.Item1;
+                var rpms = tempsRpmsAndSensorId.Item2;
+                var sensorId = tempsRpmsAndSensorId.Item3;
+                if (sensorId != null)
+                {
+                    if (sensorId == "")
+                    {
+                        selectedSensor = internalWaterTemperatureSensor;
+                    }
+                    else
+                    {
+                        selectedSensor = Sensors.FirstOrDefault(s => s.Id == sensorId);
+                    }
+                }
+                for (int i = 0; i < temps.Length; i++)
+                {
+                    var vm = new TemperatureRpmViewModel(temps[i], rpms[i]);
+                    vm.PropertyChanged += TemperatureRpmViewModelPropertyChanged;
+                    TemperaturesAndRpms.Add(vm);
+                }
+                
+            }
+            else
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    var vm = new TemperatureRpmViewModel((UInt16)(i * 5 + 20), 1000);
+                    vm.PropertyChanged += TemperatureRpmViewModelPropertyChanged;
+                    TemperaturesAndRpms.Add(vm);
+                }
             }
             InitialValueSet = true;
+        }
+
+        private bool CanTakeHardwareSensorUpdates(IEnumerable<Hardware> hardwareList)
+        {
+            return
+                hardwareList.SelectMany(h => h.Sensors)
+                    .OfType<TemperatureSensor>()
+                    .Any(sens => Sensors.All(s => s.Id != sens.Id));
         }
 
         private void AddHardwareSensorsData(IEnumerable<Hardware> hardwareList)
@@ -124,13 +185,10 @@ namespace CorsairDashboard.ViewModels.Controls.FanEditors
             {
                 foreach (var sensor in hardware.Sensors.OfType<TemperatureSensor>())
                 {
-                    var hardwareSensorViewModel = Sensors.FirstOrDefault(s => s.SensorId == sensor.Id);
-                    if (hardwareSensorViewModel == null)
+                    if (!Sensors.Any(s => s.Id == sensor.Id))
                     {
-                        hardwareSensorViewModel = new SensorWithHardwareNameViewModel(hardware, sensor);
-                        Sensors.Add(hardwareSensorViewModel);
+                        Sensors.Add(new SensorViewModel() { Id = sensor.Id, Name = hardware.Name });
                     }
-                    hardwareSensorViewModel.Update(sensor);
                 }
             }
         }

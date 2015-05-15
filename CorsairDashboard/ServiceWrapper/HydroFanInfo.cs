@@ -14,9 +14,16 @@ namespace CorsairDashboard.HydroService
             get { return Convert.ToUInt16(RawValue); }
         }
 
-        public Tuple<UInt16[], UInt16[]> RpmsAndTempsTable
+        public Tuple<UInt16[], UInt16[], String> RmpsTempsAndSensorId
         {
-            get { return (Tuple<UInt16[], UInt16[]>)RawValue; }
+            get
+            {
+                if (!(RawValue is Tuple<UInt16[], UInt16[]>))
+                    return null;
+
+                var rpmsAndTemps = (Tuple<UInt16[], UInt16[]>)RawValue;
+                return new Tuple<UInt16[], UInt16[], String>(rpmsAndTemps.Item1, rpmsAndTemps.Item2, ExternalSensorId as String);
+            }
         }
     }
 }

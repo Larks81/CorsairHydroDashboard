@@ -63,6 +63,7 @@
   <xs:element name="ArrayOfHydroColor" nillable="true" type="tns:ArrayOfHydroColor" />
   <xs:complexType name="HydroFanInfo">
     <xs:sequence>
+      <xs:element minOccurs="0" name="ExternalSensorId" nillable="true" type="xs:anyType" />
       <xs:element minOccurs="0" name="IsConnected" type="xs:boolean" />
       <xs:element minOccurs="0" name="IsFourPinFan" type="xs:boolean" />
       <xs:element minOccurs="0" name="MaxRpm" type="xs:int" />

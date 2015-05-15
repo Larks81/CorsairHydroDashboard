@@ -284,6 +284,9 @@ namespace CorsairDashboard.HydroService {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private object ExternalSensorIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private bool IsConnectedField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -311,6 +314,19 @@ namespace CorsairDashboard.HydroService {
             }
             set {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public object ExternalSensorId {
+            get {
+                return this.ExternalSensorIdField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ExternalSensorIdField, value) != true)) {
+                    this.ExternalSensorIdField = value;
+                    this.RaisePropertyChanged("ExternalSensorId");
+                }
             }
         }
         

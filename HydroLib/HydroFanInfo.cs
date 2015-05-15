@@ -30,6 +30,13 @@ namespace HydroLib
         [DataMember]
         public object RawValue { get; internal set; }
 
+        /// <summary>
+        /// External identifier of the sensor that provides the reference temperature for this fan.
+        /// The value of this field is not set by this library, it's here just for convenience.
+        /// </summary>
+        [DataMember]
+        public object ExternalSensorId { get; set; }
+
         internal HydroFanInfo(int fanNr, bool isConnected, bool isFourPin, int rpm, int maxRpm, FanMode mode, object settingValue)
         {
             Number = fanNr;

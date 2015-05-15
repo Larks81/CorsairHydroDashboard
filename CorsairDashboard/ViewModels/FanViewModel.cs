@@ -140,7 +140,7 @@ namespace CorsairDashboard.ViewModels
                                 ((FixedRpmFanEditorViewModel) Editor).MaxRpm = (UInt16)(fanInfo.MaxRpm + 150);
                                 break;
                             case FanMode.Custom:
-                                Editor.SetInitialValue(fanInfo.RpmsAndTempsTable);
+                                Editor.SetInitialValue(fanInfo.RmpsTempsAndSensorId);
                                 break;
                         }
                     }
