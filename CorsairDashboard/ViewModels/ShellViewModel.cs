@@ -118,7 +118,8 @@ namespace CorsairDashboard.ViewModels
                         FansRpm = new BindableCollection<FanRpmViewModel>();
                         for (int i = 0; i < nrOfFans; i++)
                         {
-                            var fanVm = new FanRpmViewModel() { FanNr = i };
+                            var fanVm = IoC.Get<FanRpmViewModel>();
+                            fanVm.FanNr = i;
                             FansRpm.Add(fanVm);
                             HydroDeviceDataProvider.Fans.ElementAt(i)
                                 .Where(fanInfo => fanInfo != null)

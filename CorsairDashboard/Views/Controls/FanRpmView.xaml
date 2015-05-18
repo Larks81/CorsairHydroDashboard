@@ -4,27 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+             Loaded="FanRpmView_OnLoaded" Unloaded="FanRpmView_OnUnloaded"
              d:DesignHeight="300" d:DesignWidth="300">
     
     <StackPanel Orientation="Horizontal">
-        <Rectangle Width="20" Height="20">
+        <Rectangle Width="20" Height="20" Name="FanRectangle">
             <Rectangle.Fill>
                 <VisualBrush Stretch="Fill" Visual="{StaticResource fan_icon}"></VisualBrush>
             </Rectangle.Fill>
             <Rectangle.RenderTransform>
                 <RotateTransform CenterX="10" CenterY="10"></RotateTransform>
             </Rectangle.RenderTransform>
-            <Rectangle.Triggers>
-                <EventTrigger RoutedEvent="Loaded">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)" 
-                                             To="-360" Duration="0:0:2"
-                                             RepeatBehavior="Forever"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Rectangle.Triggers>
         </Rectangle>
         <TextBlock x:Name="Description" VerticalAlignment="Center" Margin="8, 0"></TextBlock>
     </StackPanel>

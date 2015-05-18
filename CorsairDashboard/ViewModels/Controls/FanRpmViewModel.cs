@@ -1,16 +1,16 @@
-﻿using Caliburn.Micro;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.Windows;
+using Caliburn.Micro;
+using CorsairDashboard.Caliburn;
 
 namespace CorsairDashboard.ViewModels.Controls
 {
+    [Export, PartCreationPolicy(CreationPolicy.NonShared)]
     public class FanRpmViewModel : PropertyChangedBase
     {
-        int fanNr, rpm;
+        private int fanNr, rpm;
+        private readonly IShell shell;
 
         public int FanNr
         {
@@ -22,7 +22,7 @@ namespace CorsairDashboard.ViewModels.Controls
                     fanNr = value;
                     NotifyOfPropertyChange(() => FanNr);
                     NotifyOfPropertyChange(() => Description);
-                    NotifyOfPropertyChange(() => RotateAnimationDuration);
+                    NotifyOfPropertyChange(() => AnimationSpeed);
                 }
             }
         }
@@ -37,7 +37,7 @@ namespace CorsairDashboard.ViewModels.Controls
                     rpm = value;
                     NotifyOfPropertyChange(() => Rpm);
                     NotifyOfPropertyChange(() => Description);
-                    NotifyOfPropertyChange(() => RotateAnimationDuration);
+                    NotifyOfPropertyChange(() => AnimationSpeed);
                 }
             }
         }
@@ -46,25 +46,30 @@ namespace CorsairDashboard.ViewModels.Controls
         {
             get
             {
-                return String.Format("Fan {0}: {1} rpm", FanNr, Rpm);
+                var label = shell.Settings.GetLabelForFan(shell.HydroDeviceDataProvider.SelectedDeviceId, fanNr);
+                if (String.IsNullOrEmpty(label))
+                {
+                    label = String.Format("Fan {0}", fanNr);
+                }
+                return String.Format("{0}: {1} rpm", label, Rpm);
             }
         }
 
-        public Duration RotateAnimationDuration
+        public double AnimationSpeed
         {
             get
             {
-                int sec;
                 if (rpm == 0)
-                {
-                    sec = 0;
-                }
-                else
-                {
-                    sec = 1;
-                }
-                return new Duration(TimeSpan.FromSeconds(sec));
+                    return 0.0f;
+
+                return 1.0f * ((double)rpm / 1500.0);
             }
+        }
+
+        [ImportingConstructor]
+        public FanRpmViewModel(IShell shell)
+        {
+            this.shell = shell;
         }
     }
 }
