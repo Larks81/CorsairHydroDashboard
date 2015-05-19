@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,9 +15,11 @@ namespace HydroLib
         List<HydroFanInfo> fansInfo;
         volatile UInt16[] extTempsForFans;
         CancellationTokenSource cancellationTokenSource;
+        int deviceNumber;
 
-        public HydroNullDevice()
+        public HydroNullDevice(int fakeDeviceNumber)
         {
+            deviceNumber = fakeDeviceNumber;
             ledInfo = new HydroLedInfo()
             {
                 Color1 = new HydroColor(0x33, 0xf1, 0x90),
@@ -122,6 +125,17 @@ namespace HydroLib
                     await Task.Delay(2000);
                 }
             }, cancellationToken);
+        }
+
+        public Guid GetDeviceGuid()
+        {
+            using (var md5 = MD5.Create())
+            {
+                var devName = String.Format("Fake Hydro {0}", deviceNumber);
+                var hash = md5.ComputeHash(Encoding.ASCII.GetBytes(devName));
+                var guid = new Guid(hash);
+                return guid;
+            }
         }
 
         public Task<HydroLedInfo> GetLedInfoAsync()

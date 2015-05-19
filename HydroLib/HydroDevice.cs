@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using HydroLib.Extensions;
+using System.Security.Cryptography;
 
 namespace HydroLib
 {
@@ -28,6 +29,16 @@ namespace HydroLib
         }
 
         #region Infos
+
+        public Guid GetDeviceGuid()
+        {
+            using (var md5 = MD5.Create())
+            {
+                var hash = md5.ComputeHash(Encoding.ASCII.GetBytes(device.DevicePath));
+                var guid = new Guid(hash);
+                return guid;
+            }
+        }
 
         public async Task<String> GetModelNameAsync()
         {

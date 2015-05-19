@@ -135,7 +135,7 @@ namespace CorsairDashboard.WindowsService
             return hydroDevices.Select(kvp => new ConnectedDeviceInfo(kvp.Key, kvp.Value.GetModelNameAsync().Result));
         }
 
-        public void ForceRefreshConnectedDevicesInfo()
+        public async void ForceRefreshConnectedDevicesInfo()
         {
             //can lead to problems if more clients are connected at the same time, but it's not an option at the moment..
             foreach (var hydroDevice in hydroDevices.Values)
@@ -148,8 +148,9 @@ namespace CorsairDashboard.WindowsService
             var devices = new List<ConnectedDeviceInfo>(hydroEnumerator.Count());
             foreach (var dev in hydroEnumerator)
             {
-                var guid = Guid.NewGuid();
-                devices.Add(new ConnectedDeviceInfo(guid, dev.GetModelNameAsync().Result));
+                var guid = dev.GetDeviceGuid();
+                var name = await dev.GetModelNameAsync();
+                devices.Add(new ConnectedDeviceInfo(guid, name));
                 hydroDevices.Add(guid, dev);
             }
         }

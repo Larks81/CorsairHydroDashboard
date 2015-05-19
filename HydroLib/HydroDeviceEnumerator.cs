@@ -33,7 +33,7 @@ namespace HydroLib
 
             if (canReturnNullDevice && !atLeastOneRealDeviceIsPresent)
             {
-                yield return new HydroNullDevice();
+                yield return new HydroNullDevice(0);
             }
         }
 

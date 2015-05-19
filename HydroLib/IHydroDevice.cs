@@ -5,6 +5,8 @@ namespace HydroLib
 {
     public interface IHydroDevice : IDisposable
     {
+        Guid GetDeviceGuid();
+
         Task<HydroLedInfo> GetLedInfoAsync();
 
         Task<HydroFanInfo> GetFanInfoAsync(byte fanNr);
