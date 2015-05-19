@@ -10,6 +10,7 @@ namespace CorsairDashboard.WindowsService.HardwareMonitoring
         [ServiceKnownType(typeof(Cpu))]
         [ServiceKnownType(typeof(Gpu))]
         [ServiceKnownType(typeof(Hdd))]
+        [ServiceKnownType(typeof(Mainboard))]
         void OnHardwareMonitorUpdate(Hardware hardware);
     }
 }

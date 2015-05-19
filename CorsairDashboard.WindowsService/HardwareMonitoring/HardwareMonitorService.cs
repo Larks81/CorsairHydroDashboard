@@ -139,6 +139,23 @@ namespace CorsairDashboard.WindowsService.HardwareMonitoring
                             break;
 
                         case OpenHardwareMonitor.Hardware.HardwareType.Mainboard:
+                            var mb = new Mainboard(id: hardware.Identifier.ToString(), name: hardware.Name);
+                            foreach (var mbTempSensor in hardware.Sensors.Where(s => s.SensorType == SensorType.Temperature))
+                            {
+                                mb.AddTemperature(mbTempSensor.Identifier.ToString(),
+                                    mbTempSensor.Name, 
+                                    mbTempSensor.Value.GetValueOrDefault());
+                            }
+                            foreach (var mbSubHw in hardware.SubHardware)
+                            {
+                                foreach (var mbTempSensor in mbSubHw.Sensors.Where(s => s.SensorType == SensorType.Temperature))
+                                {
+                                    mb.AddTemperature(mbTempSensor.Identifier.ToString(), 
+                                        mbTempSensor.Name,
+                                        mbTempSensor.Value.GetValueOrDefault());
+                                }
+                            }
+                            cHw = mb;
                             break;
 
                         case OpenHardwareMonitor.Hardware.HardwareType.RAM:

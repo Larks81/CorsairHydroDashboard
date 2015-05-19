@@ -458,7 +458,7 @@ namespace CorsairDashboard.HydroService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="HydroService.ICorsairHydroService", CallbackContract=typeof(CorsairDashboard.HydroService.ICorsairHydroServiceCallback))]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="HydroService.ICorsairHydroService", CallbackContract=typeof(global::CorsairDashboard.HydroService.ICorsairHydroServiceCallback))]
     public interface ICorsairHydroService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICorsairHydroService/GetServiceState", ReplyAction="http://tempuri.org/ICorsairHydroService/GetServiceStateResponse")]
@@ -587,12 +587,12 @@ namespace CorsairDashboard.HydroService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface ICorsairHydroServiceChannel : CorsairDashboard.HydroService.ICorsairHydroService, System.ServiceModel.IClientChannel {
+    public interface ICorsairHydroServiceChannel : global::CorsairDashboard.HydroService.ICorsairHydroService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class CorsairHydroServiceClient : System.ServiceModel.DuplexClientBase<CorsairDashboard.HydroService.ICorsairHydroService>, CorsairDashboard.HydroService.ICorsairHydroService {
+    public partial class CorsairHydroServiceClient : System.ServiceModel.DuplexClientBase<global::CorsairDashboard.HydroService.ICorsairHydroService>, global::CorsairDashboard.HydroService.ICorsairHydroService {
         
         public CorsairHydroServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {

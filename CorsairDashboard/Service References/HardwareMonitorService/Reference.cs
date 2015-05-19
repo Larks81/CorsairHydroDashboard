@@ -17,9 +17,10 @@ namespace CorsairDashboard.HardwareMonitorService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Hardware", Namespace="http://schemas.datacontract.org/2004/07/CorsairDashboard.HardwareMonitoring")]
     [System.SerializableAttribute()]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.Hdd))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.Cpu))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.Mainboard))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.Gpu))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.Hdd))]
     public partial class Hardware : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
@@ -111,13 +112,6 @@ namespace CorsairDashboard.HardwareMonitorService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Hdd", Namespace="http://schemas.datacontract.org/2004/07/CorsairDashboard.HardwareMonitoring.Hw")]
-    [System.SerializableAttribute()]
-    public partial class Hdd : CorsairDashboard.HardwareMonitorService.Hardware {
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Cpu", Namespace="http://schemas.datacontract.org/2004/07/CorsairDashboard.HardwareMonitoring.Hw")]
     [System.SerializableAttribute()]
     public partial class Cpu : CorsairDashboard.HardwareMonitorService.Hardware {
@@ -125,9 +119,23 @@ namespace CorsairDashboard.HardwareMonitorService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Mainboard", Namespace="http://schemas.datacontract.org/2004/07/CorsairDashboard.HardwareMonitoring.Hw")]
+    [System.SerializableAttribute()]
+    public partial class Mainboard : CorsairDashboard.HardwareMonitorService.Hardware {
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Gpu", Namespace="http://schemas.datacontract.org/2004/07/CorsairDashboard.HardwareMonitoring.Hw")]
     [System.SerializableAttribute()]
     public partial class Gpu : CorsairDashboard.HardwareMonitorService.Hardware {
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Hdd", Namespace="http://schemas.datacontract.org/2004/07/CorsairDashboard.HardwareMonitoring.Hw")]
+    [System.SerializableAttribute()]
+    public partial class Hdd : CorsairDashboard.HardwareMonitorService.Hardware {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
@@ -159,9 +167,10 @@ namespace CorsairDashboard.HardwareMonitorService {
     [System.SerializableAttribute()]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.UsageSensor))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.TemperatureSensor))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.Hdd))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.Cpu))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.Mainboard))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.Gpu))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.Hdd))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.Hardware))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.HardwareKind))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CorsairDashboard.HardwareMonitorService.HardwareSensor[]))]
@@ -255,7 +264,7 @@ namespace CorsairDashboard.HardwareMonitorService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="HardwareMonitorService.IHardwareMonitorService", CallbackContract=typeof(CorsairDashboard.HardwareMonitorService.IHardwareMonitorServiceCallback))]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="HardwareMonitorService.IHardwareMonitorService", CallbackContract=typeof(global::CorsairDashboard.HardwareMonitorService.IHardwareMonitorServiceCallback))]
     public interface IHardwareMonitorService {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IHardwareMonitorService/Subscribe")]
@@ -279,12 +288,12 @@ namespace CorsairDashboard.HardwareMonitorService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IHardwareMonitorServiceChannel : CorsairDashboard.HardwareMonitorService.IHardwareMonitorService, System.ServiceModel.IClientChannel {
+    public interface IHardwareMonitorServiceChannel : global::CorsairDashboard.HardwareMonitorService.IHardwareMonitorService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class HardwareMonitorServiceClient : System.ServiceModel.DuplexClientBase<CorsairDashboard.HardwareMonitorService.IHardwareMonitorService>, CorsairDashboard.HardwareMonitorService.IHardwareMonitorService {
+    public partial class HardwareMonitorServiceClient : System.ServiceModel.DuplexClientBase<global::CorsairDashboard.HardwareMonitorService.IHardwareMonitorService>, global::CorsairDashboard.HardwareMonitorService.IHardwareMonitorService {
         
         public HardwareMonitorServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {

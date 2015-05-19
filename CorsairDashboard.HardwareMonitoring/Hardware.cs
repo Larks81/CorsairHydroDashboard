@@ -12,6 +12,7 @@ namespace CorsairDashboard.HardwareMonitoring
     [KnownType(typeof(Cpu))]
     [KnownType(typeof(Gpu))]
     [KnownType(typeof(Hdd))]
+    [KnownType(typeof(Mainboard))]
     public abstract class Hardware
     {
         [DataMember]

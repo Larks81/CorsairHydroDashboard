@@ -16,5 +16,12 @@ namespace CorsairDashboard.HardwareMonitoring.Hw.Sensors
             Name = "Temperature";
             Value = value;
         }
+
+        public TemperatureSensor(String sensorId, String sensorName, float value)
+        {
+            Id = sensorId;
+            Name = sensorName;
+            Value = value;
+        }
     }
 }

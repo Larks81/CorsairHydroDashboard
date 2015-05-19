@@ -30,6 +30,9 @@ namespace CorsairDashboard.ViewModels
 
             hwMonitor.GetSignalForHardwareOfKind(HardwareKind.HardDisk)
                 .Subscribe(AddHardwareSensorsData);
+
+            hwMonitor.GetSignalForHardwareOfKind(HardwareKind.Mainboard)
+                .Subscribe(AddHardwareSensorsData);
         }
 
         private void AddHardwareSensorsData(IEnumerable<Hardware> hardwareList)

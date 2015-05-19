@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Hw\Gpu.cs" />
     <Compile Include="Hw\Hdd.cs" />
+    <Compile Include="Hw\Mainboard.cs" />
     <Compile Include="Hw\Sensors\TemperatureSensor.cs" />
     <Compile Include="Hw\Sensors\UsageSensor.cs" />
     <Compile Include="Hardware.cs" />
