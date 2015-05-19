@@ -11,7 +11,7 @@ using CorsairDashboard.ViewModels.Controls;
 
 namespace CorsairDashboard.ViewModels
 {
-    public class TemperatureBasedLedViewModel : ChildBaseViewModel
+    public class TemperatureBasedLedViewModel : ScreenWithShell
     {
         private bool canUpdateDevice;
         private UInt16 minTemp, medTemp, maxTemp;
@@ -81,6 +81,7 @@ namespace CorsairDashboard.ViewModels
         public TemperatureBasedLedViewModel(IShell shell)
             : base(shell)
         {
+            DisplayName = "Temperature based";
             canUpdateDevice = false;
 
             MinTempColorChooser = new RangeColorChooserViewModel();

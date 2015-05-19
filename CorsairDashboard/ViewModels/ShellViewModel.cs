@@ -161,7 +161,7 @@ namespace CorsairDashboard.ViewModels
             base.OnDeactivate(close);
         }
 
-        public void ChangeCurrentDisplayedViewModelTo(ChildBaseViewModel newViewModel)
+        public void ChangeCurrentDisplayedViewModelTo(object newViewModel)
         {
             ActivateItem(newViewModel);
         }

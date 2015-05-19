@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 
 namespace CorsairDashboard.ViewModels
 {
-    public class SingleColorLedViewModel : ChildBaseViewModel
+    public class SingleColorLedViewModel : ScreenWithShell
     {
         bool pulse;
 
@@ -33,21 +33,29 @@ namespace CorsairDashboard.ViewModels
         public SingleColorLedViewModel(IShell shell)
             : base(shell)
         {
-            this.RangeColorChooser = new RangeColorChooserViewModel();
+            DisplayName = "Single color";
+            RangeColorChooser = new RangeColorChooserViewModel();
+        }
 
-            shell.HydroDeviceDataProvider.Led
-                .ContinueWith(task =>
-                {
-                    var ledInfo = task.Result;
-                    var ledColor = ledInfo.Color1;
-                    RangeColorChooser.R = ledColor.R;
-                    RangeColorChooser.G = ledColor.G;
-                    RangeColorChooser.B = ledColor.B;
-                    Pulse = ledInfo.IsPulsing();
-                });
+        protected async override void OnInitialize()
+        {
+            var ledInfo = await Shell.HydroDeviceDataProvider.Led;
+            var ledColor = ledInfo.Color1;
+            RangeColorChooser.R = ledColor.R;
+            RangeColorChooser.G = ledColor.G;
+            RangeColorChooser.B = ledColor.B;
+            Pulse = ledInfo.IsPulsing();
 
-            RangeColorChooser.PropertyChanged += OnPropertyChanged; //leak?
+            RangeColorChooser.PropertyChanged += OnPropertyChanged;
             PropertyChanged += OnPropertyChanged;
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            if (close)
+            {
+                RangeColorChooser.PropertyChanged -= OnPropertyChanged;
+            }
         }
 
         private async void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -57,7 +65,5 @@ namespace CorsairDashboard.ViewModels
                 await Shell.HydroDeviceDataProvider.SetLedSingleColorAsync(RangeColorChooser.CurrentColor, Pulse);
             }
         }
-
-
     }
 }

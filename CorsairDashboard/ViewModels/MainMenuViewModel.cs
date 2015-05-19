@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace CorsairDashboard.ViewModels
 {
     [Export]
-    public class MainMenuViewModel : ChildBaseViewModel
+    public class MainMenuViewModel : ScreenWithShell
     {
         [ImportingConstructor]
         public MainMenuViewModel(IShell shell)

@@ -1,4 +1,5 @@
-﻿using CorsairDashboard.Caliburn;
+﻿using Caliburn.Micro;
+using CorsairDashboard.Caliburn;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -9,22 +10,15 @@ using System.Windows.Media;
 
 namespace CorsairDashboard.ViewModels
 {
-    [Export]
-    public class LedViewModel : ChildBaseViewModel
+    [Export, PartCreationPolicy(CreationPolicy.NonShared)]
+    public class LedViewModel : Conductor<ScreenWithShell>.Collection.OneActive
     {
-        public SingleColorLedViewModel SingleColorLed { get; set; }
-
-        public CyclingColorLedViewModel CyclingColorLed { get; set; }
-
-        public TemperatureBasedLedViewModel TemperatureBasedLed { get; set; }
-
         [ImportingConstructor]
         public LedViewModel(IShell shell)
-            : base(shell)
         {
-            SingleColorLed = new SingleColorLedViewModel(shell);
-            CyclingColorLed = new CyclingColorLedViewModel(shell);
-            TemperatureBasedLed = new TemperatureBasedLedViewModel(shell);
+            Items.Add(new SingleColorLedViewModel(shell));
+            Items.Add(new CyclingColorLedViewModel(shell));
+            Items.Add(new TemperatureBasedLedViewModel(shell));
         }
     }
 }

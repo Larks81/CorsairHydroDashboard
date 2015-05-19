@@ -14,7 +14,7 @@ using CorsairDashboard.ViewModels.Controls.FanEditors;
 
 namespace CorsairDashboard.ViewModels
 {
-    public class FanViewModel : ChildBaseViewModel
+    public class FanViewModel : ScreenWithShell
     {
         private FanModeDescription selectedMode;
         private int rpm;
@@ -23,6 +23,8 @@ namespace CorsairDashboard.ViewModels
         private bool isConnected;
         private bool is4PinFan;
         private String label;
+        private IDisposable subscriptionDisposable;
+        private FanEditorViewModelBase editor;
 
         public bool IsConnected
         {
@@ -101,8 +103,10 @@ namespace CorsairDashboard.ViewModels
         public int Rpm
         {
             get { return rpm; }
-            set {
-                if (rpm != value) {
+            set
+            {
+                if (rpm != value)
+                {
                     rpm = value;
                     NotifyOfPropertyChange(() => Rpm);
                 }
@@ -122,19 +126,43 @@ namespace CorsairDashboard.ViewModels
             }
         }
 
-        public FanEditorViewModelBase Editor { get; private set; }
+        public FanEditorViewModelBase Editor
+        {
+            get
+            {
+                return editor;
+            }
+            private set
+            {
+                if (editor != value)
+                {
+                    if (editor != null)
+                    {
+                        editor.PropertyChanged -= OnEditorPropertyChanged;
+                    }
+                    editor = value;
+                    NotifyOfPropertyChange(() => Editor);
+                }
+            }
+        }
 
         public FanViewModel(IShell shell, int fanNr)
             : base(shell)
         {
             FanNumber = fanNr;
-            label = Shell.Settings.GetLabelForFan(Shell.HydroDeviceDataProvider.SelectedDeviceId, fanNr);
+        }
+
+        protected override void OnInitialize()
+        {
             Modes = new BindableCollection<FanModeDescription>(FanModeDescription.GetFanModeDescriptions());
+            label = Shell.Settings.GetLabelForFan(Shell.HydroDeviceDataProvider.SelectedDeviceId, FanNumber);
+            NotifyOfPropertyChange(() => Label);
         }
 
         protected override void OnActivate()
         {
-            Shell.HydroDeviceDataProvider.Fans.ElementAt(FanNumber)
+            subscriptionDisposable = Shell.HydroDeviceDataProvider.Fans
+                .ElementAt(FanNumber)
                 .Where(fanInfo => fanInfo != null)
                 .Subscribe(fanInfo =>
                 {
@@ -157,7 +185,7 @@ namespace CorsairDashboard.ViewModels
                                 break;
                             case FanMode.FixedRPM:
                                 Editor.SetInitialValue(fanInfo.RpmValue);
-                                ((FixedRpmFanEditorViewModel) Editor).MaxRpm = (UInt16)(fanInfo.MaxRpm + Shell.Settings.MaxRpmDelta);
+                                ((FixedRpmFanEditorViewModel)Editor).MaxRpm = (UInt16)(fanInfo.MaxRpm + Shell.Settings.MaxRpmDelta);
                                 break;
                             case FanMode.Custom:
                                 Editor.SetInitialValue(fanInfo.RmpsTempsAndSensorId);
@@ -166,16 +194,17 @@ namespace CorsairDashboard.ViewModels
                     }
                     canUpdateDevice = true;
                 });
-
-            base.OnActivate();
         }
 
         protected override void OnDeactivate(bool close)
         {
-            if (Editor != null)
-                Editor.PropertyChanged -= OnEditorPropertyChanged;
-
-            base.OnDeactivate(close);
+            if (subscriptionDisposable != null)
+            {
+                subscriptionDisposable.Dispose();
+                subscriptionDisposable = null;
+            }
+            Editor = null;
+            canUpdateDevice = false;
         }
 
         private void LoadAndBindToEditor()
@@ -242,10 +271,10 @@ namespace CorsairDashboard.ViewModels
                     break;
 
                 case FanMode.Custom:
-                    var tempsRpmsSensorId = (Tuple<UInt16[], UInt16[], String>) Editor.ValueForParent;
+                    var tempsRpmsSensorId = (Tuple<UInt16[], UInt16[], String>)Editor.ValueForParent;
                     if (tempsRpmsSensorId != null)
                     {
-                        await Shell.HydroDeviceDataProvider.SetTemperatureBasedRpmFanAsync(FanNumber, tempsRpmsSensorId.Item1, tempsRpmsSensorId.Item2, tempsRpmsSensorId.Item3);                       
+                        await Shell.HydroDeviceDataProvider.SetTemperatureBasedRpmFanAsync(FanNumber, tempsRpmsSensorId.Item1, tempsRpmsSensorId.Item2, tempsRpmsSensorId.Item3);
                     }
                     break;
             }

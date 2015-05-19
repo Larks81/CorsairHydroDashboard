@@ -13,7 +13,7 @@ using CorsairDashboard.HydroService;
 
 namespace CorsairDashboard.ViewModels
 {
-    public class CyclingColorLedViewModel : ChildBaseViewModel
+    public class CyclingColorLedViewModel : ScreenWithShell
     {
         public enum NrOfColors
         {
@@ -116,6 +116,7 @@ namespace CorsairDashboard.ViewModels
         public CyclingColorLedViewModel(IShell shell) :
             base(shell)
         {
+            DisplayName = "Cycling colors";
             canUpdateDevice = false;
             ranges = new RangeColorChooserViewModel[4];
 

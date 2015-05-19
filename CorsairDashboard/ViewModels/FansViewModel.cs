@@ -10,40 +10,15 @@ using CorsairDashboard.Settings;
 
 namespace CorsairDashboard.ViewModels
 {
-    [Export]
-    public class FansViewModel : ChildBaseViewModel
-    {
-        public BindableCollection<ChildBaseViewModel> Fans { get; set; }
-
-        private ChildBaseViewModel selectedFan;
-        public ChildBaseViewModel SelectedFan
-        {
-            get
-            {
-                return selectedFan;
-            }
-            set
-            {
-                if (selectedFan != value)
-                {
-                    if (selectedFan != null)
-                    {
-                        selectedFan.DeactivateManually();
-                    }
-                    selectedFan = value;
-                    if (selectedFan != null)
-                    {
-                        selectedFan.ActivateManually();
-                    }
-                }
-            }
-        }
+    [Export, PartCreationPolicy(CreationPolicy.NonShared)]
+    public class FansViewModel : Conductor<ScreenWithShell>.Collection.OneActive
+    {        
+        private IShell Shell { get; set; }
 
         [ImportingConstructor]
         public FansViewModel(IShell shell)
-            : base(shell)
         {
-            Fans = new BindableCollection<ChildBaseViewModel>();
+            Shell = shell;
         }
 
         protected async override void OnInitialize()
@@ -57,21 +32,9 @@ namespace CorsairDashboard.ViewModels
                 }
                 else
                 {                    
-                    Fans.Add(new FanViewModel(Shell, i));
+                    Items.Add(new FanViewModel(Shell, i));
                 }
             }
-
-            base.OnInitialize();
-        }
-
-        protected override void OnDeactivate(bool close)
-        {
-            if (SelectedFan != null)
-            {
-                SelectedFan.DeactivateManually();
-            }
-            Fans = null;
-            base.OnDeactivate(close);
         }
     }
 }

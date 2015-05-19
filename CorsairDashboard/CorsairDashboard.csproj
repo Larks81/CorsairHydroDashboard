@@ -130,7 +130,7 @@
     <Compile Include="Settings\ISettings.cs" />
     <Compile Include="Settings\KeyValueSetting.cs" />
     <Compile Include="Settings\SettingsContext.cs" />
-    <Compile Include="ViewModels\ChildBaseViewModel.cs" />
+    <Compile Include="Caliburn\ScreenWithShell.cs" />
     <Compile Include="ViewModels\Controls\FanEditors\FanEditorViewModelBase.cs" />
     <Compile Include="ViewModels\Controls\FanEditors\FixedPwmFanEditorViewModel.cs" />
     <Compile Include="ViewModels\Controls\FanEditors\FixedRpmFanEditorViewModel.cs" />

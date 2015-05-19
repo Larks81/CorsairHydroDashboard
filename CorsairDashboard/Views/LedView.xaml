@@ -5,18 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="500" MinHeight="300">
-    <TabControl>
-        <TabItem Header="Single color">
-            <ContentControl x:Name="SingleColorLed"></ContentControl>
-        </TabItem>
-        
-        <TabItem Header="Cycling colors">
-            <ContentControl x:Name="CyclingColorLed"></ContentControl>
-        </TabItem>
-        
-        <TabItem Header="Temperature based">
-            <ContentControl x:Name="TemperatureBasedLed"></ContentControl>
-        </TabItem>
-    </TabControl>
+
+    <TabControl x:Name="Items"></TabControl>
     
 </UserControl>

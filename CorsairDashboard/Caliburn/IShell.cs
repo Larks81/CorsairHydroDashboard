@@ -12,6 +12,6 @@ namespace CorsairDashboard.Caliburn
 
         ISettings Settings { get; }
 
-        void ChangeCurrentDisplayedViewModelTo(ChildBaseViewModel newViewModel);
+        void ChangeCurrentDisplayedViewModelTo(object newViewModel);
     }
 }
