@@ -105,6 +105,7 @@
                 <TextBlock Text=":(" HorizontalAlignment="Center" FontSize="160"></TextBlock>
                 <TextBlock Text="The CorsairHydro Service is unreachable." HorizontalAlignment="Center" Style="{StaticResource BigSizeTextBlock}" Margin="0,20,0,5"></TextBlock>
                 <TextBlock Text="Please be sure the service is up and running!" HorizontalAlignment="Center" Style="{StaticResource BigSizeTextBlock}"></TextBlock>
+                <Button x:Name="TryStartService" Content="(click here to restart the service..)" Style="{StaticResource LinkButton}" Margin="30" Width="250" HorizontalAlignment="Center"></Button>
             </StackPanel>
         </Grid>
 

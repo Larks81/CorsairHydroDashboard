@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.ServiceModel;
+using System.ServiceProcess;
 using System.Threading;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using CorsairDashboard.Caliburn;
 using CorsairDashboard.Common.Service;
@@ -14,18 +17,20 @@ using CorsairDashboard.ViewModels.Controls;
 using CorsairDashboard.ServiceWrapper;
 using CorsairDashboard.HardwareMonitorService;
 using CorsairDashboard.Settings;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace CorsairDashboard.ViewModels
 {
     [Export(typeof(IShell))]
     public class ShellViewModel : ConductorWithFlyouts<object>, IShell
     {
+        private const int ServiceControllerTimeoutSeconds = 5;
         private int nrOfFans;
         private CorsairHydroServiceState serviceState;
         private bool serviceFaulted;
         private CorsairDashboard.HydroService.ICorsairHydroService hydroService;
         private IHardwareMonitorService hwMonitorService;
-        private IWindowManager windowManager;
+        private IMetroWindowManager windowManager;
 
         public HydroDeviceDataProvider HydroDeviceDataProvider { get; private set; }
 
@@ -77,18 +82,26 @@ namespace CorsairDashboard.ViewModels
         {
             get { return ServiceState == CorsairHydroServiceState.Ready; }
         }
-        
+
         [ImportingConstructor]
-        public ShellViewModel(IWindowManager windowManager, ISettings settings)
+        public ShellViewModel(IMetroWindowManager windowManager, ISettings settings)
         {
             Settings = settings;
             this.windowManager = windowManager;
+        }
+
+        public ShellViewModel()
+        {
             if (Execute.InDesignMode)
                 LoadDesignTimeData();
         }
 
         public async void Start()
         {
+            if (Execute.InDesignMode)
+                return;
+
+            ServiceFaulted = false;
             ServiceState = CorsairHydroServiceState.Bootstrapping;
             DisplayName = "Corsair Hydro Dashboard";
 
@@ -149,6 +162,8 @@ namespace CorsairDashboard.ViewModels
             }
             catch (EndpointNotFoundException e)
             {
+                HydroDeviceDataProvider = null;
+                hwMonitorService = null;
                 ServiceFaulted = true;
             }
 
@@ -156,8 +171,14 @@ namespace CorsairDashboard.ViewModels
 
         protected override void OnDeactivate(bool close)
         {
-            HydroDeviceDataProvider.Dispose();
-            hwMonitorService.Unsubscribe();            
+            if (HydroDeviceDataProvider != null)
+            {
+                HydroDeviceDataProvider.Dispose();
+            }
+            if (hwMonitorService != null)
+            {
+                hwMonitorService.Unsubscribe();
+            }
             base.OnDeactivate(close);
         }
 
@@ -187,9 +208,69 @@ namespace CorsairDashboard.ViewModels
             return true;
         }
 
+        public async void TryStartService()
+        {
+            var error = false;
+            var errorMessage = "";
+
+            await Task.Run(async () =>
+            {
+                ProgressDialogController progressDialogController = null;
+                try
+                {
+                    progressDialogController = await windowManager.ShowProgressAsync("Starting the service",
+                        "Please wait..\r\nIt shouldn't take too long!");
+                    progressDialogController.SetIndeterminate();
+
+                    var services = new List<ServiceController>()
+                    {
+                        new ServiceController("HardwareMonitorService"),
+                        new ServiceController("CorsairHydroService")
+                    };
+                    foreach (var service in services)
+                    {
+                        if (service.Status != ServiceControllerStatus.Stopped)
+                        {
+                            service.Stop();
+                            service.WaitForStatus(ServiceControllerStatus.Stopped,
+                                TimeSpan.FromSeconds(ServiceControllerTimeoutSeconds));
+                        }
+                        service.Start();
+                        service.WaitForStatus(ServiceControllerStatus.Running,
+                            TimeSpan.FromSeconds(ServiceControllerTimeoutSeconds));
+                    }
+                    await Task.Delay(TimeSpan.FromSeconds(10));
+                }
+                catch (System.ServiceProcess.TimeoutException)
+                {
+                    error = true;
+                    errorMessage = "The service took too long to respond";
+                }
+                catch (Exception e)
+                {
+                    error = true;
+                    errorMessage = e.Message;
+                }
+                if (progressDialogController != null)
+                {
+                    await progressDialogController.CloseAsync();
+                }
+            });
+
+            if (error)
+            {
+                await windowManager.ShowMessageAsync("Error launching the service",
+                        String.Format("Error trying to (re)start the services\r\n{0}", errorMessage));
+            }
+            else
+            {
+                Start();
+            }
+        }
+
         private void LoadDesignTimeData()
         {
-            ServiceFaulted = false;
+            ServiceFaulted = true;
             //ServiceState = CorsairHydroServiceState.SearchingDevice;
         }
     }

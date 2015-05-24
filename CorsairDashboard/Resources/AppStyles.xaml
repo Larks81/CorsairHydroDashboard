@@ -4,7 +4,7 @@
     <Style x:Key="BigSizeTextBlock" TargetType="TextBlock">
         <Setter Property="FontSize" Value="21"></Setter>
     </Style>
-    
+
     <Style x:Key="NormalSizeTextBlock" TargetType="TextBlock">
         <Setter Property="FontSize" Value="18"></Setter>
     </Style>
@@ -12,5 +12,24 @@
     <Style x:Key="SmallerSizeTextBlock" TargetType="TextBlock">
         <Setter Property="FontSize" Value="15"></Setter>
     </Style>
-    
+
+    <Style x:Key="LinkButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Background" Value="{x:Null}"></Setter>        
+        <Setter Property="BorderThickness" Value="0"></Setter>
+        <Setter Property="Padding" Value="0"></Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <TextBlock x:Name="LinkBtnTextBlock" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" Text="{TemplateBinding Content}" Style="{StaticResource SmallerSizeTextBlock}"></TextBlock>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="LinkBtnTextBlock" Property="TextBlock.TextDecorations" Value="Underline"></Setter>
+                            <Setter TargetName="LinkBtnTextBlock" Property="Cursor" Value="Hand"></Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

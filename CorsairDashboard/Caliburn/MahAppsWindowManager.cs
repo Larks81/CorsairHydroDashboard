@@ -13,44 +13,49 @@ using MahApps.Metro.Controls.Dialogs;
 namespace CorsairDashboard.Caliburn
 {
     [Export(typeof(IWindowManager))]
-    public class MahAppsWindowManager : WindowManager
+    [Export(typeof(IMetroWindowManager))]
+    public class MahAppsWindowManager : WindowManager, IMetroWindowManager
     {
-       /* public bool? ShowDialog(object rootModel, object context = null, IDictionary<string, object> settings = null)
+        public async Task<MessageDialogResult> ShowMessageAsync(string title, string message,
+            MessageDialogStyle style = MessageDialogStyle.Affirmative, MetroDialogSettings settings = null)
         {
-            var metroWindow = (Application.Current.MainWindow as MetroWindow);
-            if (metroWindow == null)
-                return false;
-
-            var view = ViewLocator.LocateForModel(rootModel, null, context);
-            var dialog = new CustomDialog()
+            var metroWindow = await FindMetroWindow();
+            if (metroWindow.Dispatcher.CheckAccess())
             {
-                Content = view               
-            };
-            
-            var dialogSettings = new MetroDialogSettings()
+                return await metroWindow.ShowMessageAsync(title, message, style, settings);
+            }
+            else
             {
-                AffirmativeButtonText = "Ok"
-            };
-            metroWindow.ShowMetroDialogAsync(dialog, dialogSettings);
-            return true;
+                return await metroWindow.Dispatcher.Invoke(() => metroWindow.ShowMessageAsync(title, message, style, settings));
+            }
         }
 
-        public void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null)
+        public async Task<ProgressDialogController> ShowProgressAsync(String title, String message)
         {
-            throw new NotImplementedException();
+            var metroWindow = await FindMetroWindow();
+            if (metroWindow.Dispatcher.CheckAccess())
+            {
+                return await metroWindow.ShowProgressAsync(title, message);
+            }
+            else
+            {
+                return await metroWindow.Dispatcher.Invoke(() => metroWindow.ShowProgressAsync(title, message));
+            }
         }
-
-        public void ShowWindow(object rootModel, object context = null, IDictionary<string, object> settings = null)
+        
+        protected async Task<MetroWindow> FindMetroWindow()
         {
-            var view = ViewLocator.LocateForModel(rootModel, null, context) as MetroWindow;
-            if (view == null)
-                return;
-            
-            view.SizeToContent = SizeToContent.WidthAndHeight;
-            view.Owner = Application.Current.MainWindow as MetroWindow;
-            view.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            view.Show();
-        }*/
+            var findMetroWindowFunc = new Func<MetroWindow>(() => Application.Current.MainWindow as MetroWindow);
+
+            if (Application.Current.CheckAccess())
+            {
+                return findMetroWindowFunc();
+            }
+            else
+            {
+                return await Application.Current.Dispatcher.InvokeAsync(findMetroWindowFunc);
+            }
+        }
 
         protected override Window EnsureWindow(object model, object view, bool isDialog)
         {

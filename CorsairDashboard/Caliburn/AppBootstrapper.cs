@@ -63,7 +63,7 @@ namespace CorsairDashboard.Caliburn
             var batch = new CompositionBatch();
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
-            batch.AddExportedValue<IWindowManager>(new MahAppsWindowManager());
+            batch.AddExportedValue<IMetroWindowManager>(new MahAppsWindowManager());
             batch.AddExportedValue<ISettings>(settings);
             batch.AddExportedValue(container);
             container.Compose(batch);
