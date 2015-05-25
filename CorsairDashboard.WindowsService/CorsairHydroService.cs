@@ -13,6 +13,7 @@ namespace CorsairDashboard.WindowsService
     public partial class CorsairHydroService : ServiceBase
     {
 	//Comment to test pull request
+	//And now? better?
         const String NetNamedPipeUri = "net.pipe://localhost/CorsairHydroService";
 
         private readonly ILog log = LogManager.GetLogger("HydroServiceLogger");
