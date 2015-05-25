@@ -203,6 +203,7 @@ namespace CorsairDashboard.ViewModels
                 subscriptionDisposable.Dispose();
                 subscriptionDisposable = null;
             }
+            SelectedMode = null;
             Editor = null;
             canUpdateDevice = false;
         }
@@ -212,23 +213,32 @@ namespace CorsairDashboard.ViewModels
             if (Editor != null)
                 Editor.PropertyChanged -= OnEditorPropertyChanged;
 
-            switch ((FanMode)SelectedMode.Value)
+            if (SelectedMode == null)
             {
-                case FanMode.FixedPWM:
-                    Editor = new FixedPwmFanEditorViewModel();
-                    break;
-                case FanMode.FixedRPM:
-                    Editor = new FixedRpmFanEditorViewModel();
-                    break;
-                case FanMode.Custom:
-                    Editor = new TemperatureBasedRpmFanEditorViewModel(Shell.HardwareMonitoringProvider);
-                    break;
+                Editor = null;
             }
-            if (Editor != null)
+            else
             {
-                Editor.PropertyChanged += OnEditorPropertyChanged;
+                switch ((FanMode)SelectedMode.Value)
+                {
+                    case FanMode.FixedPWM:
+                        Editor = new FixedPwmFanEditorViewModel();
+                        break;
+                    case FanMode.FixedRPM:
+                        Editor = new FixedRpmFanEditorViewModel();
+                        break;
+                    case FanMode.Custom:
+                        Editor = new TemperatureBasedRpmFanEditorViewModel(Shell.HardwareMonitoringProvider);
+                        break;
+                    default:
+                        Editor = null;
+                        break;
+                }
+                if (Editor != null)
+                {
+                    Editor.PropertyChanged += OnEditorPropertyChanged;
+                }
             }
-            NotifyOfPropertyChange(() => Editor);
         }
 
         private async void OnEditorPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
